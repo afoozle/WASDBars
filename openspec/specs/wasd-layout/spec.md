@@ -11,12 +11,12 @@ The addon SHALL move the game's own action buttons 1–12 into a cluster shaped 
 
 #### Scenario: Default layout
 - **WHEN** the addon loads for the first time on a character
-- **THEN** the cluster is shown just above action bar 2, aligned with its left edge
+- **THEN** the cluster is shown at its default position (see `display-positioning`)
 - **AND** Q, E, R, T, F, G, Z, X, C and V sit in their keyboard positions around W, A, S and D, with buttons 11 and 12 in a column to the right
 
 #### Scenario: Following action bar 2
 - **WHEN** the player moves action bar 2 in Edit Mode
-- **THEN** the cluster moves with it
+- **THEN** the cluster does not move; it has its own Edit Mode position
 
 #### Scenario: Editing the layout table
 - **WHEN** the player changes a key's button, position or size tier in the layout table and reloads
