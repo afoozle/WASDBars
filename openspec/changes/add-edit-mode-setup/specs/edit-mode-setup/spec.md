@@ -3,11 +3,11 @@
 ## ADDED Requirements
 
 ### Requirement: Confirmed Edit Mode arrangement
-`/wasd setup layout` SHALL show what it will change and, only after the player confirms, switch to an Edit Mode layout named "WASDBars" (created from the player's current layout if it doesn't exist) in which Action Bar 1's art and page arrows are hidden and Action Bar 2 sits where Action Bar 1 was. The addon SHALL NOT edit the game's preset layouts or any layout other than "WASDBars".
+`/wasd setup layout` SHALL show what it will change and, only after the player confirms, switch to an Edit Mode layout named "WASDBars" (created from the player's current layout if it doesn't exist) in which Action Bar 1's art and page arrows are hidden, its empty slots always show, it has 12 icons, and Action Bar 2 sits where Action Bar 1 was. The addon SHALL NOT edit the game's preset layouts or any layout other than "WASDBars".
 
 #### Scenario: Confirm
 - **WHEN** the player types `/wasd setup layout` and clicks Confirm
-- **THEN** the active Edit Mode layout is "WASDBars", the main bar art and page arrows are gone, action bar 2 is where action bar 1 was, and the WASD cluster is unchanged
+- **THEN** the active Edit Mode layout is "WASDBars", the main bar art and page arrows are gone, empty cluster slots still show, action bar 2 is where action bar 1 was, and the WASD cluster is unchanged
 - **AND** it stays that way after `/reload` and relogging
 
 #### Scenario: Cancel

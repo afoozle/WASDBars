@@ -19,3 +19,6 @@ Optional, for going public: the personal version is driven by slash commands. Sl
 - New capability spec: `options-panel`
 - New file: `UI/Options.lua`
 - New settings: `showMovementKeys`, `showMouseOutline`
+
+## Note from `add-wasd-layout` grilling (2026-11-22)
+The mouse outline was deferred out of `add-wasd-layout` to a possible later change. The "Show mouse outline" setting and checkbox only apply if that change happens; drop them otherwise when this change is grilled.
