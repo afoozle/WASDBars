@@ -1,22 +1,82 @@
 local ADDON, ns = ...
+local Options = {}
+ns.Options = Options
 
--- The addon's page in the game's AddOns settings. add-options-panel builds on it.
+-- The addon's page under AddOns in the game's options, built from the game's
+-- standard settings rows. Each setting reads and writes WASDBarsDB directly.
+local function checkbox(category, key, name, tooltip, onChange)
+  local setting = Settings.RegisterProxySetting(
+    category,
+    "WASDBars_" .. key,
+    Settings.VarType.Boolean,
+    name,
+    ns.Settings.defaults[key],
+    function()
+      return ns.db[key]
+    end,
+    function(value)
+      ns.db[key] = value
+      onChange(value)
+    end
+  )
+  Settings.CreateCheckbox(category, setting, tooltip)
+end
+
+local function button(layout, name, buttonText, onClick, tooltip)
+  layout:AddInitializer(CreateSettingsButtonInitializer(name, buttonText, onClick, tooltip, true))
+end
+
+local function openEditMode()
+  if InCombatLockdown() then
+    ns.print("Edit Mode can't be opened in combat.")
+    return
+  end
+  HideUIPanel(SettingsPanel)
+  ShowUIPanel(EditModeManagerFrame)
+end
+
 ns.Events.on("PLAYER_LOGIN", function()
-  local panel = CreateFrame("Frame")
-  local title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-  title:SetPoint("TOPLEFT", 16, -16)
-  title:SetText("WASDBars")
+  local category, layout = Settings.RegisterVerticalLayoutCategory("WASDBars")
+  Options.category = category
 
-  local text = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-  text:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-  text:SetJustifyH("LEFT")
-  text:SetText("Bind your keys to the WASD cluster and action bar 2, and check your Edit Mode layout.")
+  layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Display"))
+  button(
+    layout,
+    "Move and resize",
+    "Open Edit Mode",
+    openEditMode,
+    "Select WASDBars in Edit Mode to drag it, or click it to change its scale."
+  )
 
-  local button = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
-  button:SetPoint("TOPLEFT", text, "BOTTOMLEFT", 0, -12)
-  button:SetSize(140, 24)
-  button:SetText("Run setup")
-  button:SetScript("OnClick", ns.Setup.run)
+  layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Appearance"))
+  checkbox(
+    category,
+    "showMovementKeys",
+    "Show movement keys",
+    "Show the W, A, S and D arrow keys between the action buttons.",
+    ns.MovementKeys.setShown
+  )
+  checkbox(
+    category,
+    "largeHotkeys",
+    "Large hotkey text",
+    "Show each key's name large at the bottom of its button. Off uses the game's small corner text.",
+    ns.Cluster.refreshHotkeys
+  )
 
-  Settings.RegisterAddOnCategory(Settings.RegisterCanvasLayoutCategory(panel, "WASDBars"))
+  layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Setup"))
+  button(layout, "Keybinds", "Set up keybinds", function()
+    ns.Bindings.request()
+  end, "Bind the keys around WASD to action bar 1 and the number row to action bar 2. Shows what changes first.")
+  button(layout, "Edit Mode layout", "Check layout", function()
+    ns.Setup.checkLayout()
+  end, "List any Edit Mode settings that don't suit WASDBars. Changes nothing.")
+
+  Settings.RegisterAddOnCategory(category)
 end)
+
+function Options.open()
+  if Options.category then
+    Settings.OpenToCategory(Options.category:GetID())
+  end
+end

@@ -42,6 +42,13 @@ commands.debug = {
   end,
 }
 
+commands.options = {
+  help = "open the WASDBars options",
+  run = function()
+    ns.Options.open()
+  end,
+}
+
 -- /wasd setup <part>; plain /wasd setup runs the whole setup.
 Slash.setup = {
   [""] = function()

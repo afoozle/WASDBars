@@ -9,11 +9,47 @@ end
 -- The game's own hotkey text, made larger and moved to bottom centre, with
 -- mouse buttons shortened to M4/M5. The game still sets the text, its range
 -- colour and whether it shows; this runs again after it does.
+-- With the "Large hotkey text" option off, the game's own style is put back.
 local HOTKEY_SIZE = 18
+local original = {}
+
+local function remember(hotkey)
+  if original[hotkey] then
+    return
+  end
+  local points = {}
+  for i = 1, hotkey:GetNumPoints() do
+    points[i] = { hotkey:GetPoint(i) }
+  end
+  local width, height = hotkey:GetSize()
+  original[hotkey] =
+    { font = { hotkey:GetFont() }, points = points, width = width, height = height, justify = hotkey:GetJustifyH() }
+end
+
+local function restore(hotkey)
+  local saved = original[hotkey]
+  if not saved then
+    return
+  end
+  if saved.font[1] then
+    hotkey:SetFont(unpack(saved.font))
+  end
+  hotkey:ClearAllPoints()
+  for _, point in ipairs(saved.points) do
+    hotkey:SetPoint(unpack(point))
+  end
+  hotkey:SetSize(saved.width, saved.height)
+  hotkey:SetJustifyH(saved.justify)
+end
 
 local function styleHotkey(button)
   local hotkey = button.HotKey
   if not hotkey then
+    return
+  end
+  remember(hotkey)
+  if not ns.db.largeHotkeys then
+    restore(hotkey)
     return
   end
   local path = hotkey:GetFont()
@@ -82,8 +118,7 @@ ns.Events.on("PLAYER_LOGIN", function()
   end
 end)
 
--- After the game rewrites the hotkey text for new keybinds.
-ns.Events.on("UPDATE_BINDINGS", function()
+local function styleAllHotkeys()
   if not Cluster.frame then
     return
   end
@@ -92,7 +127,24 @@ ns.Events.on("UPDATE_BINDINGS", function()
       styleHotkey(actionButton(k.key))
     end
   end
-end)
+end
+
+-- For the "Large hotkey text" option. Font strings aren't protected, so this
+-- is safe in combat. The game's text comes back on its next update or reload.
+function Cluster.refreshHotkeys()
+  styleAllHotkeys()
+  if not ns.db.largeHotkeys then
+    for _, k in ipairs(Cluster.geometry.keys) do
+      local button = k.key.button and actionButton(k.key)
+      if button and button.UpdateHotkeys then
+        button:UpdateHotkeys(button.buttonType)
+      end
+    end
+  end
+end
+
+-- After the game rewrites the hotkey text for new keybinds.
+ns.Events.on("UPDATE_BINDINGS", styleAllHotkeys)
 
 -- The spike found nothing moves the buttons back; this is a cheap safety check.
 ns.Events.on("EDIT_MODE_LAYOUTS_UPDATED", function()
