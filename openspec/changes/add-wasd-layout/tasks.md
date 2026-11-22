@@ -5,16 +5,16 @@
 - [ ] 1.2 By hand in Edit Mode, Action Bar 1: "Hide Bar Art", "Hide Bar Scrolling", "Always Show Buttons", "# of Icons" 12; drag Action Bar 2 into Action Bar 1's old spot
 
 ## 2. Logic, data and tests
-- [ ] 2.1 `Data/Layout.lua` (design.md section 2)
-- [ ] 2.2 `Logic/LayoutGeometry.lua` (design.md section 3)
-- [ ] 2.3 `layout_geometry_spec.lua`: keys centred on their grid points; scales follow the size tiers; stagger preserved; cluster size covers every key; button 11 above button 12 and right of the keyboard keys
-- [ ] 2.4 `layout_data_spec.lua`: buttons 1–12 each used once; every non-movement key has a size tier; movement keys have a direction
+- [x] 2.1 `Data/Layout.lua` (design.md section 2)
+- [x] 2.2 `Logic/LayoutGeometry.lua` (design.md section 3)
+- [x] 2.3 `layout_geometry_spec.lua`: keys centred on their grid points; scales follow the size tiers; stagger preserved; cluster size covers every key; button 11 above button 12 and right of the keyboard keys
+- [x] 2.4 `layout_data_spec.lua`: buttons 1–12 each used once; every non-movement key has a size tier; movement keys have a direction
 
 ## 3. Frames
-- [ ] 3.1 `UI/Cluster.lua`: container anchored to action bar 2, `applyLayout` at login, the `EDIT_MODE_LAYOUTS_UPDATED` check (design.md section 4)
-- [ ] 3.2 `UI/MovementKeys.lua`: game slot art, letters and game arrows (design.md section 5)
-- [ ] 3.3 Add new files to the TOC in load order; update `.luacheckrc` read globals
-- [ ] 3.4 `make check` passes
+- [x] 3.1 `UI/Cluster.lua`: container anchored to action bar 2, `applyLayout` at login, the `EDIT_MODE_LAYOUTS_UPDATED` check (design.md section 4)
+- [x] 3.2 `UI/MovementKeys.lua`: game slot art, letters and game arrows (design.md section 5)
+- [x] 3.3 Add new files to the TOC in load order; update `.luacheckrc` read globals
+- [x] 3.4 `make check` passes
 
 ## 4. In-game checks
 - [ ] 4.1 The cluster appears just above action bar 2, left-aligned with it, with Q, E, R, T, F, G, Z, X, C, V in keyboard positions around W/A/S/D, and buttons 11 and 12 in a column to the right; action bar 2, micro menu and bags are where they were

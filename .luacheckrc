@@ -13,5 +13,6 @@ read_globals = {
   "DEFAULT_CHAT_FRAME",
   "C_AddOns",
   "GetAddOnMetadata",
+  "MultiBarBottomLeft",
 }
 files["tests/**"] = { std = "+busted" }
