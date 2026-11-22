@@ -2,7 +2,7 @@ local ADDON, ns = ...
 local MovementKeys = {}
 ns.MovementKeys = MovementKeys
 
-local DIM = 0.6
+local LETTER_SIZE = 20
 
 -- Up and down use the main bar's page arrows; left and right rotate the up arrow.
 local ARROWS = {
@@ -39,7 +39,6 @@ local function createKey(parent, k, baseSize)
   key:SetSize(baseSize, baseSize)
   key:SetScale(k.scale)
   key:SetPoint("CENTER", parent, "TOPLEFT", k.cx / k.scale, -k.cy / k.scale)
-  key:SetAlpha(DIM)
 
   local background = key:CreateTexture(nil, "BACKGROUND")
   background:SetAllPoints()
@@ -64,6 +63,7 @@ local function createKey(parent, k, baseSize)
   end
 
   local letter = key:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+  letter:SetFont(letter:GetFont(), LETTER_SIZE, "THICKOUTLINE")
   letter:SetPoint("TOPLEFT", 4, -3)
   letter:SetText(k.key.label)
 

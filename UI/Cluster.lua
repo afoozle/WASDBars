@@ -6,6 +6,25 @@ local function actionButton(key)
   return _G["ActionButton" .. key.button]
 end
 
+-- The game's own hotkey text, made larger and moved to bottom centre. The game
+-- still sets the text, its range colour and whether it shows.
+local HOTKEY_SIZE = 18
+
+local function styleHotkey(button)
+  local hotkey = button.HotKey
+  if not hotkey then
+    return
+  end
+  local path = hotkey:GetFont()
+  if path then
+    hotkey:SetFont(path, HOTKEY_SIZE, "THICKOUTLINE")
+  end
+  hotkey:ClearAllPoints()
+  hotkey:SetPoint("BOTTOM", button, "BOTTOM", 0, 3)
+  hotkey:SetWidth(button:GetWidth())
+  hotkey:SetJustifyH("CENTER")
+end
+
 -- Moves the game's action buttons into the cluster. Out of combat only:
 -- always called through ns.combatQueue.
 local function applyLayout()
@@ -18,6 +37,7 @@ local function applyLayout()
       button:SetScale(k.scale)
       -- a scaled frame's offsets are in its own scaled units
       button:SetPoint("CENTER", frame, "TOPLEFT", k.cx / k.scale, -k.cy / k.scale)
+      styleHotkey(button)
     end
   end
   ns.debug("layout applied")
@@ -45,6 +65,14 @@ ns.Events.on("PLAYER_LOGIN", function()
   Cluster.frame = frame
 
   ns.combatQueue:run("layout", applyLayout)
+
+  -- in case the game lays the hotkey out again when it updates it
+  for _, k in ipairs(Cluster.geometry.keys) do
+    local button = k.key.button and actionButton(k.key)
+    if button and button.UpdateHotkeys then
+      hooksecurefunc(button, "UpdateHotkeys", styleHotkey)
+    end
+  end
 end)
 
 -- The spike found nothing moves the buttons back; this is a cheap safety check.

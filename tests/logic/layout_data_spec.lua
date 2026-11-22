@@ -20,11 +20,9 @@ describe("Data/Layout", function()
     end
   end)
 
-  it("gives every action button key a known size tier", function()
+  it("gives every key a known size", function()
     for _, key in ipairs(layout.keys) do
-      if key.button then
-        assert.is_number(layout.sizes[key.size], key.label .. " has no size tier")
-      end
+      assert.is_number(layout.sizes[key.size], key.label .. " has no size")
     end
   end)
 

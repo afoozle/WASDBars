@@ -12,6 +12,11 @@ describe("LayoutGeometry.compute", function()
     end
   end
 
+  local function edges(k)
+    local half = k.scale * BASE / 2
+    return k.cx - half, k.cx + half
+  end
+
   before_each(function()
     ns = {}
     load_addon_file("Data/Layout.lua", ns)
@@ -19,38 +24,58 @@ describe("LayoutGeometry.compute", function()
     geometry = ns.LayoutGeometry.compute(ns.Layout, BASE)
   end)
 
-  it("centres keys on their grid points", function()
-    local layout = {
-      sizes = { primary = 1 },
-      gap = 5,
-      keys = {
-        { label = "a", button = 1, x = 0, y = 0, size = "primary" },
-        { label = "b", button = 2, x = 2, y = 1, size = "primary" },
-      },
-    }
-    local g = ns.LayoutGeometry.compute(layout, 40)
-    assert.same({ 20, 20 }, { g.keys[1].cx, g.keys[1].cy })
-    assert.same({ 2 * 45 + 20, 45 + 20 }, { g.keys[2].cx, g.keys[2].cy })
+  local tiny = {
+    sizes = { big = 1, small = 0.5 },
+    gap = 5,
+    keys = {
+      { label = "a", x = 0, y = 0, size = "big" },
+      { label = "b", x = 1, y = 0, size = "small" },
+      { label = "c", x = 3, y = 0, size = "big" },
+      { label = "d", x = 0, y = 1, size = "small" },
+    },
+  }
+
+  it("packs neighbouring keys with the gap between them", function()
+    local g = ns.LayoutGeometry.compute(tiny, 40)
+    assert.equal((1 + 0.5) / 2 * 40 + 5, g.keys[2].cx - g.keys[1].cx)
   end)
 
-  it("starts the cluster at the leftmost and topmost key", function()
-    local layout = {
-      sizes = { primary = 1 },
+  it("puts a key after a jump on its grid point", function()
+    local g = ns.LayoutGeometry.compute(tiny, 40)
+    assert.equal(3 * 45, g.keys[3].cx - g.keys[1].cx)
+  end)
+
+  it("keeps rows one grid step apart", function()
+    local g = ns.LayoutGeometry.compute(tiny, 40)
+    assert.equal(45, g.keys[4].cy - g.keys[1].cy)
+  end)
+
+  it("fits the cluster box tightly around the keys", function()
+    local g = ns.LayoutGeometry.compute({
+      sizes = { small = 0.5 },
       gap = 0,
-      keys = { { label = "a", button = 1, x = 0.5, y = 1, size = "primary" } },
-    }
-    local g = ns.LayoutGeometry.compute(layout, 40)
-    assert.same({ 20, 20, 40, 40 }, { g.keys[1].cx, g.keys[1].cy, g.width, g.height })
+      keys = { { label = "a", x = 0.5, y = 1, size = "small" } },
+    }, 40)
+    assert.same({ 10, 10, 20, 20 }, { g.keys[1].cx, g.keys[1].cy, g.width, g.height })
   end)
 
-  it("scales keys by their size tier", function()
+  it("uses two sizes: big and small", function()
     assert.equal(1.0, find("Q").scale)
     assert.equal(0.8, find("T").scale)
+    assert.equal(0.8, find("W").scale)
     assert.equal(0.8, find("Mouse front").scale)
-    assert.equal(0.6, find("W").scale)
   end)
 
-  it("keeps the keyboard stagger", function()
+  it("leaves the same gap between every pair of neighbours in a row", function()
+    local row = { "Q", "W", "E", "R", "T" }
+    for i = 2, #row do
+      local _, right = edges(find(row[i - 1]))
+      local left = edges(find(row[i]))
+      assert.is_true(math.abs(left - right - ns.Layout.gap) < 1e-9, row[i - 1] .. "-" .. row[i])
+    end
+  end)
+
+  it("keeps the keyboard stagger at the start of each row", function()
     local step = BASE + ns.Layout.gap
     assert.equal(step / 4, find("A").cx - find("Q").cx)
     assert.equal(step / 2, find("Z").cx - find("A").cx)
@@ -60,8 +85,10 @@ describe("LayoutGeometry.compute", function()
 
   it("covers every key with the cluster box", function()
     for _, k in ipairs(geometry.keys) do
-      assert.is_true(k.cx - BASE / 2 >= 0 and k.cx + BASE / 2 <= geometry.width, k.key.label)
-      assert.is_true(k.cy - BASE / 2 >= 0 and k.cy + BASE / 2 <= geometry.height, k.key.label)
+      local left, right = edges(k)
+      local half = k.scale * BASE / 2
+      assert.is_true(left >= -1e-9 and right <= geometry.width + 1e-9, k.key.label)
+      assert.is_true(k.cy - half >= -1e-9 and k.cy + half <= geometry.height + 1e-9, k.key.label)
     end
   end)
 

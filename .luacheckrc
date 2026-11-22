@@ -27,6 +27,8 @@ read_globals = {
   "Enum",
   "MainActionBar",
   "UnitGUID",
+  "hooksecurefunc",
+  "UISpecialFrames",
   "Settings",
 }
 files["tests/**"] = { std = "+busted" }
