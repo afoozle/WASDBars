@@ -11,8 +11,11 @@ local function join(...)
   return table.concat(parts, " ")
 end
 
+-- light blue, so the addon's lines stand out from the chat around them
+local PREFIX = "|cff66ccffWASDBars:|r "
+
 function ns.print(...)
-  DEFAULT_CHAT_FRAME:AddMessage("WASDBars: " .. join(...))
+  DEFAULT_CHAT_FRAME:AddMessage(PREFIX .. join(...))
 end
 
 function ns.debug(...)

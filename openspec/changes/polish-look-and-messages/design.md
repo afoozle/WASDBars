@@ -20,6 +20,8 @@
 - `Bindings.request(onDone)` (all groups), `Bindings.isSetUp()`, `Bindings.statusSentence()`.
 
 ## 4. Messages
+The "WASDBars:" prefix is light blue (`|cff66ccff`), the rest the chat frame's own colour.
+
 | When | Chat |
 |---|---|
 | Confirm | `Keybinds set up.` |
