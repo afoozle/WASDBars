@@ -12,8 +12,11 @@ Logic/Settings.lua
 Logic/CombatQueue.lua
 Logic/LayoutGeometry.lua
 Logic/Placement.lua
+Logic/BindingPlan.lua
 Data/Layout.lua
+Data/BindingGroups.lua
 UI/Cluster.lua
 UI/MovementKeys.lua
 UI/EditMode.lua
+UI/Bindings.lua
 Core/Slash.lua
