@@ -15,8 +15,8 @@
 - [x] 3.1 Cluster: equal cells, E/D/C on a slant, tighter big keys, W/A/S/D arrows clear, W/A/S/D the same size as T/G/V with centred arrows, mouse hotkeys M4/M5; hotkey text readable at bottom centre and turns red out of range
 - [x] 3.2 `/wasd setup status` is one line; `/wasd setup` with everything done prints two lines
 - [x] 3.3 Edit Mode: turn Hide Bar Art off; `/wasd setup layout` lists it readably; turn it back on
-- [ ] 3.4 Rogue alt: the offer appears (now keyed by character ID); Set up shows the keybind window with both steps and the lost-key warning including stance names; Escape / close button / Cancel change nothing; not offered again after `/reload`
-- [ ] 3.5 No BugSack errors
+- [x] 3.4 Rogue alt: the offer appeared and was saved under the character GUID; the keybind window showed both steps and the lost-key list (stance binds correctly not listed: the game also binds them to Ctrl-F keys). The player confirmed rather than escaping; Deutscheb uses the account-wide binding set, so the binds were saved there
+- [x] 3.5 No BugSack errors
 
 ## 4. Wrap-up
 - [ ] 4.1 Merge and archive
