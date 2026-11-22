@@ -86,7 +86,7 @@ No packaging or releases until `add-curseforge-publishing`. The TOC has `## Vers
 ### Git Workflow
 - `main` branch; one branch per change named after it (for example `add-wasd-layout`)
 - Conventional commit messages (`feat:`, `fix:`, `chore:`, `test:`, `docs:`, `perf:`)
-- No GitHub remote until there's a working addon to try on the Windows PC
+- GitHub remote: https://github.com/afoozle/WASDBars (`origin`, over SSH); push `main` only
 - When a change is finished: merge and archive the OpenSpec change
 
 ### Working with Claude Code
@@ -99,7 +99,7 @@ No packaging or releases until `add-curseforge-publishing`. The TOC has `## Vers
   - SavedVariables (written on `/reload`, logout or exit): `_forever_/WTF/Account/AFOOZLE/SavedVariables/` (`WASDBars.lua`, BugGrabber's errors in `!BugGrabber.lua`)
   - Taint log: `_forever_/Logs/taint.log` (only if `/console taintLog 1` is on and something was tainted)
   - Test characters: Zoolefa (druid, level 21, no mount until about level 40) and Deutscheb (rogue alt)
-- **Windows PC:** later, once there's a working addon worth trying there (`add-curseforge-publishing` adds a proper install path).
+- **Windows PC:** installs from GitHub by following `INSTALL.md` (a git clone into the Forever AddOns folder; LibEditMode through CurseForge). `add-curseforge-publishing` would add packaged releases.
 - WASDBars settings are account-wide on each machine (`SavedVariables: WASDBarsDB`); they don't sync between machines. Keybinds follow the game's own keybind saving.
 
 ## Domain Context

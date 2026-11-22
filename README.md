@@ -6,6 +6,10 @@ It's a personal tool, built for a feral druid who plays with WASD movement.
 
 **Requires [LibEditMode](https://www.curseforge.com/wow/addons/libeditmode)**, installed from CurseForge. Move and scale the cluster in the game's Edit Mode.
 
+## Installing
+
+See **[INSTALL.md](INSTALL.md)** (Windows and macOS). It's written so that a person, or an AI agent told "install this addon: https://github.com/afoozle/WASDBars", can follow it.
+
 ## Development (Mac)
 
 Needs Homebrew and Python 3. Then, once:
