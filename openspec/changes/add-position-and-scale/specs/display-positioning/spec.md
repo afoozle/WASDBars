@@ -2,39 +2,38 @@
 
 ## ADDED Requirements
 
-### Requirement: Move the display
-The player SHALL be able to unlock the display, drag it anywhere on screen, and lock it again. The position SHALL be saved (account-wide, per machine) and the display SHALL NOT be draggable off screen. Unlocking SHALL be refused in combat.
+### Requirement: Move the display in Edit Mode
+The display SHALL be its own element in the game's Edit Mode, named "WASDBars", independent of the game's action bars. With Edit Mode open the player SHALL be able to select and drag it anywhere on screen; it SHALL NOT go off screen. Its position SHALL be saved per Edit Mode layout (account-wide, per machine).
 
 #### Scenario: Moving
-- **WHEN** the player types `/wasd unlock`, drags the display, types `/wasd lock` and reloads
+- **WHEN** the player opens Edit Mode, drags the display, closes Edit Mode and reloads
 - **THEN** the display stays where it was dropped
 
-#### Scenario: Unlock in combat
-- **WHEN** the player types `/wasd unlock` in combat
-- **THEN** chat says it can't be moved in combat and nothing changes
+#### Scenario: Independent of the bars
+- **WHEN** the player moves action bar 2 in Edit Mode
+- **THEN** the display does not move
 
 ### Requirement: Scale the display
-The player SHALL be able to scale the whole display between 0.5 and 2.0. Every key SHALL scale by the same factor, keeping the layout and size order. Values outside the range SHALL be limited with a message, and non-numbers SHALL be rejected.
+The display's Edit Mode settings SHALL include a Scale slider from 0.5 to 2.0. Every key SHALL scale by the same factor, keeping the layout and size order. The scale SHALL be saved with the position.
 
 #### Scenario: Scaling
-- **WHEN** the player types `/wasd scale 1.5`
-- **THEN** the display is 1.5 times its default size, and the setting is saved
+- **WHEN** the player sets Scale to 1.5 in the display's Edit Mode settings and reloads
+- **THEN** the display is 1.5 times its default size
 
-#### Scenario: Too large
-- **WHEN** the player types `/wasd scale 5`
-- **THEN** the scale is set to 2.0 and chat says it was limited
-
-#### Scenario: In combat
-- **WHEN** the player changes the scale twice during combat
-- **THEN** chat shows "WASDBars: will apply after combat." once and the latest value applies when combat ends
-
-### Requirement: Reset
-The player SHALL be able to restore the default position and scale, and a missing or damaged saved position SHALL fall back to the default.
+### Requirement: Reset and defaults
+The display SHALL start at a default position and scale 1.0 in any layout where it hasn't been moved. The player SHALL be able to restore the default position and scale from its Edit Mode settings. A missing or damaged saved position SHALL fall back to the default without errors.
 
 #### Scenario: Reset
-- **WHEN** the player types `/wasd reset`
-- **THEN** the display returns to bottom centre at scale 1.0
+- **WHEN** the player uses "Reset To Default Position" and resets the settings in the display's Edit Mode settings
+- **THEN** the display returns to the default position at scale 1.0
 
 #### Scenario: Damaged saved position
 - **WHEN** the saved position is invalid at login
 - **THEN** the display uses the default position and no error occurs
+
+### Requirement: Combat safety
+The display SHALL never be moved or scaled during combat. Position and scale applied outside Edit Mode, such as at login or on a layout change, SHALL go through the combat queue.
+
+#### Scenario: Layout change in combat
+- **WHEN** the active Edit Mode layout changes during combat
+- **THEN** the display moves to that layout's position when combat ends, with no errors

@@ -17,7 +17,7 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 | 0 | `spike-button-takeover` ✅ passed 2026-11-22, archived | none (throwaway) | A rough, throwaway addon that proves the game's action buttons can be moved into the WASD shape on Forever and stay there. Go/no-go for the whole project; its findings feed every later change |
 | 1 | `setup-addon-foundation` ✅ done 2026-11-22, archived | `addon-foundation` | git repo in standard addon layout, lint, formatting, unit tests, CLAUDE.md, core skeleton (settings, events, combat queue, slash command) |
 | 2 | `add-wasd-layout` ✅ done 2026-11-22, archived | `wasd-layout` | Move the game's action buttons 1–12 into the WASD shape with size tiers and movement keys (letters and arrows) |
-| 3 | `add-position-and-scale` | `display-positioning` | Move, lock, scale and reset the display |
+| 3 | `add-position-and-scale` | `display-positioning` | Move, scale and reset the display as its own Edit Mode element (LibEditMode) |
 | 4 | `add-key-binding-setup` | `key-binding-setup` | Confirmed setup of the WASD-cluster binds and the number-row binds (`/wasd setup keys`) |
 | 5 | `add-edit-mode-setup` | `edit-mode-setup` | Confirmed Edit Mode arrangement (hide main bar art and scrolling, always show buttons, 12 icons, action bar 2 in action bar 1's old spot) in a "WASDBars" layout (`/wasd setup layout`), and the first-time setup offered once at first login that runs keys then layout |
 
@@ -35,7 +35,7 @@ If the spike fails there is no fallback build: stop and rethink (for example, co
 - Lua 5.1 (WoW addon runtime)
 - The game's own action buttons (`ActionButton1`–`ActionButton12`), arranged by the addon
 - Target client: WoW Forever, interface `16001`, TOC suffix `_Forever`. Other addons treat Forever (`WOW_PROJECT_ID == WOW_PROJECT_CAMELOT`) like the modern retail UI, so expect retail-style frames and possibly Edit Mode; the spike confirms
-- No runtime libraries (no Ace3, no LibActionButton)
+- Helper libraries are welcome when they mean less addon code. The player installs them from CurseForge and WASDBars declares them as TOC dependencies; they are never copied into the repo. In use: LibEditMode (bundles LibStub). The addon still never replaces the game's action buttons, so no LibActionButton
 - Development tooling (not shipped): luacheck, StyLua, busted
 
 ## Folder Layout
@@ -124,5 +124,5 @@ No packaging or releases until `add-curseforge-publishing`. The TOC has `## Vers
 - Fail quietly: no chat spam, no errors with Lua error reporting off.
 
 ## External Dependencies
-- Runtime: none.
+- Runtime: LibEditMode (CurseForge, installed by the player; a TOC dependency).
 - Development (Mac): Homebrew, Python 3, StyLua, and a project-local Lua 5.1 + LuaRocks (luacheck, busted), installed by `make setup`. BugGrabber + BugSack in game.

@@ -4,6 +4,8 @@ A small World of Warcraft: Forever addon that arranges the game's own action bar
 
 It's a personal tool, built for a feral druid who plays with WASD movement.
 
+**Requires [LibEditMode](https://www.curseforge.com/wow/addons/libeditmode)**, installed from CurseForge. Move and scale the cluster in the game's Edit Mode.
+
 ## Development (Mac)
 
 Needs Homebrew and Python 3. Then, once:
