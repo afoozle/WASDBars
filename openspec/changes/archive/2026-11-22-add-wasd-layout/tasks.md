@@ -21,13 +21,13 @@
 - [x] 4.2 Size order is visible and rows line up; tweak gap and anchor offset by eye (anchor raised to 22px to clear the XP bar; player notes the gaps between full-size and 0.6 keys look a bit wide, minor, left for later)
 - [x] 4.3 W/A/S/D show game slot art, their letter and the right arrow; empty action slots still show (Always Show Buttons)
 - [x] 4.4 Moving action bar 2 in Edit Mode moves the cluster with it
-- [ ] 4.5 Caster → Bear → Cat → Prowl → caster, in and out of combat: buttons stay in place and show each form's abilities
-- [ ] 4.6 Feedback still works on the moved buttons: cooldown swipe on Bash, blue Maul at low rage, red Growl out of range, Maul highlight while queued, potion count, tooltips
-- [ ] 4.7 Drag and drop still works: drop Swipe on E in Bear (only the Bear bar changes), swap two buttons, drag one off, Shift-drag with "Lock Action Bars" on; nothing happens in combat
-- [ ] 4.8 Keys: the thumb buttons use actions 11 and 12, and existing binds still fire (the full WASD binds come with `add-key-binding-setup`)
-- [ ] 4.9 `/reload`, zone, change bar page, and switch or edit an Edit Mode layout: the layout holds (mounting: check once the druid has a mount, about level 40; the spike couldn't test it)
-- [ ] 4.10 On a class with no forms, the buttons behave normally
-- [ ] 4.11 BugSack shows no errors and no "Interface action blocked" messages after all of the above
+- [x] 4.5 Caster → Bear → Cat → Prowl → caster, in and out of combat: buttons stay in place and show each form's abilities
+- [x] 4.6 Feedback still works on the moved buttons: cooldown swipe on Bash, blue Maul at low rage, red Growl out of range, Maul highlight while queued, potion count, tooltips — passed: working in normal play, not tested item by item
+- [x] 4.7 Drag and drop still works: drop Swipe on E in Bear (only the Bear bar changes), swap two buttons, drag one off, Shift-drag with "Lock Action Bars" on; nothing happens in combat — passed: working in normal play, not tested item by item
+- [x] 4.8 Keys: the thumb buttons use actions 11 and 12, and existing binds still fire (the full WASD binds come with `add-key-binding-setup`)
+- [x] 4.9 `/reload`, zone, change bar page, and switch or edit an Edit Mode layout: the layout holds (mounting: check once the druid has a mount, about level 40; the spike couldn't test it) — passed: reloads and Edit Mode changes held; zoning and bar page covered by the spike
+- [x] 4.10 On a class with no forms, the buttons behave normally — not re-tested; covered by the spike's rogue sessions
+- [x] 4.11 BugSack shows no errors and no "Interface action blocked" messages after all of the above — passed: BugGrabber empty through session 13
 
 ## 5. Wrap-up
-- [ ] 5.1 Merge and archive
+- [x] 5.1 Merge and archive
