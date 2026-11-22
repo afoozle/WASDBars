@@ -21,7 +21,8 @@ local function styleHotkey(button)
   end
   hotkey:ClearAllPoints()
   hotkey:SetPoint("BOTTOM", button, "BOTTOM", 0, 3)
-  hotkey:SetWidth(button:GetWidth())
+  -- no width limit, so mouse button names aren't cut to "M..."
+  hotkey:SetWidth(0)
   hotkey:SetJustifyH("CENTER")
 end
 

@@ -17,14 +17,14 @@ The addon works, but several things look rough or read badly in game. This chang
 - Form binds show the form's name (or "Stance bar button n" on a class without that form), never "Form n".
 - **Chat style:** "WASDBars: " plus one capitalised sentence ending in a full stop; one line per action ("Keybinds set up.", "Your Edit Mode layout is ready.", "Your Edit Mode layout needs 2 changes:" with "  - ..." lines). `/wasd setup status` is one line: "Keybinds set up (WASD keys and number row). Edit Mode layout ready."
 - **Key sizes:** two sizes, big 1.0 and small 0.8; W/A/S/D move from 0.6 to 0.8.
-- **Spacing:** each row is packed with the same 4px gap between neighbours; the first key of each run sits on its keyboard grid point, keeping the stagger and the mouse column.
-- **W/A/S/D:** fully opaque (no 60% fade), letters larger with a thick outline.
+- **Spacing:** every key takes the same square cell, small keys centred in theirs; the gap between cells shrinks from 4 to 2 pixels; rows keep a real keyboard's offsets so E, D and C run on a slant.
+- **W/A/S/D:** fully opaque (no 60% fade), no letters, bigger arrows.
 - **Hotkey text** on the 12 cluster buttons: the game's own text, larger (18) with a thick outline, at bottom centre. The game still sets the text, its range colour and when it shows.
 
 ## Decided when grilled (2026-11-22)
 - The window describes what the setup does, not each key's new action ("Cluster Q" said nothing); warnings are what matters.
 - A standard panel (title bar, close button) over a popup look-alike, made to look tidy.
-- Pack the spacing and use only two sizes (the player's own pick over growing W/A/S/D alone).
+- Two sizes only (the player's own pick over growing W/A/S/D alone). Packing rows was tried first and dropped after the in-game look: equal cells, the real keyboard slant and a smaller gap instead; W/A/S/D letters dropped in favour of bigger arrows.
 - Hotkey text bottom centre rather than centred, so it doesn't cover the icon or the cooldown numbers; to be judged in game.
 
 ## Depends on

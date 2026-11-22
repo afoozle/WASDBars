@@ -2,12 +2,13 @@
 
 ## 1. Layout (`Logic/LayoutGeometry.lua`, `Data/Layout.lua`)
 - `sizes = { big = 1.0, small = 0.8 }`; every key (movement keys too) names its size.
-- Keys are sorted into rows; a key exactly one grid step right of the previous key in its row is placed `gap` pixels from it (`prev.cx + (prev.scale + scale) / 2 * baseSize + gap`). Any other key, the first in a row or after a jump like the mouse column, is centred on its grid point (`x * step`). Rows stay `step` apart vertically.
-- The cluster box is fitted tightly round the keys' scaled extents.
+- Every key gets the same square cell centred on its grid point (`x * step`, `y * step`, `step = baseSize + gap`); smaller keys sit in the middle of theirs. The rows keep a real keyboard's offsets (A row a quarter key right of the Q row, Z row half a key further), so E, D and C run on a slant.
+- `gap` is 2 pixels (was 4).
+- First tried packing each row with an even gap; in game that lost the keyboard slant (R, F and C stacked in a column) and made small keys take less room than big ones. The player asked for equal cells, the real stagger, and less space between big keys instead.
 
 ## 2. Key labels
-- `UI/MovementKeys.lua`: no alpha fade; the letter is the `GameFontHighlightLarge` font at 20 with `THICKOUTLINE` (scaled with the key).
-- `UI/Cluster.lua`: each cluster button's `HotKey` font string gets its own font at 18 with `THICKOUTLINE`, anchored `BOTTOM` (0, 3), full button width, centred. Applied with the layout, and again after the game's `UpdateHotkeys` (`hooksecurefunc`) in case it re-lays the text out. Font strings aren't protected, but this runs with the layout through the combat queue anyway.
+- `UI/MovementKeys.lua`: no letters (the arrows matter more); arrows 0.75 of the key (were 0.5); no alpha fade.
+- `UI/Cluster.lua`: each cluster button's `HotKey` font string gets its own font at 18 with `THICKOUTLINE`, anchored `BOTTOM` (0, 3), centred, with no width limit (a width showed the mouse buttons as "M..."). Applied with the layout, and again after the game's `UpdateHotkeys` (`hooksecurefunc`) in case it re-lays the text out.
 
 ## 3. Keybind window (`UI/Bindings.lua`)
 - `WASDBarsKeybindWindow`, `BasicFrameTemplateWithInset`, 440 wide, top centre, `DIALOG` strata, movable, clamped, in `UISpecialFrames` (Escape closes it).

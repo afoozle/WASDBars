@@ -1,11 +1,12 @@
 local ADDON, ns = ...
 
--- The WASD cluster. Positions are in key units (one big key plus a gap); keys
--- in a row are packed (see Logic/LayoutGeometry.lua). `button` is the action button number.
+-- The WASD cluster. Positions are in key units (one big key plus a gap), with
+-- rows offset like a real keyboard; each key is centred on its grid point.
+-- `button` is the action button number.
 -- `label` is drawn only on movement keys; on action buttons it is documentation.
 ns.Layout = {
   sizes = { big = 1.0, small = 0.8 },
-  gap = 4, -- pixels between neighbouring keys
+  gap = 2, -- pixels between big keys
   -- default Edit Mode position (relative to the screen) and scale, for layouts where it hasn't been moved
   position = { point = "BOTTOMLEFT", x = 200, y = 81 },
   scale = 1.0,

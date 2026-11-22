@@ -2,8 +2,6 @@ local ADDON, ns = ...
 local MovementKeys = {}
 ns.MovementKeys = MovementKeys
 
-local LETTER_SIZE = 20
-
 -- Up and down use the main bar's page arrows; left and right rotate the up arrow.
 local ARROWS = {
   up = { atlas = "UI-HUD-ActionBar-PageUpArrow-Up", rotation = 0 },
@@ -34,7 +32,7 @@ end
 local function createKey(parent, k, baseSize)
   local template = _G.ActionButton1
   -- Built at full button size and shrunk with SetScale like the action buttons,
-  -- so the art, letter and arrow all shrink together.
+  -- so the art and arrow shrink together.
   local key = CreateFrame("Frame", nil, parent)
   key:SetSize(baseSize, baseSize)
   key:SetScale(k.scale)
@@ -55,17 +53,12 @@ local function createKey(parent, k, baseSize)
   local arrowInfo = ARROWS[k.key.movement]
   local arrow = key:CreateTexture(nil, "OVERLAY")
   arrow:SetPoint("CENTER")
-  arrow:SetSize(baseSize * 0.5, baseSize * 0.5)
+  arrow:SetSize(baseSize * 0.75, baseSize * 0.75)
   if arrowInfo and arrow:SetAtlas(arrowInfo.atlas) ~= false then
     arrow:SetRotation(arrowInfo.rotation)
   else
     ns.debug("no arrow art for " .. k.key.label)
   end
-
-  local letter = key:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-  letter:SetFont(letter:GetFont(), LETTER_SIZE, "THICKOUTLINE")
-  letter:SetPoint("TOPLEFT", 4, -3)
-  letter:SetText(k.key.label)
 
   return key
 end
