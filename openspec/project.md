@@ -20,7 +20,7 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 | 3 | `add-position-and-scale` ✅ done 2026-11-22, archived | `display-positioning` | Move, scale and reset the display as its own Edit Mode element (LibEditMode) |
 | 4 | `add-key-binding-setup` ✅ done 2026-11-22, archived | `key-binding-setup` | Confirmed setup of the WASD-cluster binds and the number-row binds, 1–0, - and = to action bar 2 (`/wasd setup keys`) |
 | 5 | `add-edit-mode-setup` ✅ done 2026-11-22, archived | `edit-mode-setup` | First-time setup offered once per character (keys, then a read-only Edit Mode layout check that lists manual fixes), `/wasd setup`, and a Run setup button in the AddOns settings |
-| 6 | `polish-look-and-messages` | changes to `wasd-layout`, `key-binding-setup`, `edit-mode-setup` | Tighter key spacing, clearer key labels, and binding popups and chat messages that read well |
+| 6 | `polish-look-and-messages` ✅ done 2026-11-22, archived | changes to `wasd-layout`, `key-binding-setup`, `edit-mode-setup` | Tighter key spacing, clearer key labels, and binding popups and chat messages that read well |
 
 **Optional, if it goes public**
 
