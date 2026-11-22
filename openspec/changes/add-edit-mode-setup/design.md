@@ -1,29 +1,22 @@
-# Design: Edit Mode setup and first-time setup
+# Design: First-time setup and Edit Mode layout check
 
-Draft; refine when this change is grilled and after the feasibility check.
+## 1. Layout check (`Logic/LayoutCheck.lua`, pure, unit tested)
+- `LayoutCheck.problems(readings)`: `readings` has `numIcons`, `alwaysShowButtons`, `hideBarArt`, `hideBarScrolling`, `bar2Shown`, `bar1OverlapsBar2`. Returns the manual fix for each failing check, in that order. A `nil` reading (the game couldn't tell) skips its check.
+- `LayoutCheck.overlaps(a, b)`: rects `{ left, bottom, width, height }`; touching edges don't overlap.
+- `LayoutCheck.statusLine(fixes)`: "Action bar layout: OK" or "Action bar layout: 2 things to fix (/wasd setup layout)".
 
-## 1. Feasibility check (do first)
-A throwaway test, like the spike but smaller, out of combat:
-1. Read the layouts with `C_EditMode.GetLayouts()`; find the active one and the systems for Action Bar 1 (`Enum.EditModeSystem.ActionBar`, main bar index) and Action Bar 2.
-2. Copy the active layout into a new account layout named "WASDBars"; set Action Bar 1's hide-art, hide-scrolling, always-show-buttons and number-of-icons (12) settings Action Bar 2's anchor to Action Bar 1's old position (relative to the screen, not to Action Bar 1), and Action Bar 1 moved out of the way so its empty frame doesn't cover anything; `C_EditMode.SaveLayouts(...)`, then `C_EditMode.SetActiveLayout(...)`.
-3. Check: the change shows (straight away, or after `/reload`), it survives `/reload` and relog, the WASD cluster is unaffected, opening Edit Mode afterwards shows the "WASDBars" layout with those settings, and BugSack shows no taint or blocked actions (including when entering Edit Mode or combat afterwards).
-4. Record which `Enum` values and setting IDs Forever uses, and whether a reload is needed.
+## 2. Readings (`UI/Setup.lua`)
+- Action bar 1 settings come from the bar itself: `MainActionBar:GetSettingValue(Enum.EditModeActionBarSetting.<name>)` for `NumIcons`, `AlwaysShowButtons`, `HideBarArt`, `HideBarScrolling` (booleans may come back as 0/1). Missing enum entries or methods give `nil`, so the check is skipped rather than erroring.
+- `bar2Shown` is `MultiBarBottomLeft:IsShown()`; the overlap compares both bars' `GetRect()` scaled by `GetEffectiveScale()`.
+- Read only: nothing is written to Edit Mode, its frames or its tables.
 
-**Pass:** build section 2. **Fail:** build section 3's first-time setup with the manual-steps fallback only.
+## 3. Setup chain and offer (`UI/Setup.lua`)
+- `ns.Setup.run()`: `ns.Bindings.requestAll(ns.Setup.checkLayout)`, so WASD keys → number row → layout check, each after the previous popup closes.
+- `ns.Setup.checkLayout()` prints "action bar layout is set up." or "in Edit Mode, in your '<layout>' layout:" followed by one line per fix.
+- At `PLAYER_LOGIN`: if `setupOffered["Name-Realm"]` isn't set and the character's keys aren't all set up, show the `WASDBARS_OFFER_SETUP` popup through the combat queue (`"setup-offer"`) and record the offer. Set up runs `ns.Setup.run()`; Not now does nothing.
 
-The addon only uses `C_EditMode` functions and never writes to `EditModeManagerFrame` or its tables, to avoid taint.
+## 4. Options page (`UI/Options.lua`)
+A canvas page registered with `Settings.RegisterCanvasLayoutCategory` / `RegisterAddOnCategory`: title, one line of text, and a Run setup button calling `ns.Setup.run`.
 
-## 2. Edit Mode arrangement (`ns.EditModeSetup`)
-- `ns.EditModeSetup.status()`: `"applied"` if the active layout is "WASDBars" with the expected settings, otherwise `"not applied"`.
-- `ns.EditModeSetup.request(onDone)`: out of combat only (in combat: queue under `"setup-layout"`). If already applied, say so. Otherwise show a StaticPopup listing what will change ("Create Edit Mode layout 'WASDBars' from '<current>'", "Action Bar 1: hide art and page arrows", "Action Bar 2: move to where Action Bar 1 was") with Confirm / Cancel. Confirm applies it (and reloads if the check found that necessary, telling the player first). `onDone` runs afterwards.
-- Pure parts (finding the right systems in a layout table, building the modified copy) live in `Logic/EditModeLayout.lua` and are unit tested with a captured layout table from the feasibility check.
-
-## 3. First-time setup
-- At `PLAYER_LOGIN`, if `WASDBarsDB.setupOffered` isn't set and not in combat: show "Set up WASDBars? This will bind keys and arrange your action bars." with Set up / Not now. Either answer sets `setupOffered`.
-- Set up runs `ns.Bindings.request("wasd")` → `ns.Bindings.request("numbers")` → `ns.EditModeSetup.request()`, each step starting when the previous popup closes. Each keeps its own confirmation; cancelling one step moves on to the next.
-
-## 4. Commands
-- `/wasd setup`: run the whole first-time setup again
-- `/wasd setup keys`: keybind part only (from `add-key-binding-setup`)
-- `/wasd setup layout`: Edit Mode part only (or the manual steps if the fallback is in use)
-- `/wasd setup status`: keybind lines plus "Action bar layout: set up / not set up"
+## 5. Commands (`Core/Slash.lua`)
+`Slash.setup` gains `""` (whole setup) and `layout`; `status` adds the layout line.

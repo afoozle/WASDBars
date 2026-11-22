@@ -2,47 +2,44 @@
 
 ## ADDED Requirements
 
-### Requirement: Confirmed Edit Mode arrangement
-`/wasd setup layout` SHALL show what it will change and, only after the player confirms, switch to an Edit Mode layout named "WASDBars" (created from the player's current layout if it doesn't exist) in which Action Bar 1's art and page arrows are hidden, its empty slots always show, it has 12 icons, and Action Bar 2 sits where Action Bar 1 was. The addon SHALL NOT edit the game's preset layouts or any layout other than "WASDBars".
+### Requirement: Edit Mode layout check
+`/wasd setup layout` SHALL read the active Edit Mode layout and list, as manual Edit Mode steps, each of these that is off: Action Bar 1 "# of Icons" is 12, "Always Show Buttons" on, "Hide Bar Art" on, "Hide Bar Scrolling" on, Action Bar 2 turned on, and Action Bar 1 not overlapping Action Bar 2. The addon SHALL NOT change any Edit Mode layout, frame or table.
 
-#### Scenario: Confirm
-- **WHEN** the player types `/wasd setup layout` and clicks Confirm
-- **THEN** the active Edit Mode layout is "WASDBars", the main bar art and page arrows are gone, empty cluster slots still show, action bar 2 is where action bar 1 was, and the WASD cluster is unchanged
-- **AND** it stays that way after `/reload` and relogging
+#### Scenario: Something to fix
+- **WHEN** Action Bar 1 has 8 icons and the player types `/wasd setup layout`
+- **THEN** chat says to set Action Bar 1's "# of Icons" to 12
+- **AND** nothing in Edit Mode changes
 
-#### Scenario: Cancel
-- **WHEN** the player clicks Cancel
-- **THEN** no Edit Mode layout changes
+#### Scenario: All set
+- **WHEN** every checked setting is right
+- **THEN** chat says the action bar layout is set up
 
-#### Scenario: Already set up
-- **WHEN** the "WASDBars" layout is active with the expected settings and the player runs `/wasd setup layout`
-- **THEN** chat says it's already set up and no popup is shown
+#### Scenario: Setting can't be read
+- **WHEN** the game doesn't report one of the settings
+- **THEN** that check is skipped without errors
 
-#### Scenario: Not possible on this client
-- **WHEN** the feasibility check failed and the player runs `/wasd setup layout`
-- **THEN** chat lists the manual Edit Mode steps and nothing is changed
+### Requirement: First-time setup offered once per character
+At a character's first login with WASDBars, if its keys aren't all set up, the addon SHALL offer the setup once. "Set up" SHALL run the WASD keys popup, then the number row popup, then the layout check, each after the previous one closes. Either answer SHALL be remembered for that character.
 
-### Requirement: First-time setup offered once
-At the first login with WASDBars, the addon SHALL offer the first-time setup once. Choosing "Set up" SHALL run the keybind setup and then the Edit Mode arrangement, each with its own confirmation. Either answer SHALL be remembered so the offer isn't shown again.
-
-#### Scenario: First login
-- **WHEN** the player logs in with WASDBars for the first time and clicks "Set up"
-- **THEN** the WASD keys popup appears, then the number row popup, then the Edit Mode popup, each only after the previous one closes
+#### Scenario: New character
+- **WHEN** a character whose keys aren't set up logs in with WASDBars for the first time and the player clicks "Set up"
+- **THEN** the WASD keys popup appears, then the number row popup, then the layout check in chat
 
 #### Scenario: Not now
 - **WHEN** the player clicks "Not now"
-- **THEN** nothing changes and the offer isn't shown at later logins
+- **THEN** nothing changes and that character isn't offered the setup again
 
-### Requirement: Each part can be re-run on its own
-`/wasd setup` SHALL run the whole setup again; `/wasd setup keys` and `/wasd setup layout` SHALL run just that part; `/wasd setup status` SHALL report the state of each part.
+#### Scenario: Keys already set up
+- **WHEN** a character whose keys are all set up logs in
+- **THEN** no offer is shown
+
+### Requirement: Running setup again
+`/wasd setup` and the Run setup button on the WASDBars page in the game's AddOns settings SHALL run the whole setup; `/wasd setup keys` and `/wasd setup layout` SHALL run one part; `/wasd setup status` SHALL report each key group and the layout.
 
 #### Scenario: Status
-- **WHEN** the keybinds are set up but the Edit Mode arrangement isn't, and the player types `/wasd setup status`
-- **THEN** chat shows the keybind groups as set up and "Action bar layout: not set up"
+- **WHEN** the keys are set up, Hide Bar Art is off, and the player types `/wasd setup status`
+- **THEN** chat shows both key groups as set up and "Action bar layout: 1 thing to fix (/wasd setup layout)"
 
-### Requirement: No taint from Edit Mode changes
-The addon SHALL change Edit Mode only through `C_EditMode` functions, out of combat, and SHALL NOT write to the game's Edit Mode frames or tables. Changing the layout SHALL cause no "Interface action blocked" errors, including when entering combat or opening Edit Mode afterwards.
-
-#### Scenario: Requested in combat
-- **WHEN** the player runs `/wasd setup layout` in combat
-- **THEN** chat shows "WASDBars: will apply after combat." and the confirmation appears when combat ends
+#### Scenario: Options button
+- **WHEN** the player clicks Run setup on the WASDBars options page
+- **THEN** the setup runs as with `/wasd setup`

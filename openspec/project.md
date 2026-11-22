@@ -19,7 +19,7 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 | 2 | `add-wasd-layout` ✅ done 2026-11-22, archived | `wasd-layout` | Move the game's action buttons 1–12 into the WASD shape with size tiers and movement keys (letters and arrows) |
 | 3 | `add-position-and-scale` ✅ done 2026-11-22, archived | `display-positioning` | Move, scale and reset the display as its own Edit Mode element (LibEditMode) |
 | 4 | `add-key-binding-setup` ✅ done 2026-11-22, archived | `key-binding-setup` | Confirmed setup of the WASD-cluster binds and the number-row binds, 1–0, - and = to action bar 2 (`/wasd setup keys`) |
-| 5 | `add-edit-mode-setup` | `edit-mode-setup` | Confirmed Edit Mode arrangement (hide main bar art and scrolling, always show buttons, 12 icons, action bar 2 in action bar 1's old spot) in a "WASDBars" layout (`/wasd setup layout`), and the first-time setup offered once at first login that runs keys then layout |
+| 5 | `add-edit-mode-setup` | `edit-mode-setup` | First-time setup offered once per character (keys, then a read-only Edit Mode layout check that lists manual fixes), `/wasd setup`, and a Run setup button in the AddOns settings |
 
 **Optional, if it goes public**
 
