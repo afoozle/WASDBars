@@ -7,7 +7,7 @@ ns.Layout = {
   sizes = { primary = 1.0, secondary = 0.8, movement = 0.6 },
   gap = 4, -- pixels between primary keys
   -- default Edit Mode position (relative to the screen) and scale, for layouts where it hasn't been moved
-  position = { point = "BOTTOM", x = -250, y = 150 },
+  position = { point = "BOTTOMLEFT", x = 200, y = 81 },
   scale = 1.0,
   keys = {
     { label = "Q", button = 1, x = 0.5, y = 0, size = "primary" },

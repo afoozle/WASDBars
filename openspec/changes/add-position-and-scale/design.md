@@ -11,7 +11,7 @@
 - Positions from the library are `point, x, y` relative to `UIParent` (same point on both), with offsets in the frame's own scaled units.
 
 ## 2. Settings
-- `Settings.defaults.layouts = {}`; saved as `WASDBarsDB.layouts[layoutName] = { point = "BOTTOM", x = -250, y = 150, scale = 1.0 }`.
+- `Settings.defaults.layouts = {}`; saved as `WASDBarsDB.layouts[layoutName] = { point = "BOTTOMLEFT", x = 200, y = 81, scale = 1.0 }`.
 - The default position and scale live in `Data/Layout.lua` as `ns.Layout.position = { point = ..., x = ..., y = ... }` and `ns.Layout.scale = 1.0`; the numbers are set from the player's placement during the in-game checks. `ns.Layout.anchor` (relative to action bar 2) is removed.
 
 ## 3. `Logic/Placement.lua` (pure, unit tested)

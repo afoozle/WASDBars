@@ -7,7 +7,7 @@ The cluster's best spot depends on the player's screen and UI. They need to move
 - The cluster becomes its own Edit Mode element ("WASDBars") through **LibEditMode**, installed by the player from CurseForge and declared as a TOC dependency. It is positioned against the screen and no longer follows action bar 2.
 - Drag it with Edit Mode open; it is kept on screen
 - A **Scale** slider (0.5–2.0, steps of 0.05) in the cluster's Edit Mode settings box
-- Position and scale are saved per Edit Mode layout name; a layout with nothing saved uses the default (left of bottom centre, above the bars)
+- Position and scale are saved per Edit Mode layout name; a layout with nothing saved uses the default (bottom left, above the bars)
 - Reset through LibEditMode's own "Reset To Default Position" and reset-settings buttons
 - Anything applied outside Edit Mode (layout changes, login) goes through the combat queue
 - No slash commands for any of this
