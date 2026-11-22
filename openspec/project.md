@@ -18,7 +18,7 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 | 1 | `setup-addon-foundation` ✅ done 2026-11-22, archived | `addon-foundation` | git repo in standard addon layout, lint, formatting, unit tests, CLAUDE.md, core skeleton (settings, events, combat queue, slash command) |
 | 2 | `add-wasd-layout` ✅ done 2026-11-22, archived | `wasd-layout` | Move the game's action buttons 1–12 into the WASD shape with size tiers and movement keys (letters and arrows) |
 | 3 | `add-position-and-scale` ✅ done 2026-11-22, archived | `display-positioning` | Move, scale and reset the display as its own Edit Mode element (LibEditMode) |
-| 4 | `add-key-binding-setup` | `key-binding-setup` | Confirmed setup of the WASD-cluster binds and the number-row binds (`/wasd setup keys`) |
+| 4 | `add-key-binding-setup` | `key-binding-setup` | Confirmed setup of the WASD-cluster binds and the number-row binds, 1–0, - and = to action bar 2 (`/wasd setup keys`) |
 | 5 | `add-edit-mode-setup` | `edit-mode-setup` | Confirmed Edit Mode arrangement (hide main bar art and scrolling, always show buttons, 12 icons, action bar 2 in action bar 1's old spot) in a "WASDBars" layout (`/wasd setup layout`), and the first-time setup offered once at first login that runs keys then layout |
 
 **Optional, if it goes public**
@@ -108,7 +108,7 @@ No packaging or releases until `add-curseforge-publishing`. The TOC has `## Vers
 
   | Key | Binding command | Bar |
   |---|---|---|
-  | 1–9, 0 | `MULTIACTIONBAR1BUTTON1`–`10` | Action bar 2 (same in every form) |
+  | 1–9, 0, -, = | `MULTIACTIONBAR1BUTTON1`–`12` | Action bar 2 (same in every form) |
   | Q, E, R, T, F, G, Z, X, C, V | `ACTIONBUTTON1`–`10` | Action bar 1 (changes with form) |
   | Mouse front side button (usually `BUTTON5`) | `ACTIONBUTTON11` | Action bar 1 |
   | Mouse back side button (usually `BUTTON4`) | `ACTIONBUTTON12` | Action bar 1 |

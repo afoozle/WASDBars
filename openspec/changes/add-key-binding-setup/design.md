@@ -1,51 +1,26 @@
 # Design: Key binding setup
 
 ## 1. Data (`Data/BindingGroups.lua`)
-```lua
-ns.BindingGroups = {
-  wasd = {
-    title = "WASD keys (action bar 1)",
-    binds = {
-      { key = "Q", command = "ACTIONBUTTON1" },  { key = "E", command = "ACTIONBUTTON2" },
-      { key = "R", command = "ACTIONBUTTON3" },  { key = "T", command = "ACTIONBUTTON4" },
-      { key = "F", command = "ACTIONBUTTON5" },  { key = "G", command = "ACTIONBUTTON6" },
-      { key = "Z", command = "ACTIONBUTTON7" },  { key = "X", command = "ACTIONBUTTON8" },
-      { key = "C", command = "ACTIONBUTTON9" },  { key = "V", command = "ACTIONBUTTON10" },
-      { key = "BUTTON5", command = "ACTIONBUTTON11", label = "Mouse front" },
-      { key = "BUTTON4", command = "ACTIONBUTTON12", label = "Mouse back" },
-    },
-  },
-  numbers = {
-    title = "Number row (action bar 2)",
-    binds = {},  -- filled below
-  },
-}
-local numberKeys = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }
-for i, key in ipairs(numberKeys) do
-  table.insert(ns.BindingGroups.numbers.binds, { key = key, command = "MULTIACTIONBAR1BUTTON" .. i })
-end
-```
-Mouse button names are data so they can be swapped if the layout change's in-game checks showed the front button is `BUTTON4`.
+`ns.BindingGroups` is an ordered list, in the order `/wasd setup keys` asks:
+- `{ id = "wasd", title = "WASD keys", binds = ... }`: Q, E, R, T, F, G, Z, X, C, V → `ACTIONBUTTON1`–`10`; `BUTTON5` → `ACTIONBUTTON11` (label "Mouse front"); `BUTTON4` → `ACTIONBUTTON12` (label "Mouse back")
+- `{ id = "numbers", title = "Number row", binds = ... }`: 1–9, 0, `-`, `=` → `MULTIACTIONBAR1BUTTON1`–`12`, built in a loop
 
-## 2. Planning (`Logic/BindingPlan.lua`)
-`BindingPlan.build(group, getBindingAction, getBindingText)` returns:
-```lua
-{
-  changes = { { key, label, from = "current binding name or nil", to = "new binding name" }, ... },
-  alreadyApplied = true/false,   -- every key already bound to its command
-  correct = n, total = n,        -- for status messages
-}
-```
-Names come from the game: `getBindingText(command, "BINDING_NAME_")` (the real `GetBindingText`), so "STRAFELEFT" shows as the game's own wording. Keys already bound correctly are left out of `changes`. Binding a key only replaces that key's old command; other keys bound to the same command keep it. Pure and unit tested with table-backed stubs.
+## 2. Planning (`Logic/BindingPlan.lua`, pure, unit tested)
+- `BindingPlan.build(group, getBindingAction)` returns `{ changes = { { key, label, command, current } }, correct, total, state }`. `current` is the key's command now (`nil` if unbound); keys already right are left out of `changes`; `state` is `"applied"`, `"partial"` or `"not applied"`.
+- `BindingPlan.statusLine(group, plan)`: "WASD keys: set up", "Number row: 7 of 12 set up" or "Number row: not set up".
+- Binding a key only replaces that key's old command; other keys bound to the same command keep it.
 
-`BindingPlan.status(group, getBindingAction)` returns `"applied"`, `"partial"` (with `correct` and `total`) or `"not applied"`.
+## 3. Confirmation and apply (`UI/Bindings.lua`)
+- `ns.Bindings.request(group, onDone)` runs through `ns.combatQueue:run("bind-" .. id, ...)`, so in combat the popup waits until combat ends. If nothing needs changing it prints "<title>: already set up." Otherwise it shows the `WASDBARS_CONFIRM_BINDS` StaticPopup: the title, then one line per change, such as "Q: Action Button 7 -> Action Button 1", using the game's own names (`GetBindingName`). The game font has no arrow character.
+- Confirm: through the combat queue, `SetBinding(key, command)` for each change (this unbinds the key's old command), then `SaveBindings(GetCurrentBindingSet())`, then "WASDBars: <title> set up." For the number row, if `MultiBarBottomLeft` isn't shown, a reminder to turn on action bar 2 in Edit Mode; the bar is never turned on.
+- Confirm and Cancel both call `onDone` a frame later (`C_Timer.After(0, ...)`), so the next popup isn't hidden along with the one just clicked.
+- `ns.Bindings.requestAll(onDone)` asks for each group in turn. `ns.Bindings.status(group)` returns the status line.
 
-## 3. Confirmation and apply (`UI/BindingConfirm.lua`)
-- `ns.Bindings.request(group, onDone)`: `onDone` is called after Confirm or Cancel, so the first-time setup can chain the next step. Out of combat only (in combat: queue it under the key `"bind-" .. group` and show the popup when combat ends). Build the plan. If already applied, say so and stop. Otherwise show a StaticPopup whose text is the group title followed by one line per change, for example "Q: Strafe Left → Action Button 1" (at most 12 lines, so no scrolling is needed), with Confirm / Cancel.
-- On Confirm: for each change `SetBinding(key, command)`; then `SaveBindings(GetCurrentBindingSet())`; print "WASDBars: <group title> set up." For the number row, if action bar 2 isn't shown (`MultiBarBottomLeft` hidden or its setting off), print a reminder to turn it on in the game's interface options.
-- On Cancel: nothing changes.
-- `SetBinding` automatically unbinds the key from its previous command, so no separate unbind step is needed.
+## 4. Commands (`Core/Slash.lua`)
+- `Slash.setup` maps parts to functions: `keys` (`requestAll`) and `status` (one line per group). `add-edit-mode-setup` adds `layout` and its own status line.
+- `/wasd setup <part>`; anything else prints how to use it.
 
-## 4. Commands
-- `/wasd setup keys`: request the WASD group, then (when that popup closes) the number row
-- `/wasd setup status`: one line per group, for example "WASD keys: set up" or "Number row: 7 of 10 set up" (`add-edit-mode-setup` adds a line for the Edit Mode layout)
+## 5. One-off spell move (not addon code)
+Rebinding changes which slot each key fires (Q went from slot 7 to slot 1). During the in-game checks:
+1. A `/run` line saves every form's slot contents into `WASDBarsDB`, and the player reloads.
+2. Claude Code reads the file and writes a one-off `/run` swap script for the player's bars.
