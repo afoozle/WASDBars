@@ -7,8 +7,8 @@
 - First tried packing each row with an even gap; in game that lost the keyboard slant (R, F and C stacked in a column) and made small keys take less room than big ones. The player asked for equal cells, the real stagger, and less space between big keys instead.
 
 ## 2. Key labels
-- `UI/MovementKeys.lua`: no letters (the arrows matter more); arrows 0.75 of the key (were 0.5); no alpha fade.
-- `UI/Cluster.lua`: each cluster button's `HotKey` font string gets its own font at 18 with `THICKOUTLINE`, anchored `BOTTOM` (0, 3), centred, with no width limit (a width showed the mouse buttons as "M..."). Applied with the layout, and again after the game's `UpdateHotkeys` (`hooksecurefunc`) in case it re-lays the text out.
+- `UI/MovementKeys.lua`: no letters (the arrows matter more); no alpha fade. The slot background and border copy the real button's art size and anchors (`copyPlacement`): the game draws that art larger than the button, and stretching it to the bare frame made W/A/S/D look smaller than the 0.8 action buttons. Arrows are the tutorial arrows `NPE_ArrowUp/Down/Left/Right` (drawn centred, one per direction), kept to their own shape within 0.6 of the key; the page arrows (rotated for left and right) are only a fallback, because their art isn't centred.
+- `UI/Cluster.lua`: each cluster button's `HotKey` font string gets its own font at 18 with `THICKOUTLINE`, anchored `BOTTOM` (0, 3), centred, button width. This client spells mouse buttons out ("Mouse Button 5"), which showed as "M..."; `Logic/HotkeyText.lua` shortens them to "M5" after the game sets the text. Applied with the layout, after the game's `UpdateHotkeys` (`hooksecurefunc`) and on `UPDATE_BINDINGS`.
 
 ## 3. Keybind window (`UI/Bindings.lua`)
 - `WASDBarsKeybindWindow`, `BasicFrameTemplateWithInset`, 440 wide, top centre, `DIALOG` strata, movable, clamped, in `UISpecialFrames` (Escape closes it).

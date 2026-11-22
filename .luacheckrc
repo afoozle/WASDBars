@@ -30,6 +30,7 @@ read_globals = {
   "UnitGUID",
   "hooksecurefunc",
   "UISpecialFrames",
+  "C_Texture",
   "Settings",
 }
 files["tests/**"] = { std = "+busted" }

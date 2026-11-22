@@ -2,19 +2,42 @@ local ADDON, ns = ...
 local MovementKeys = {}
 ns.MovementKeys = MovementKeys
 
--- Up and down use the main bar's page arrows; left and right rotate the up arrow.
+-- The game's own arrows, first choice first. The tutorial arrows are drawn
+-- centred, one per direction; the main bar's page arrows are the fallback,
+-- rotated for left and right, but their art isn't centred.
+local ARROW_SIZE = 0.6 -- of the key
 local ARROWS = {
-  up = { atlas = "UI-HUD-ActionBar-PageUpArrow-Up", rotation = 0 },
-  down = { atlas = "UI-HUD-ActionBar-PageDownArrow-Up", rotation = 0 },
-  left = { atlas = "UI-HUD-ActionBar-PageUpArrow-Up", rotation = math.pi / 2 },
-  right = { atlas = "UI-HUD-ActionBar-PageUpArrow-Up", rotation = -math.pi / 2 },
+  up = { { atlas = "NPE_ArrowUp" }, { atlas = "UI-HUD-ActionBar-PageUpArrow-Up" } },
+  down = { { atlas = "NPE_ArrowDown" }, { atlas = "UI-HUD-ActionBar-PageDownArrow-Up" } },
+  left = { { atlas = "NPE_ArrowLeft" }, { atlas = "UI-HUD-ActionBar-PageUpArrow-Up", rotation = math.pi / 2 } },
+  right = { { atlas = "NPE_ArrowRight" }, { atlas = "UI-HUD-ActionBar-PageUpArrow-Up", rotation = -math.pi / 2 } },
 }
 
--- Copies a game texture's art (atlas or file) onto target; false if there is none.
-local function copyArt(target, source)
+local function atlasInfo(name)
+  return C_Texture and C_Texture.GetAtlasInfo and C_Texture.GetAtlasInfo(name)
+end
+
+-- Places target exactly where source sits on its button (the game draws some
+-- button art larger than the button), relative to our key frame instead.
+local function copyPlacement(target, source, key)
+  local count = source:GetNumPoints()
+  if count == 0 then
+    target:SetAllPoints()
+    return
+  end
+  target:SetSize(source:GetSize())
+  for i = 1, count do
+    local point, _, relativePoint, x, y = source:GetPoint(i)
+    target:SetPoint(point, key, relativePoint, x, y)
+  end
+end
+
+-- Copies a game texture's art (atlas or file) and placement onto target; false if there is none.
+local function copyArt(target, source, key)
   if not source then
     return false
   end
+  copyPlacement(target, source, key)
   local atlas = source.GetAtlas and source:GetAtlas()
   if atlas then
     target:SetAtlas(atlas)
@@ -39,24 +62,35 @@ local function createKey(parent, k, baseSize)
   key:SetPoint("CENTER", parent, "TOPLEFT", k.cx / k.scale, -k.cy / k.scale)
 
   local background = key:CreateTexture(nil, "BACKGROUND")
-  background:SetAllPoints()
-  if not copyArt(background, template.SlotBackground) then
+  if not copyArt(background, template.SlotBackground, key) then
     ns.debug("no slot background art for movement keys")
   end
 
   local border = key:CreateTexture(nil, "ARTWORK")
-  border:SetAllPoints()
-  if not copyArt(border, template:GetNormalTexture()) then
+  if not copyArt(border, template:GetNormalTexture(), key) then
     ns.debug("no button border art for movement keys")
   end
 
-  local arrowInfo = ARROWS[k.key.movement]
   local arrow = key:CreateTexture(nil, "OVERLAY")
   arrow:SetPoint("CENTER")
-  arrow:SetSize(baseSize * 0.75, baseSize * 0.75)
-  if arrowInfo and arrow:SetAtlas(arrowInfo.atlas) ~= false then
-    arrow:SetRotation(arrowInfo.rotation)
-  else
+  local placed = false
+  for _, choice in ipairs(ARROWS[k.key.movement] or {}) do
+    local info = atlasInfo(choice.atlas)
+    if info then
+      arrow:SetAtlas(choice.atlas)
+      -- keep the art's own shape, fitted inside the arrow box
+      local box = baseSize * ARROW_SIZE
+      local fit = box / math.max(info.width, info.height)
+      arrow:SetSize(info.width * fit, info.height * fit)
+      if choice.rotation then
+        arrow:SetRotation(choice.rotation)
+      end
+      ns.debug(k.key.label .. " arrow: " .. choice.atlas)
+      placed = true
+      break
+    end
+  end
+  if not placed then
     ns.debug("no arrow art for " .. k.key.label)
   end
 

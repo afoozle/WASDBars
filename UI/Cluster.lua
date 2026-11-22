@@ -6,8 +6,9 @@ local function actionButton(key)
   return _G["ActionButton" .. key.button]
 end
 
--- The game's own hotkey text, made larger and moved to bottom centre. The game
--- still sets the text, its range colour and whether it shows.
+-- The game's own hotkey text, made larger and moved to bottom centre, with
+-- mouse buttons shortened to M4/M5. The game still sets the text, its range
+-- colour and whether it shows; this runs again after it does.
 local HOTKEY_SIZE = 18
 
 local function styleHotkey(button)
@@ -21,9 +22,13 @@ local function styleHotkey(button)
   end
   hotkey:ClearAllPoints()
   hotkey:SetPoint("BOTTOM", button, "BOTTOM", 0, 3)
-  -- no width limit, so mouse button names aren't cut to "M..."
-  hotkey:SetWidth(0)
+  hotkey:SetWidth(button:GetWidth())
   hotkey:SetJustifyH("CENTER")
+  local text = hotkey:GetText()
+  local short = ns.HotkeyText.shorten(text)
+  if short ~= text then
+    hotkey:SetText(short)
+  end
 end
 
 -- Moves the game's action buttons into the cluster. Out of combat only:
@@ -72,6 +77,18 @@ ns.Events.on("PLAYER_LOGIN", function()
     local button = k.key.button and actionButton(k.key)
     if button and button.UpdateHotkeys then
       hooksecurefunc(button, "UpdateHotkeys", styleHotkey)
+    end
+  end
+end)
+
+-- After the game rewrites the hotkey text for new keybinds.
+ns.Events.on("UPDATE_BINDINGS", function()
+  if not Cluster.frame then
+    return
+  end
+  for _, k in ipairs(Cluster.geometry.keys) do
+    if k.key.button then
+      styleHotkey(actionButton(k.key))
     end
   end
 end)

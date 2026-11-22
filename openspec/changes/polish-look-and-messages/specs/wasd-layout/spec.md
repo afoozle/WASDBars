@@ -21,7 +21,7 @@ W, A, S and D SHALL be shown as small, non-clickable keys drawn with the game's 
 - **THEN** W shows an up arrow, A left, S down and D right, and clicking them does nothing
 
 ### Requirement: Game behaviour kept
-Moved buttons SHALL keep everything the game's action buttons do: icons, cooldowns, usable/rage/range colours, queued and active highlights, item counts, tooltips, the game's own keybind labels, keybinds, following shapeshift forms in and out of combat, and drag and drop out of combat. The addon SHALL NOT replace any of the game's functions. It MAY restyle the game's own hotkey text on the cluster buttons (larger, outlined, at the bottom centre), but the game SHALL still set its text, colour and visibility.
+Moved buttons SHALL keep everything the game's action buttons do: icons, cooldowns, usable/rage/range colours, queued and active highlights, item counts, tooltips, the game's own keybind labels, keybinds, following shapeshift forms in and out of combat, and drag and drop out of combat. The addon SHALL NOT replace any of the game's functions. It MAY restyle the game's own hotkey text on the cluster buttons (larger, outlined, at the bottom centre, mouse buttons shortened to M4/M5), but the game SHALL still set its text, colour and visibility.
 
 #### Scenario: Form change in combat
 - **WHEN** the player shifts from caster to Bear Form in combat

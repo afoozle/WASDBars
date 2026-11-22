@@ -19,7 +19,7 @@ The addon works, but several things look rough or read badly in game. This chang
 - **Key sizes:** two sizes, big 1.0 and small 0.8; W/A/S/D move from 0.6 to 0.8.
 - **Spacing:** every key takes the same square cell, small keys centred in theirs; the gap between cells shrinks from 4 to 2 pixels; rows keep a real keyboard's offsets so E, D and C run on a slant.
 - **W/A/S/D:** fully opaque (no 60% fade), no letters, bigger arrows.
-- **Hotkey text** on the 12 cluster buttons: the game's own text, larger (18) with a thick outline, at bottom centre. The game still sets the text, its range colour and when it shows.
+- **Hotkey text** on the 12 cluster buttons: the game's own text, larger (18) with a thick outline, at bottom centre, with mouse buttons shortened to M4/M5. The game still sets the text, its range colour and when it shows.
 
 ## Decided when grilled (2026-11-22)
 - The window describes what the setup does, not each key's new action ("Cluster Q" said nothing); warnings are what matters.
