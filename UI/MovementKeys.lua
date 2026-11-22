@@ -131,7 +131,6 @@ local function createKey(parent, k, baseSize)
     ns.debug("no arrow art for " .. k.key.label)
   end
 
-  key.arrow = arrow
   return key
 end
 

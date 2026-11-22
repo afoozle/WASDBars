@@ -23,5 +23,4 @@ UI/EditMode.lua
 UI/Bindings.lua
 UI/Setup.lua
 UI/Options.lua
-UI/Measure.lua
 Core/Slash.lua

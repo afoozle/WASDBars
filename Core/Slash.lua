@@ -70,14 +70,6 @@ commands.setup = {
   end,
 }
 
--- temporary, for polish-look-and-messages
-commands.measure = {
-  help = "save sizes and positions for Claude Code to read",
-  run = function()
-    ns.measure()
-  end,
-}
-
 SLASH_WASDBARS1 = "/wasd"
 SlashCmdList.WASDBARS = function(msg)
   local name, args = (msg or ""):match("^%s*(%S*)%s*(.-)%s*$")

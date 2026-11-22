@@ -3,7 +3,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: Relative key sizes
-Keys SHALL use two relative sizes: big (1.0) for the keys touching W, A, S or D (Q, E, R, F, Z, X, C) and small (0.8) for W, A, S, D, the further-out keys (T, G, V) and buttons 11 and 12. Every key SHALL take the same square cell, centred on its keyboard position, with smaller keys centred in theirs. Rows SHALL be offset like a real keyboard (the A row a quarter key right of the Q row, the Z row half a key further).
+Keys SHALL use two relative sizes: big (1.0) for the keys touching W, A, S or D (Q, E, R, F, Z, X, C) and small (0.8) for W, A, S, D, the further-out keys (T, G, V) and buttons 11 and 12. Every key SHALL take the same square cell, centred on its keyboard position, with smaller keys centred in theirs and no gap between cells. Buttons 11 and 12 SHALL sit in a column next to G, centred on the three rows. Rows SHALL be offset like a real keyboard (the A row a quarter key right of the Q row, the Z row half a key further).
 
 #### Scenario: Size order
 - **WHEN** the cluster is shown
