@@ -31,6 +31,12 @@ read_globals = {
   "hooksecurefunc",
   "UISpecialFrames",
   "C_Texture",
+  "CreateSettingsButtonInitializer",
+  "CreateSettingsListSectionHeaderInitializer",
+  "HideUIPanel",
+  "ShowUIPanel",
+  "SettingsPanel",
+  "EditModeManagerFrame",
   "Settings",
 }
 files["tests/**"] = { std = "+busted" }

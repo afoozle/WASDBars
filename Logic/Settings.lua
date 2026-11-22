@@ -8,6 +8,9 @@ Settings.defaults = {
   layouts = {},
   -- character GUID -> true once the first-time setup has been offered on that character
   setupOffered = {},
+  -- options page (UI/Options.lua)
+  showMovementKeys = true,
+  largeHotkeys = true,
 }
 
 local function copy(value)

@@ -141,7 +141,16 @@ ns.Events.on("PLAYER_LOGIN", function()
   MovementKeys.frames = {}
   for _, k in ipairs(cluster.geometry.keys) do
     if k.key.movement then
-      MovementKeys.frames[k.key.label] = createKey(cluster.frame, k, cluster.baseSize)
+      local key = createKey(cluster.frame, k, cluster.baseSize)
+      key:SetShown(ns.db.showMovementKeys)
+      MovementKeys.frames[k.key.label] = key
     end
   end
 end)
+
+-- Plain decorative frames, so this is safe in combat.
+function MovementKeys.setShown(shown)
+  for _, key in pairs(MovementKeys.frames or {}) do
+    key:SetShown(shown)
+  end
+end
