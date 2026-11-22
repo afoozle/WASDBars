@@ -24,5 +24,10 @@ read_globals = {
   "C_Timer",
   "GetShapeshiftFormInfo",
   "C_Spell",
+  "Enum",
+  "MainActionBar",
+  "UnitName",
+  "GetRealmName",
+  "Settings",
 }
 files["tests/**"] = { std = "+busted" }

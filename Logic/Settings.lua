@@ -6,6 +6,8 @@ ns.Settings = Settings
 Settings.defaults = {
   -- Edit Mode layout name -> { point, x, y, scale } (see Logic/Placement.lua)
   layouts = {},
+  -- "Name-Realm" -> true once the first-time setup has been offered on that character
+  setupOffered = {},
 }
 
 local function copy(value)
