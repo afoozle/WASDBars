@@ -31,5 +31,5 @@ A WoW: Forever addon (interface `16001`, Lua 5.1) that arranges the game's own a
   - `WASDBars.lua`: the addon's settings
   - `!BugGrabber.lua`: Lua errors and blocked actions
 - Taint log: `_forever_/Logs/taint.log` (only with `/console taintLog 1`)
-- The player installs third-party addons (BugGrabber, BugSack) through CurseForge.
+- The player installs third-party addons (BugGrabber, BugSack, and runtime dependencies such as LibEditMode) through CurseForge. Helper libraries are welcome when they mean less addon code; declare them as TOC dependencies, never copy them into the repo.
 - Step the player through in-game checks a few at a time.

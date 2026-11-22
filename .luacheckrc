@@ -13,6 +13,6 @@ read_globals = {
   "DEFAULT_CHAT_FRAME",
   "C_AddOns",
   "GetAddOnMetadata",
-  "MultiBarBottomLeft",
+  "LibStub",
 }
 files["tests/**"] = { std = "+busted" }

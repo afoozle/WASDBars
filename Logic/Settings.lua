@@ -3,7 +3,10 @@ local Settings = {}
 ns.Settings = Settings
 
 -- Account-wide defaults. Later changes add their own keys here.
-Settings.defaults = {}
+Settings.defaults = {
+  -- Edit Mode layout name -> { point, x, y, scale } (see Logic/Placement.lua)
+  layouts = {},
+}
 
 local function copy(value)
   if type(value) ~= "table" then

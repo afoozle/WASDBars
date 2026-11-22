@@ -6,7 +6,9 @@ local ADDON, ns = ...
 ns.Layout = {
   sizes = { primary = 1.0, secondary = 0.8, movement = 0.6 },
   gap = 4, -- pixels between primary keys
-  anchor = { x = 0, y = 22 }, -- cluster's bottom-left from action bar 2's top-left, in pixels; clears the XP bar
+  -- default Edit Mode position (relative to the screen) and scale, for layouts where it hasn't been moved
+  position = { point = "BOTTOMLEFT", x = 200, y = 81 },
+  scale = 1.0,
   keys = {
     { label = "Q", button = 1, x = 0.5, y = 0, size = "primary" },
     { label = "W", movement = "up", x = 1.5, y = 0 },

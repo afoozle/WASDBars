@@ -38,10 +38,10 @@ ns.Events.on("PLAYER_LOGIN", function()
   Cluster.geometry = ns.LayoutGeometry.compute(layout, Cluster.baseSize)
 
   -- Holds protected buttons once the layout is applied, so it is only
-  -- created, sized and anchored here, before any buttons are inside.
+  -- created and sized here, before any buttons are inside. UI/EditMode.lua
+  -- positions and scales it.
   local frame = CreateFrame("Frame", "WASDBarsCluster", UIParent)
   frame:SetSize(Cluster.geometry.width, Cluster.geometry.height)
-  frame:SetPoint("BOTTOMLEFT", MultiBarBottomLeft, "TOPLEFT", layout.anchor.x, layout.anchor.y)
   Cluster.frame = frame
 
   ns.combatQueue:run("layout", applyLayout)

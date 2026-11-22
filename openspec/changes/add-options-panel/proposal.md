@@ -22,3 +22,6 @@ Optional, for going public: the personal version is driven by slash commands. Sl
 
 ## Note from `add-wasd-layout` grilling (2026-11-22)
 The mouse outline was deferred out of `add-wasd-layout` to a possible later change. The "Show mouse outline" setting and checkbox only apply if that change happens; drop them otherwise when this change is grilled.
+
+## Note from `add-position-and-scale` grilling (2026-11-22)
+Moving, scaling and resetting the display now happen in Edit Mode through LibEditMode, saved per Edit Mode layout. There is no `ns.Display` API, no `locked` setting and no `/wasd unlock|lock|scale|reset`. The "Display" section planned above probably shrinks to a pointer to Edit Mode; decide when this change is grilled.
