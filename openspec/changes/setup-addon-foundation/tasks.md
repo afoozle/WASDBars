@@ -8,10 +8,10 @@
 
 ## 2. Tooling
 - [ ] 2.1 `scripts/setup-dev.sh` (design.md section 6) and run `make setup`
-- [ ] 2.2 `.luacheckrc` (design.md section 5)
-- [ ] 2.3 `.stylua.toml`
-- [ ] 2.4 `.busted` and the two test helpers (design.md section 4)
-- [ ] 2.5 `Makefile` (design.md section 6)
+- [x] 2.2 `.luacheckrc` (design.md section 5)
+- [x] 2.3 `.stylua.toml`
+- [x] 2.4 `.busted` and the two test helpers (design.md section 4)
+- [x] 2.5 `Makefile` (design.md section 6)
 
 ## 3. Addon skeleton
 - [ ] 3.1 `WASDBars.toc` at the repo root (design.md section 2)
