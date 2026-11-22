@@ -27,10 +27,10 @@
 - [x] 4.3 `make check` passes
 
 ## 5. In-game checks (Mac)
-- [ ] 5.1 Claude Code links the repo into AddOns as `WASDBars`; it appears in the AddOns list at character select, not marked out of date
-- [ ] 5.2 Log in: no errors in BugSack
-- [ ] 5.3 `/wasd help` lists `help`, `version` and `debug`; `/wasd version` prints "dev build"; `/wasd nonsense` says it wasn't recognised
-- [ ] 5.4 `/reload`, then `/dump WASDBarsDB`: table exists with default values
+- [x] 5.1 Claude Code links the repo into AddOns as `WASDBars`; it appears in the AddOns list at character select, not marked out of date
+- [x] 5.2 Log in: no errors in BugSack
+- [x] 5.3 `/wasd help` lists `help`, `version` and `debug`; `/wasd version` prints "dev build"; `/wasd nonsense` says it wasn't recognised
+- [x] 5.4 `/reload`, then `/dump WASDBarsDB`: table exists with default values
 
 ## 6. Wrap-up
-- [ ] 6.1 Archive this change
+- [x] 6.1 Archive this change

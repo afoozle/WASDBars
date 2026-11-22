@@ -15,7 +15,7 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 | # | Change | Capability | What it adds |
 |---|---|---|---|
 | 0 | `spike-button-takeover` ✅ passed 2026-11-22, archived | none (throwaway) | A rough, throwaway addon that proves the game's action buttons can be moved into the WASD shape on Forever and stay there. Go/no-go for the whole project; its findings feed every later change |
-| 1 | `setup-addon-foundation` | `addon-foundation` | git repo in standard addon layout, lint, formatting, unit tests, CLAUDE.md, core skeleton (settings, events, combat queue, slash command) |
+| 1 | `setup-addon-foundation` ✅ done 2026-11-22, archived | `addon-foundation` | git repo in standard addon layout, lint, formatting, unit tests, CLAUDE.md, core skeleton (settings, events, combat queue, slash command) |
 | 2 | `add-wasd-layout` | `wasd-layout` | Move the game's action buttons 1–12 into the WASD shape with size tiers, movement arrows and a mouse outline |
 | 3 | `add-position-and-scale` | `display-positioning` | Move, lock, scale and reset the display |
 | 4 | `add-key-binding-setup` | `key-binding-setup` | Confirmed setup of the WASD-cluster binds and the number-row binds (`/wasd setup keys`) |
