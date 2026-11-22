@@ -4,13 +4,16 @@
 ## Author: Matt
 ## Version: @project-version@
 ## SavedVariables: WASDBarsDB
+## Dependencies: LibEditMode
 
 Core/Init.lua
 Core/Events.lua
 Logic/Settings.lua
 Logic/CombatQueue.lua
 Logic/LayoutGeometry.lua
+Logic/Placement.lua
 Data/Layout.lua
 UI/Cluster.lua
 UI/MovementKeys.lua
+UI/EditMode.lua
 Core/Slash.lua
