@@ -26,7 +26,7 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 
 | # | Change | Capability | What it adds |
 |---|---|---|---|
-| 7 | `add-options-panel` | `options-panel` | Options in the game's own settings window |
+| 7 | `add-options-panel` | `options-panel` | Options in the game's own settings window: Open Edit Mode, show movement keys, large hotkey text, setup buttons |
 | 8 | `add-performance-recording` | `performance-recording` | Save WoW Forever's built-in profiler numbers for WASDBars so Claude Code can read them; used on demand |
 | 9 | `add-curseforge-publishing` | `curseforge-publishing` | Packager, CI, GitHub Releases, Windows PC install, and uploads to CurseForge |
 
