@@ -6,7 +6,7 @@ One place in the game's own options to reach everything WASDBars offers, for the
 ## What Changes
 WASDBars options under AddOns in the game's options window, built from the game's standard settings rows. It replaces the Run setup page from `add-edit-mode-setup`.
 - **Display:** "Move and resize" with an **Open Edit Mode** button (moving and scaling live in Edit Mode through LibEditMode).
-- **Appearance:** **Show movement keys (W, A, S, D)** and **Large hotkey text** checkboxes, both on by default. Large hotkey text off puts the game's own small corner text back.
+- **Appearance:** **Show movement keys** and **Large hotkey text** checkboxes, both on by default. Large hotkey text off puts the game's own small corner text back.
 - **Setup:** **Set up keybinds** (the keybind window) and **Check layout** (the Edit Mode layout check).
 - `/wasd options` opens it; plain `/wasd` still shows help.
 

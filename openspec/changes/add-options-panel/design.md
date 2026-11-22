@@ -9,7 +9,7 @@ Proxy settings read and write `WASDBarsDB` directly, so the page always shows th
 | Section | Row | Does |
 |---|---|---|
 | Display | Move and resize: **Open Edit Mode** | Out of combat: hides the options window and shows `EditModeManagerFrame`. In combat: "Edit Mode can't be opened in combat." |
-| Appearance | **Show movement keys (W, A, S, D)** | `showMovementKeys`; `MovementKeys.setShown` shows or hides the decorative frames (safe in combat) |
+| Appearance | **Show movement keys** | `showMovementKeys`; `MovementKeys.setShown` shows or hides the decorative frames (safe in combat) |
 | Appearance | **Large hotkey text** | `largeHotkeys`; `Cluster.refreshHotkeys` restyles every cluster button's hotkey text |
 | Setup | Keybinds: **Set up keybinds** | `ns.Bindings.request()` |
 | Setup | Edit Mode layout: **Check layout** | `ns.Setup.checkLayout()` |

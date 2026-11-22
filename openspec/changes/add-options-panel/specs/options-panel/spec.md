@@ -21,7 +21,7 @@ The page SHALL have an Open Edit Mode button, because the cluster is moved and s
 - **THEN** the options window closes and Edit Mode opens, where WASDBars can be selected
 
 ### Requirement: Appearance options
-The page SHALL have "Show movement keys (W, A, S, D)" and "Large hotkey text" checkboxes, both on by default, applied straight away and kept after reloading. With large hotkey text off, the cluster's buttons SHALL show the game's own hotkey text style.
+The page SHALL have "Show movement keys" and "Large hotkey text" checkboxes, both on by default, applied straight away and kept after reloading. With large hotkey text off, the cluster's buttons SHALL show the game's own hotkey text style.
 
 #### Scenario: Hide movement keys
 - **WHEN** the player unticks "Show movement keys"

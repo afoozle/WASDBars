@@ -52,8 +52,8 @@ ns.Events.on("PLAYER_LOGIN", function()
   checkbox(
     category,
     "showMovementKeys",
-    "Show movement keys (W, A, S, D)",
-    "Show the arrow keys between the action buttons.",
+    "Show movement keys",
+    "Show the W, A, S and D arrow keys between the action buttons.",
     ns.MovementKeys.setShown
   )
   checkbox(
