@@ -26,8 +26,7 @@ read_globals = {
   "C_Spell",
   "Enum",
   "MainActionBar",
-  "UnitName",
-  "GetRealmName",
+  "UnitGUID",
   "Settings",
 }
 files["tests/**"] = { std = "+busted" }

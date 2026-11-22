@@ -84,8 +84,9 @@ function Setup.run()
   ns.Bindings.requestAll(Setup.checkLayout)
 end
 
+-- The realm name isn't ready yet at PLAYER_LOGIN; the GUID is.
 local function characterKey()
-  return UnitName("player") .. "-" .. GetRealmName()
+  return UnitGUID("player")
 end
 
 local function keysSetUp()

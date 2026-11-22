@@ -13,7 +13,7 @@
 ## 3. Setup chain and offer (`UI/Setup.lua`)
 - `ns.Setup.run()`: `ns.Bindings.requestAll(ns.Setup.checkLayout)`, so WASD keys → number row → layout check, each after the previous popup closes.
 - `ns.Setup.checkLayout()` prints "action bar layout is set up." or "in Edit Mode, in your '<layout>' layout:" followed by one line per fix.
-- At `PLAYER_LOGIN`: if `setupOffered["Name-Realm"]` isn't set and the character's keys aren't all set up, show the `WASDBARS_OFFER_SETUP` popup through the combat queue (`"setup-offer"`) and record the offer. Set up runs `ns.Setup.run()`; Not now does nothing.
+- At `PLAYER_LOGIN`: if `setupOffered[<character GUID>]` isn't set (the realm name isn't ready at `PLAYER_LOGIN`; the first try recorded "Deutscheb-") and the character's keys aren't all set up, show the `WASDBARS_OFFER_SETUP` popup through the combat queue (`"setup-offer"`) and record the offer. Set up runs `ns.Setup.run()`; Not now does nothing.
 
 ## 4. Options page (`UI/Options.lua`)
 A canvas page registered with `Settings.RegisterCanvasLayoutCategory` / `RegisterAddOnCategory`: title, one line of text, and a Run setup button calling `ns.Setup.run`.
