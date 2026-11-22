@@ -1,0 +1,47 @@
+# Design: Performance recording for Claude Code
+
+## 1. Where the numbers come from
+WoW Forever's built-in addon profiler (`C_AddOnProfiler`) is always on and measures every addon. `C_AddOnProfiler.GetAddOnMetric("WASDBars", metric)` returns WASDBars' numbers in milliseconds; `C_AddOnProfiler.GetOverallMetric(metric)` returns the total for all addons. The metric names come from `Enum.AddOnProfilerMetric`; task 1.1 records the exact names on Forever (expected to include a recent average, a session average, a peak, and counts of slow frames).
+
+WASDBars doesn't time its own functions. If the numbers ever point to a problem, Claude Code finds the cause by reading the code and, if needed, asking for a recording with one feature switched off.
+
+## 2. Recorder (`Core/Perf.lua`)
+- **Off by default.** Nothing runs until `/wasd perf start`.
+- `/wasd perf start <label>`: if `C_AddOnProfiler` doesn't exist, say so and stop. Otherwise start a new session and a 1-second `C_Timer.NewTicker`.
+- Each tick saves one row:
+
+  | Field | Source |
+  |---|---|
+  | `t` | seconds since start |
+  | `recentMs` | WASDBars recent-average metric |
+  | `peakMs` | WASDBars peak metric |
+  | `allRecentMs` | all-addons recent-average metric |
+  | `fps` | `GetFramerate()` |
+  | `combat` | `InCombatLockdown()` |
+  | `form` | `GetShapeshiftForm()` |
+  | `target` | `UnitExists("target")` |
+
+- `/wasd perf stop`: cancel the ticker, save the session-level metrics for WASDBars and for all addons, and print "WASDBars: recording saved. Type /reload to write it to disk."
+- `/wasd perf clear`: empty `WASDBarsPerfDB`.
+- Session record:
+  ```lua
+  { label = "bear-pull", started = "2026-11-22 20:14", seconds = 312,
+    addonVersion = "dev build", interface = 16001,
+    summary = { wasdbars = { ...session metrics... }, allAddons = { ... } },
+    samples = { ...rows... } }
+  ```
+- Limits: newest 600 samples per session (10 minutes), newest 5 sessions. Older data is dropped.
+- Labels are free text; suggested ones are listed in CLAUDE.md (`idle`, `bear-pull`, `form-spam`, `cat-dps`), optionally prefixed `pc-` for recordings made on the Windows PC.
+
+## 3. Where the file is
+`<game>/_forever_/WTF/Account/<ACCOUNT>/SavedVariables/WASDBars.lua`, written on `/reload`, logout or exit. It's plain Lua data (`WASDBarsPerfDB = { ... }`) that Claude Code reads as text. On the Mac the game folder is `/Applications/World of Warcraft/_forever_/` (see `openspec/project.md`). Recordings made on the Windows PC can be copied to the Mac and read the same way.
+
+## 4. CLAUDE.md "Performance" section
+- How to ask the player for a recording: "/wasd perf start bear-pull, do the pull, /wasd perf stop, /reload"
+- Where the file is (section 3); read it, don't run it
+- What good looks like (rough guide, to adjust with experience): WASDBars' recent average stays well under 0.1 ms in combat and is a small share of the all-addons total; no regular peaks above 1 ms; frame rate doesn't dip when WASDBars' numbers rise
+- The loop: compare in-combat rows with idle rows, link spikes to what was happening (combat, form change, target), find the likely cause in the code, fix it, run `make check`, ask for the same recording again, and compare
+- Keep findings in the commit message so earlier numbers can be compared later
+
+## 5. When to use it
+On demand only: when something feels slow, after a change that adds hooks or event handling, and once before a public release. Changes' in-game checklists don't include a recording.

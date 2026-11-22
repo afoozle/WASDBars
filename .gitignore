@@ -1,0 +1,9 @@
+.claude/settings.local.json
+.tools/
+.lua/
+.luarocks/
+lua_modules/
+luacov.*
+.DS_Store
+Thumbs.db
+*.zip
