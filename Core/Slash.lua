@@ -13,7 +13,7 @@ local function showHelp()
     table.insert(names, name)
   end
   table.sort(names)
-  ns.print("commands:")
+  ns.print("Commands:")
   for _, name in ipairs(names) do
     DEFAULT_CHAT_FRAME:AddMessage("  /wasd " .. name .. " - " .. commands[name].help)
   end
@@ -27,9 +27,9 @@ commands.version = {
     local getMetadata = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
     local version = getMetadata(ADDON, "Version")
     if not version or version == "@project-version@" then
-      ns.print("dev build")
+      ns.print("Dev build.")
     else
-      ns.print((version:gsub("^v", "")))
+      ns.print("Version " .. version:gsub("^v", "") .. ".")
     end
   end,
 }
@@ -38,7 +38,7 @@ commands.debug = {
   help = "turn extra chat output on or off (this session only)",
   run = function()
     ns.debugEnabled = not ns.debugEnabled
-    ns.print("debug output " .. (ns.debugEnabled and "on" or "off") .. ".")
+    ns.print("Debug output " .. (ns.debugEnabled and "on" or "off") .. ".")
   end,
 }
 
@@ -48,16 +48,13 @@ Slash.setup = {
     ns.Setup.run()
   end,
   keys = function()
-    ns.Bindings.requestAll()
+    ns.Bindings.request()
   end,
   layout = function()
     ns.Setup.checkLayout()
   end,
   status = function()
-    for _, group in ipairs(ns.BindingGroups) do
-      ns.print(ns.Bindings.status(group))
-    end
-    ns.print(ns.Setup.layoutStatus())
+    ns.print(ns.Bindings.statusSentence() .. " " .. ns.Setup.layoutStatusSentence())
   end,
 }
 
@@ -68,7 +65,7 @@ commands.setup = {
     if part then
       part()
     else
-      ns.print("use /wasd setup, /wasd setup keys, /wasd setup layout or /wasd setup status.")
+      ns.print("Use /wasd setup, or /wasd setup keys, layout or status.")
     end
   end,
 }

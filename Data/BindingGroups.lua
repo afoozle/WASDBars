@@ -1,13 +1,14 @@
 local ADDON, ns = ...
 
--- The only keybinds the addon ever changes, in the order `/wasd setup keys`
--- asks for them. `question` heads the confirmation popup; `label` replaces
--- the game's key name in messages.
+-- The only keybinds the addon ever changes, in the order the setup window
+-- lists them. `name` is used in chat; `heading` and `detail` describe the step
+-- in the setup window; `label` replaces the game's key name in messages.
 ns.BindingGroups = {
   {
     id = "wasd",
-    title = "WASD keys",
-    question = "Bind Q E R T F G Z X C V and the mouse side buttons to the WASD cluster?",
+    name = "WASD keys",
+    heading = "Action bar 1 on the keys around WASD",
+    detail = "Q E R T F G Z X C V and both mouse side buttons fire the WASD cluster's buttons.",
     binds = {
       { key = "Q", command = "ACTIONBUTTON1" },
       { key = "E", command = "ACTIONBUTTON2" },
@@ -25,8 +26,9 @@ ns.BindingGroups = {
   },
   {
     id = "numbers",
-    title = "Number row",
-    question = "Bind 1-0, - and = to action bar 2?",
+    name = "number row",
+    heading = "Action bar 2 on the number row",
+    detail = "1-9, 0, - and = fire action bar 2's buttons 1-12.",
     binds = {},
   },
 }

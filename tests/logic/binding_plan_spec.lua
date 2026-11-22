@@ -66,7 +66,7 @@ describe("BindingPlan", function()
 
     it("names stance bar buttons after their form", function()
       assert.equal("Cat Form", name("SHAPESHIFTBUTTON3"))
-      assert.equal("Form 2", name("SHAPESHIFTBUTTON2"))
+      assert.equal("Stance bar button 2", name("SHAPESHIFTBUTTON2"))
     end)
 
     it("uses the game's name for anything else", function()
@@ -74,14 +74,51 @@ describe("BindingPlan", function()
     end)
   end)
 
-  describe("statusLine", function()
-    it("describes each state", function()
-      assert.equal("Test keys: set up", BindingPlan.statusLine(group, { state = "applied" }))
+  describe("lostActions", function()
+    local function lost(keys)
+      local b = stubs.bindings(keys)
+      return BindingPlan.lostActions({ BindingPlan.build(group, b.GetBindingAction) }, b.GetBindingKey)
+    end
+
+    it("lists actions left with no key, with the keys that did them", function()
+      assert.same({
+        { command = "REPLY", keys = { "Q" } },
+        { command = "TOGGLEAUTORUN", keys = { "Mouse front" } },
+      }, lost({ Q = "REPLY", BUTTON5 = "TOGGLEAUTORUN" }))
+    end)
+
+    it("leaves out actions another key still does", function()
+      assert.same({}, lost({ Q = "TURNLEFT", A = "TURNLEFT" }))
+    end)
+
+    it("leaves out actions the setup binds to another key", function()
+      assert.same({}, lost({ Q = "ACTIONBUTTON2" }))
+    end)
+
+    it("groups keys that did the same action", function()
+      assert.same({ { command = "JUMP", keys = { "Q", "E" } } }, lost({ Q = "JUMP", E = "JUMP" }))
+    end)
+  end)
+
+  describe("statusSentence", function()
+    local groups = { { name = "WASD keys" }, { name = "number row" } }
+
+    it("sums up when everything is set up", function()
       assert.equal(
-        "Test keys: 1 of 3 set up",
-        BindingPlan.statusLine(group, { state = "partial", correct = 1, total = 3 })
+        "Keybinds set up (WASD keys and number row).",
+        BindingPlan.statusSentence(groups, { { state = "applied" }, { state = "applied" } })
       )
-      assert.equal("Test keys: not set up", BindingPlan.statusLine(group, { state = "not applied" }))
+    end)
+
+    it("lists each group otherwise", function()
+      assert.equal(
+        "Keybinds: WASD keys set up, number row 7 of 12 set up.",
+        BindingPlan.statusSentence(groups, { { state = "applied" }, { state = "partial", correct = 7, total = 12 } })
+      )
+      assert.equal(
+        "Keybinds: WASD keys not set up, number row not set up.",
+        BindingPlan.statusSentence(groups, { { state = "not applied" }, { state = "not applied" } })
+      )
     end)
   end)
 end)

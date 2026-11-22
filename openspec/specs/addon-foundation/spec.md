@@ -99,3 +99,10 @@ The repo SHALL include a `CLAUDE.md` that points to the OpenSpec project context
 #### Scenario: Starting a session
 - **WHEN** Claude Code opens the repo
 - **THEN** `CLAUDE.md` tells it to read `openspec/project.md`, which change is next, and how to run the checks
+
+### Requirement: Chat message style
+Every chat message SHALL start with "WASDBars: " (the prefix in light blue) followed by plain-language sentences that start with a capital letter and end with a full stop (or a colon before indented list lines). An action SHALL produce one line, not one per part.
+
+#### Scenario: Combat message
+- **WHEN** work is deferred during combat
+- **THEN** chat shows "WASDBars: Will apply after combat."

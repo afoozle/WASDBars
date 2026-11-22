@@ -67,11 +67,15 @@ function LayoutCheck.overlaps(a, b)
   return a[1] < b[1] + b[3] and b[1] < a[1] + a[3] and a[2] < b[2] + b[4] and b[2] < a[2] + a[4]
 end
 
--- One line for /wasd setup status.
-function LayoutCheck.statusLine(fixes)
+-- The layout half of /wasd setup status.
+function LayoutCheck.statusSentence(fixes)
   if #fixes == 0 then
-    return "Action bar layout: OK"
+    return "Edit Mode layout ready."
   end
-  local things = #fixes == 1 and "1 thing" or (#fixes .. " things")
-  return "Action bar layout: " .. things .. " to fix (/wasd setup layout)"
+  return "Edit Mode layout " .. LayoutCheck.needs(fixes) .. " (/wasd setup layout)."
+end
+
+-- "needs 1 change" / "needs 2 changes"
+function LayoutCheck.needs(fixes)
+  return "needs " .. #fixes .. (#fixes == 1 and " change" or " changes")
 end

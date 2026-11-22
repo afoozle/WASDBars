@@ -14,6 +14,7 @@ Logic/LayoutGeometry.lua
 Logic/Placement.lua
 Logic/BindingPlan.lua
 Logic/LayoutCheck.lua
+Logic/HotkeyText.lua
 Data/Layout.lua
 Data/BindingGroups.lua
 UI/Cluster.lua

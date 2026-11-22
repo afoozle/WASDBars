@@ -61,27 +61,26 @@ local function problems()
   return ns.LayoutCheck.problems(readings())
 end
 
-function Setup.layoutStatus()
-  return ns.LayoutCheck.statusLine(problems())
+function Setup.layoutStatusSentence()
+  return ns.LayoutCheck.statusSentence(problems())
 end
 
 -- Lists the manual Edit Mode steps still needed. Never changes the layout.
 function Setup.checkLayout()
   local fixes = problems()
   if #fixes == 0 then
-    ns.print("action bar layout is set up.")
+    ns.print("Your Edit Mode layout is ready.")
     return
   end
-  local layout = LibStub("LibEditMode"):GetActiveLayoutName() or "current"
-  ns.print("in Edit Mode, in your '" .. layout .. "' layout:")
+  ns.print("Your Edit Mode layout " .. ns.LayoutCheck.needs(fixes) .. ":")
   for _, fix in ipairs(fixes) do
-    DEFAULT_CHAT_FRAME:AddMessage("  " .. fix)
+    DEFAULT_CHAT_FRAME:AddMessage("  - " .. fix)
   end
 end
 
--- The whole setup: WASD keys, number row, then the layout check.
+-- The whole setup: the keybind window, then the layout check.
 function Setup.run()
-  ns.Bindings.requestAll(Setup.checkLayout)
+  ns.Bindings.request(Setup.checkLayout)
 end
 
 -- The realm name isn't ready yet at PLAYER_LOGIN; the GUID is.
@@ -89,18 +88,9 @@ local function characterKey()
   return UnitGUID("player")
 end
 
-local function keysSetUp()
-  for _, group in ipairs(ns.BindingGroups) do
-    if ns.BindingPlan.build(group, GetBindingAction).state ~= "applied" then
-      return false
-    end
-  end
-  return true
-end
-
 StaticPopupDialogs[OFFER] = {
-  text = "Set up WASDBars?\nThis binds your keys to the WASD cluster and action bar 2, "
-    .. "and checks your Edit Mode layout. Each step asks first.",
+  text = "Set up WASDBars?\n\nIt binds your keys to the WASD cluster and action bar 2, "
+    .. "then checks your Edit Mode layout. You'll see what changes before anything does.",
   button1 = "Set up",
   button2 = "Not now",
   OnAccept = function()
@@ -114,7 +104,7 @@ StaticPopupDialogs[OFFER] = {
 -- Offered once per character, and only while its keys aren't set up.
 ns.Events.on("PLAYER_LOGIN", function()
   local key = characterKey()
-  if ns.db.setupOffered[key] or keysSetUp() then
+  if ns.db.setupOffered[key] or ns.Bindings.isSetUp() then
     return
   end
   ns.combatQueue:run("setup-offer", function()
