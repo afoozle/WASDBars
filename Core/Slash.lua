@@ -42,6 +42,30 @@ commands.debug = {
   end,
 }
 
+-- /wasd setup <part>. Later changes add parts (and status lines) here.
+Slash.setup = {
+  keys = function()
+    ns.Bindings.requestAll()
+  end,
+  status = function()
+    for _, group in ipairs(ns.BindingGroups) do
+      ns.print(ns.Bindings.status(group))
+    end
+  end,
+}
+
+commands.setup = {
+  help = "'keys' binds the WASD keys and number row; 'status' shows what's set up",
+  run = function(args)
+    local part = Slash.setup[args:lower()]
+    if part then
+      part()
+    else
+      ns.print("use /wasd setup keys or /wasd setup status.")
+    end
+  end,
+}
+
 SLASH_WASDBARS1 = "/wasd"
 SlashCmdList.WASDBARS = function(msg)
   local name, args = (msg or ""):match("^%s*(%S*)%s*(.-)%s*$")

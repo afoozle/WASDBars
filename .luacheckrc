@@ -14,5 +14,13 @@ read_globals = {
   "C_AddOns",
   "GetAddOnMetadata",
   "LibStub",
+  "GetBindingAction",
+  "GetBindingName",
+  "SetBinding",
+  "SaveBindings",
+  "GetCurrentBindingSet",
+  "MultiBarBottomLeft",
+  "StaticPopup_Show",
+  "C_Timer",
 }
 files["tests/**"] = { std = "+busted" }
