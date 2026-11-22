@@ -28,3 +28,7 @@ This installs StyLua with Homebrew, and a project-local Lua 5.1 with luacheck an
 To try it in game, symlink the repo root into `/Applications/World of Warcraft/_forever_/Interface/AddOns/` as `WASDBars` and `/reload`.
 
 Specs and the roadmap live in `openspec/`; start with `openspec/project.md`.
+
+## License
+
+MIT; see [LICENSE](LICENSE).
