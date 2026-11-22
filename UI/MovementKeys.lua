@@ -52,24 +52,61 @@ local function copyArt(target, source, key)
   return false
 end
 
-local function createKey(parent, k, baseSize)
+-- Built from the game's own (non-secure) action button template so it is drawn
+-- exactly like an empty slot, with the same art visible as on the cluster's
+-- own buttons. Never clickable.
+local function templateKey(parent)
+  local ok, key = pcall(CreateFrame, "CheckButton", nil, parent, "ActionButtonTemplate")
+  if not ok then
+    return nil
+  end
+  key:EnableMouse(false)
+  local source = _G.ActionButton1
+  for _, name in ipairs({ "SlotArt", "SlotBackground" }) do
+    if key[name] and source[name] then
+      key[name]:SetShown(source[name]:IsShown())
+    end
+  end
+  local normal, sourceNormal = key:GetNormalTexture(), source:GetNormalTexture()
+  if normal and sourceNormal then
+    copyArt(normal, sourceNormal, key)
+  end
+  for _, name in ipairs({ "icon", "Icon", "HotKey", "Count", "Name", "cooldown", "Cooldown", "Border" }) do
+    if key[name] then
+      key[name]:Hide()
+    end
+  end
+  return key
+end
+
+-- Fallback if the template isn't available: copies the slot art piece by piece.
+local function copiedKey(parent, baseSize)
   local template = _G.ActionButton1
-  -- Built at full button size and shrunk with SetScale like the action buttons,
-  -- so the art and arrow shrink together.
   local key = CreateFrame("Frame", nil, parent)
   key:SetSize(baseSize, baseSize)
-  key:SetScale(k.scale)
-  key:SetPoint("CENTER", parent, "TOPLEFT", k.cx / k.scale, -k.cy / k.scale)
-
   local background = key:CreateTexture(nil, "BACKGROUND")
   if not copyArt(background, template.SlotBackground, key) then
     ns.debug("no slot background art for movement keys")
   end
-
   local border = key:CreateTexture(nil, "ARTWORK")
   if not copyArt(border, template:GetNormalTexture(), key) then
     ns.debug("no button border art for movement keys")
   end
+  return key
+end
+
+local function createKey(parent, k, baseSize)
+  local key = templateKey(parent)
+  if key then
+    ns.debug(k.key.label .. ": built from the action button template")
+  else
+    key = copiedKey(parent, baseSize)
+  end
+  -- Full button size, shrunk with SetScale like the action buttons, so the art
+  -- and arrow shrink together.
+  key:SetSize(baseSize, baseSize)
+  key:SetScale(k.scale)
+  key:SetPoint("CENTER", parent, "TOPLEFT", k.cx / k.scale, -k.cy / k.scale)
 
   local arrow = key:CreateTexture(nil, "OVERLAY")
   arrow:SetPoint("CENTER")
@@ -94,6 +131,7 @@ local function createKey(parent, k, baseSize)
     ns.debug("no arrow art for " .. k.key.label)
   end
 
+  key.arrow = arrow
   return key
 end
 
@@ -104,7 +142,7 @@ ns.Events.on("PLAYER_LOGIN", function()
   MovementKeys.frames = {}
   for _, k in ipairs(cluster.geometry.keys) do
     if k.key.movement then
-      table.insert(MovementKeys.frames, createKey(cluster.frame, k, cluster.baseSize))
+      MovementKeys.frames[k.key.label] = createKey(cluster.frame, k, cluster.baseSize)
     end
   end
 end)

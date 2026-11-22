@@ -22,7 +22,8 @@ local function styleHotkey(button)
   end
   hotkey:ClearAllPoints()
   hotkey:SetPoint("BOTTOM", button, "BOTTOM", 0, 3)
-  hotkey:SetWidth(button:GetWidth())
+  -- the game's box is shorter than this font; make it fit so the text sits where anchored
+  hotkey:SetSize(button:GetWidth(), HOTKEY_SIZE + 2)
   hotkey:SetJustifyH("CENTER")
   local text = hotkey:GetText()
   local short = ns.HotkeyText.shorten(text)

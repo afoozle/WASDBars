@@ -6,7 +6,7 @@ local ADDON, ns = ...
 -- `label` is drawn only on movement keys; on action buttons it is documentation.
 ns.Layout = {
   sizes = { big = 1.0, small = 0.8 },
-  gap = 2, -- pixels between big keys
+  gap = 0, -- pixels between key cells
   -- default Edit Mode position (relative to the screen) and scale, for layouts where it hasn't been moved
   position = { point = "BOTTOMLEFT", x = 200, y = 81 },
   scale = 1.0,
@@ -25,8 +25,8 @@ ns.Layout = {
     { label = "X", button = 8, x = 2.25, y = 2, size = "big" },
     { label = "C", button = 9, x = 3.25, y = 2, size = "big" },
     { label = "V", button = 10, x = 4.25, y = 2, size = "small" },
-    -- mouse side buttons: a column right of the shape, half a key further out, front above back
-    { label = "Mouse front", button = 11, x = 6.25, y = 0, size = "small" },
-    { label = "Mouse back", button = 12, x = 6.25, y = 1, size = "small" },
+    -- mouse side buttons: a column next to G, front above back, centred on the three rows
+    { label = "Mouse front", button = 11, x = 5.75, y = 0.5, size = "small" },
+    { label = "Mouse back", button = 12, x = 5.75, y = 1.5, size = "small" },
   },
 }

@@ -72,10 +72,11 @@ describe("LayoutGeometry.compute", function()
     end
   end)
 
-  it("puts button 11 above button 12, right of the keyboard keys", function()
+  it("puts button 11 above button 12, right of the keyboard keys and centred on the rows", function()
     local front, back = find("Mouse front"), find("Mouse back")
     assert.equal(front.cx, back.cx)
     assert.is_true(front.cy < back.cy)
+    assert.equal(find("S").cy, (front.cy + back.cy) / 2)
     for _, label in ipairs({ "T", "G", "V" }) do
       assert.is_true(front.cx > find(label).cx, label)
     end
