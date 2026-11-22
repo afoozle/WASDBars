@@ -1,10 +1,10 @@
 # Tasks: Set up the addon foundation
 
 ## 1. Repository
-- [ ] 1.1 `git init` in this folder, default branch `main` (no remote yet)
-- [ ] 1.2 Add `.gitignore`, `.gitattributes`, `.editorconfig` (design.md section 7)
-- [ ] 1.3 Add a short README (what it is, dev setup, make targets) and CLAUDE.md (design.md section 8)
-- [ ] 1.4 Commit `.agents/`, `.claude/` and `skills-lock.json` along with the rest
+- [x] 1.1 `git init` in this folder, default branch `main` (no remote yet)
+- [x] 1.2 Add `.gitignore`, `.gitattributes`, `.editorconfig` (design.md section 7)
+- [x] 1.3 Add a short README (what it is, dev setup, make targets) and CLAUDE.md (design.md section 8)
+- [x] 1.4 Commit `.agents/`, `.claude/` and `skills-lock.json` along with the rest
 
 ## 2. Tooling
 - [ ] 2.1 `scripts/setup-dev.sh` (design.md section 6) and run `make setup`
