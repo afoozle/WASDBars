@@ -31,6 +31,25 @@ function BindingPlan.build(group, getBindingAction)
   return plan
 end
 
+-- A short, plain name for what a command does, for the confirmation popup.
+-- getBindingName: the game's GetBindingName(command).
+-- getFormName: returns the name of stance bar form n, or nil if unknown.
+function BindingPlan.commandName(command, getBindingName, getFormName)
+  local n = command:match("^ACTIONBUTTON(%d+)$")
+  if n then
+    return "Action bar 1 button " .. n
+  end
+  n = command:match("^MULTIACTIONBAR1BUTTON(%d+)$")
+  if n then
+    return "Action bar 2 button " .. n
+  end
+  n = command:match("^SHAPESHIFTBUTTON(%d+)$")
+  if n then
+    return getFormName(tonumber(n)) or ("Form " .. n)
+  end
+  return getBindingName(command)
+end
+
 -- One line for /wasd setup status, e.g. "Number row: 7 of 12 set up".
 function BindingPlan.statusLine(group, plan)
   if plan.state == "applied" then

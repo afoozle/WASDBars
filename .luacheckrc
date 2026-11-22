@@ -22,5 +22,7 @@ read_globals = {
   "MultiBarBottomLeft",
   "StaticPopup_Show",
   "C_Timer",
+  "GetShapeshiftFormInfo",
+  "C_Spell",
 }
 files["tests/**"] = { std = "+busted" }

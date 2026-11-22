@@ -8,11 +8,16 @@ local function plan(group)
   return ns.BindingPlan.build(group, GetBindingAction)
 end
 
+local function formName(n)
+  local spellID = select(4, GetShapeshiftFormInfo(n))
+  return spellID and C_Spell and C_Spell.GetSpellName and C_Spell.GetSpellName(spellID)
+end
+
 local function describe(group, changes)
-  local lines = { group.title, "" }
+  local lines = { group.question, "", "These keys stop doing what they do now:" }
   for _, change in ipairs(changes) do
-    local from = change.current and GetBindingName(change.current) or "nothing"
-    table.insert(lines, (change.label or change.key) .. ": " .. from .. " -> " .. GetBindingName(change.command))
+    local now = change.current and ns.BindingPlan.commandName(change.current, GetBindingName, formName) or "nothing"
+    table.insert(lines, (change.label or change.key) .. ": " .. now)
   end
   return table.concat(lines, "\n")
 end

@@ -7,11 +7,12 @@
 
 ## 2. Planning (`Logic/BindingPlan.lua`, pure, unit tested)
 - `BindingPlan.build(group, getBindingAction)` returns `{ changes = { { key, label, command, current } }, correct, total, state }`. `current` is the key's command now (`nil` if unbound); keys already right are left out of `changes`; `state` is `"applied"`, `"partial"` or `"not applied"`.
+- `BindingPlan.commandName(command, getBindingName, getFormName)`: short plain name for a command (section 3).
 - `BindingPlan.statusLine(group, plan)`: "WASD keys: set up", "Number row: 7 of 12 set up" or "Number row: not set up".
 - Binding a key only replaces that key's old command; other keys bound to the same command keep it.
 
 ## 3. Confirmation and apply (`UI/Bindings.lua`)
-- `ns.Bindings.request(group, onDone)` runs through `ns.combatQueue:run("bind-" .. id, ...)`, so in combat the popup waits until combat ends. If nothing needs changing it prints "<title>: already set up." Otherwise it shows the `WASDBARS_CONFIRM_BINDS` StaticPopup: the title, then one line per change, such as "Q: Action Button 7 -> Action Button 1", using the game's own names (`GetBindingName`). The game font has no arrow character.
+- `ns.Bindings.request(group, onDone)` runs through `ns.combatQueue:run("bind-" .. id, ...)`, so in combat the popup waits until combat ends. If nothing needs changing it prints "<title>: already set up." Otherwise it shows the `WASDBARS_CONFIRM_BINDS` StaticPopup: the group's `question` (for example "Bind 1-0, - and = to action bar 2?"), then "These keys stop doing what they do now:" and one short line per change, such as "Q: Action bar 1 button 7" or "2: Cat Form". `BindingPlan.commandName` gives action bar buttons short names, stance bar buttons their form's name (`GetShapeshiftFormInfo` spell ID → `C_Spell.GetSpellName`), and anything else the game's own name (`GetBindingName`). Lines are kept short so the popup doesn't wrap. (First try in game showed "2: Special Action Button 3 -> Action Bar 2 Button 2", which wrapped and read as nonsense.)
 - Confirm: through the combat queue, `SetBinding(key, command)` for each change (this unbinds the key's old command), then `SaveBindings(GetCurrentBindingSet())`, then "WASDBars: <title> set up." For the number row, if `MultiBarBottomLeft` isn't shown, a reminder to turn on action bar 2 in Edit Mode; the bar is never turned on.
 - Confirm and Cancel both call `onDone` a frame later (`C_Timer.After(0, ...)`), so the next popup isn't hidden along with the one just clicked.
 - `ns.Bindings.requestAll(onDone)` asks for each group in turn. `ns.Bindings.status(group)` returns the status line.

@@ -50,6 +50,30 @@ describe("BindingPlan", function()
     assert.is_nil(plan.changes[1].current)
   end)
 
+  describe("commandName", function()
+    local function name(command)
+      return BindingPlan.commandName(command, function(c)
+        return "game:" .. c
+      end, function(n)
+        return ({ "Bear Form", nil, "Cat Form" })[n]
+      end)
+    end
+
+    it("names action bar buttons briefly", function()
+      assert.equal("Action bar 1 button 7", name("ACTIONBUTTON7"))
+      assert.equal("Action bar 2 button 12", name("MULTIACTIONBAR1BUTTON12"))
+    end)
+
+    it("names stance bar buttons after their form", function()
+      assert.equal("Cat Form", name("SHAPESHIFTBUTTON3"))
+      assert.equal("Form 2", name("SHAPESHIFTBUTTON2"))
+    end)
+
+    it("uses the game's name for anything else", function()
+      assert.equal("game:STRAFELEFT", name("STRAFELEFT"))
+    end)
+  end)
+
   describe("statusLine", function()
     it("describes each state", function()
       assert.equal("Test keys: set up", BindingPlan.statusLine(group, { state = "applied" }))
