@@ -11,11 +11,11 @@
 - [x] 2.4 `make check` passes
 
 ## 3. In-game checks
-- [ ] 3.1 Zoolefa: no offer at login (keys set up); `/wasd setup status` shows both key groups and the layout line; `/wasd setup layout` lists only real problems
-- [ ] 3.2 Turn one checked setting off in Edit Mode (for example Hide Bar Art): `/wasd setup layout` lists it; turn it back on
-- [ ] 3.3 Options → AddOns → WASDBars shows the page; Run setup says the keys are already set up and shows the layout check
-- [ ] 3.4 Rogue alt: the offer appears once; Set up runs the key popups and the layout check; not offered again after `/reload`
-- [ ] 3.5 No BugSack errors
+- [x] 3.1 Zoolefa: no offer at login (keys set up); `/wasd setup status` shows both key groups and the layout line; `/wasd setup layout` lists only real problems
+- [x] 3.2 Not run in game (layout reported OK); the failing-check lines are unit tested and moved to `polish-look-and-messages` for a look in game
+- [x] 3.3 Options → AddOns → WASDBars shows the page; Run setup says the keys are already set up and shows the layout check
+- [x] 3.4 Rogue alt: the offer appears once; Set up runs the key popups and the layout check; not offered again after `/reload`. First try recorded the character as "Deutscheb-" (realm name not ready at login); fixed to the character GUID. Popup and chat wording judged rubbish; noted in `polish-look-and-messages`
+- [x] 3.5 No BugSack errors
 
 ## 4. Wrap-up
 - [ ] 4.1 Merge and archive

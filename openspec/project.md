@@ -20,14 +20,15 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 | 3 | `add-position-and-scale` ✅ done 2026-11-22, archived | `display-positioning` | Move, scale and reset the display as its own Edit Mode element (LibEditMode) |
 | 4 | `add-key-binding-setup` ✅ done 2026-11-22, archived | `key-binding-setup` | Confirmed setup of the WASD-cluster binds and the number-row binds, 1–0, - and = to action bar 2 (`/wasd setup keys`) |
 | 5 | `add-edit-mode-setup` | `edit-mode-setup` | First-time setup offered once per character (keys, then a read-only Edit Mode layout check that lists manual fixes), `/wasd setup`, and a Run setup button in the AddOns settings |
+| 6 | `polish-look-and-messages` | changes to `wasd-layout`, `key-binding-setup`, `edit-mode-setup` | Tighter key spacing, clearer key labels, and binding popups and chat messages that read well |
 
 **Optional, if it goes public**
 
 | # | Change | Capability | What it adds |
 |---|---|---|---|
-| 6 | `add-options-panel` | `options-panel` | Options in the game's own settings window |
-| 7 | `add-performance-recording` | `performance-recording` | Save WoW Forever's built-in profiler numbers for WASDBars so Claude Code can read them; used on demand |
-| 8 | `add-curseforge-publishing` | `curseforge-publishing` | Packager, CI, GitHub Releases, Windows PC install, and uploads to CurseForge |
+| 7 | `add-options-panel` | `options-panel` | Options in the game's own settings window |
+| 8 | `add-performance-recording` | `performance-recording` | Save WoW Forever's built-in profiler numbers for WASDBars so Claude Code can read them; used on demand |
+| 9 | `add-curseforge-publishing` | `curseforge-publishing` | Packager, CI, GitHub Releases, Windows PC install, and uploads to CurseForge |
 
 If the spike fails there is no fallback build: stop and rethink (for example, configure an existing bar addon into this shape and keep only the keybind and decoration parts).
 
