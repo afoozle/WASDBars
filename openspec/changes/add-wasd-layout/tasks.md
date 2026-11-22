@@ -2,7 +2,7 @@
 
 ## 1. Spike findings
 - [x] 1.1 Copy the relevant spike findings into design.md section 1
-- [x] 1.2 By hand in Edit Mode, Action Bar 1: "Hide Bar Art", "Hide Bar Scrolling", "Always Show Buttons", "# of Icons" 12; drag Action Bar 2 into Action Bar 1's old spot
+- [x] 1.2 By hand in Edit Mode, Action Bar 1: "Hide Bar Art", "Hide Bar Scrolling", "Always Show Buttons", "# of Icons" 12; drag Action Bar 2 into Action Bar 1's old spot and Action Bar 1 somewhere out of the way (the empty bar still catches the mouse and blocks Action Bar 2's tooltips if they overlap; untick Snap to Elements and briefly set Action Bar 1 to Vertical to reach Action Bar 2 and unlink it)
 
 ## 2. Logic, data and tests
 - [x] 2.1 `Data/Layout.lua` (design.md section 2)

@@ -14,7 +14,7 @@ The simplest way is to move **the game's own action bar 1 buttons** into that sh
   - W, A, S, D as small dimmed keys drawn with the game's own empty-slot art, with the key letter and a direction arrow (the game's own arrow art) on top
 - Layout is applied once at login. As a cheap safety check, when Edit Mode layouts change (`EDIT_MODE_LAYOUTS_UPDATED`) the addon checks whether any button has left the cluster and re-applies through the combat queue if so. The spike found nothing else ever moves them, so there are no hooks into the game's bar code.
 - Game art only: no custom textures in this change.
-- The main bar's leftover art, empty-slot visibility and action bar 2 are **not** touched by the addon. While testing this change the player sets them up by hand in Edit Mode (Action Bar 1: "Hide Bar Art", "Hide Bar Scrolling", "Always Show Buttons" and "# of Icons" 12; drag Action Bar 2 into Action Bar 1's old spot). `add-edit-mode-setup` later does this for the player.
+- The main bar's leftover art, empty-slot visibility and action bar 2 are **not** touched by the addon. While testing this change the player sets them up by hand in Edit Mode (Action Bar 1: "Hide Bar Art", "Hide Bar Scrolling", "Always Show Buttons" and "# of Icons" 12; drag Action Bar 2 into Action Bar 1's old spot and move the now-empty Action Bar 1 out of the way, since it still catches the mouse). `add-edit-mode-setup` later does this for the player.
 
 Everything an action button does (feedback, form following, drag and drop, keybind labels) comes from the game; this change adds none of it.
 
