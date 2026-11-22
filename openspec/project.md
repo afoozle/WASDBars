@@ -70,7 +70,7 @@ WASDBars/                      repo root = addon folder
 - The addon **arranges the game's own action buttons**; it never creates action buttons, and never manages spells or macros. Everything an action button does (feedback, form following, drag and drop) is the game's
 - The addon only adds to the game's functions with `hooksecurefunc`; it never replaces them
 - The addon changes keybinds only through the keybind setup (`add-key-binding-setup`), only after the player confirms, and only the keys listed in the keybind layout below
-- The addon changes Edit Mode layouts only through the Edit Mode setup (`add-edit-mode-setup`), only after the player confirms, and only in its own "WASDBars" layout (never the game's preset layouts)
+- The addon never writes Edit Mode layouts, frames or tables. It only reads the action bars' Edit Mode settings to list manual fixes (`/wasd setup layout`); the cluster is its own Edit Mode element through LibEditMode
 - Anything that moves, sizes or reparents the action buttons or the cluster, or changes keybinds, goes through the combat queue: run now if out of combat, otherwise run on `PLAYER_REGEN_ENABLED` with a single "will apply after combat" message
 
 ### Versioning
@@ -114,7 +114,7 @@ No packaging or releases until `add-curseforge-publishing`. The TOC has `## Vers
   | Mouse back side button (usually `BUTTON4`) | `ACTIONBUTTON12` | Action bar 1 |
   | W, A, S, D | movement | – |
 
-- The number row is shown by the game's own action bar 2. WASDBars never draws it; the confirmed Edit Mode setup (`add-edit-mode-setup`) moves it into action bar 1's old spot, with the WASD cluster above it.
+- The number row is shown by the game's own action bar 2. WASDBars never draws or moves it; the player places it in Edit Mode (`/wasd setup layout` lists what's still off).
 - Keybind labels on the buttons are the game's own (including the thumb buttons; no relabel).
 - Addons can't write files directly. The only way data leaves the game is SavedVariables, which the game writes to the `WTF` folder on `/reload`, logout or exit.
 
