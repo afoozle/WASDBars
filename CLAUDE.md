@@ -7,7 +7,7 @@ A WoW: Forever addon (interface `16001`, Lua 5.1) that arranges the game's own a
 ## Roadmap and changes
 - Work is planned as OpenSpec changes in `openspec/changes/`, built in the order of the roadmap table in `openspec/project.md`. Finished changes are in `openspec/changes/archive/`; the next change is the first roadmap row that isn't archived.
 - **Grill each change's spec at the start of work on it**, using what earlier changes learned (the spike's findings are in `openspec/changes/archive/2026-11-22-spike-button-takeover/design.md`).
-- One branch per change, named after it. Conventional commits. A change is done when `make check` passes and its in-game checks (end of its `tasks.md`) pass; then merge to `main` and archive it to `openspec/changes/archive/<date>-<change>/`.
+- One branch per change, named after it. Conventional commits, with no `Co-Authored-By` or other AI attribution lines. A change is done when `make check` passes and its in-game checks (end of its `tasks.md`) pass; then merge to `main` and archive it to `openspec/changes/archive/<date>-<change>/`.
 
 ## Commands
 - `make setup`: install dev tools (once)
