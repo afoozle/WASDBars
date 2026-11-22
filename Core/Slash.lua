@@ -24,13 +24,8 @@ commands.help = { help = "list these commands", run = showHelp }
 commands.version = {
   help = "show the addon version",
   run = function()
-    local getMetadata = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
-    local version = getMetadata(ADDON, "Version")
-    if not version or version == "@project-version@" then
-      ns.print("Dev build.")
-    else
-      ns.print("Version " .. version:gsub("^v", "") .. ".")
-    end
+    local version = ns.addonVersion()
+    ns.print(version and ("Version " .. version .. ".") or "Dev build.")
   end,
 }
 
@@ -39,6 +34,23 @@ commands.debug = {
   run = function()
     ns.debugEnabled = not ns.debugEnabled
     ns.print("Debug output " .. (ns.debugEnabled and "on" or "off") .. ".")
+  end,
+}
+
+commands.perf = {
+  help = "'start <label>', 'stop' or 'clear' a performance recording for Claude Code",
+  run = function(args)
+    local action, label = args:match("^(%S*)%s*(.-)$")
+    action = action:lower()
+    if action == "start" then
+      ns.Perf.start(label)
+    elseif action == "stop" then
+      ns.Perf.stop()
+    elseif action == "clear" then
+      ns.Perf.clear()
+    else
+      ns.print("Use /wasd perf start <label>, /wasd perf stop or /wasd perf clear.")
+    end
   end,
 }
 

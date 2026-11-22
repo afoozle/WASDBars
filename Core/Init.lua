@@ -18,6 +18,16 @@ function ns.print(...)
   DEFAULT_CHAT_FRAME:AddMessage(PREFIX .. join(...))
 end
 
+-- The TOC version, or nil for a dev build (the packager hasn't replaced it).
+function ns.addonVersion()
+  local getMetadata = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
+  local version = getMetadata(ADDON, "Version")
+  if not version or version == "@project-version@" then
+    return nil
+  end
+  return (version:gsub("^v", ""))
+end
+
 function ns.debug(...)
   if ns.debugEnabled then
     ns.print("[debug]", ...)
