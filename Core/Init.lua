@@ -26,6 +26,6 @@ end
 -- ns.combatQueue:run(key, fn).
 function ns.createCombatQueue()
   ns.combatQueue = ns.CombatQueue.new(InCombatLockdown, function()
-    ns.print("will apply after combat.")
+    ns.print("Will apply after combat.")
   end)
 end

@@ -2,92 +2,181 @@ local ADDON, ns = ...
 local Bindings = {}
 ns.Bindings = Bindings
 
-local POPUP = "WASDBARS_CONFIRM_BINDS"
+local WIDTH, PAD, INDENT = 440, 18, 16
+local window
 
-local function plan(group)
-  return ns.BindingPlan.build(group, GetBindingAction)
-end
-
-local function formName(n)
-  local spellID = select(4, GetShapeshiftFormInfo(n))
-  return spellID and C_Spell and C_Spell.GetSpellName and C_Spell.GetSpellName(spellID)
-end
-
-local function describe(group, changes)
-  local lines = { group.question, "", "These keys stop doing what they do now:" }
-  for _, change in ipairs(changes) do
-    local now = change.current and ns.BindingPlan.commandName(change.current, GetBindingName, formName) or "nothing"
-    table.insert(lines, (change.label or change.key) .. ": " .. now)
+local function plans()
+  local list = {}
+  for i, group in ipairs(ns.BindingGroups) do
+    list[i] = ns.BindingPlan.build(group, GetBindingAction)
   end
-  return table.concat(lines, "\n")
+  return list
 end
 
-local function apply(group, changes)
-  for _, change in ipairs(changes) do
-    SetBinding(change.key, change.command)
+-- Older clients return the form's name second; newer ones its spell ID fourth.
+local function formName(n)
+  local _, name, _, spellID = GetShapeshiftFormInfo(n)
+  if type(name) == "string" then
+    return name
+  end
+  if type(spellID) == "number" and C_Spell and C_Spell.GetSpellName then
+    return C_Spell.GetSpellName(spellID)
+  end
+end
+
+local function actionName(command)
+  return ns.BindingPlan.commandName(command, GetBindingName, formName)
+end
+
+local function apply(steps)
+  for _, step in ipairs(steps) do
+    for _, change in ipairs(step.plan.changes) do
+      SetBinding(change.key, change.command)
+    end
   end
   -- keeps whichever set the character already uses (account or character)
   SaveBindings(GetCurrentBindingSet())
-  ns.print(group.title .. " set up.")
-  if group.id == "numbers" and not MultiBarBottomLeft:IsShown() then
-    ns.print("action bar 2 is turned off. Turn it on in Edit Mode to see the number row.")
+  ns.print("Keybinds set up.")
+  for _, step in ipairs(steps) do
+    if step.group.id == "numbers" and not MultiBarBottomLeft:IsShown() then
+      ns.print("Action bar 2 is turned off. Turn it on in Edit Mode to see the number row.")
+    end
   end
 end
 
--- Show the next popup a frame later, so it isn't hidden along with the one just clicked.
-local function finish(onDone)
-  if onDone then
-    C_Timer.After(0, onDone)
+local function createWindow()
+  local f = CreateFrame("Frame", "WASDBarsKeybindWindow", UIParent, "BasicFrameTemplateWithInset")
+  f:SetSize(WIDTH, 200)
+  f:SetPoint("TOP", 0, -135)
+  f:SetFrameStrata("DIALOG")
+  f:SetToplevel(true)
+  f:EnableMouse(true)
+  f:SetMovable(true)
+  f:SetClampedToScreen(true)
+  f:RegisterForDrag("LeftButton")
+  f:SetScript("OnDragStart", f.StartMoving)
+  f:SetScript("OnDragStop", f.StopMovingOrSizing)
+  f:Hide()
+  -- Escape closes it, like the game's own windows
+  table.insert(UISpecialFrames, f:GetName())
+  if f.TitleText then
+    f.TitleText:SetText("Set up WASDBars keybinds")
   end
-end
+  f.lines = {}
 
-StaticPopupDialogs[POPUP] = {
-  text = "%s",
-  button1 = "Confirm",
-  button2 = "Cancel",
-  OnAccept = function(_, data)
-    ns.combatQueue:run("bind-" .. data.group.id, function()
-      apply(data.group, data.changes)
+  local confirm = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+  confirm:SetSize(120, 24)
+  confirm:SetPoint("BOTTOMRIGHT", f, "BOTTOM", -6, 14)
+  confirm:SetText("Confirm")
+  confirm:SetScript("OnClick", function()
+    local steps = f.steps
+    ns.combatQueue:run("keybinds", function()
+      apply(steps)
     end)
-    finish(data.onDone)
-  end,
-  OnCancel = function(_, data)
-    finish(data.onDone)
-  end,
-  timeout = 0,
-  whileDead = true,
-  hideOnEscape = true,
-}
+    f:Hide()
+  end)
 
--- group: an entry of ns.BindingGroups. onDone runs after Confirm or Cancel,
--- or straight away when the group is already set up.
-function Bindings.request(group, onDone)
-  ns.combatQueue:run("bind-" .. group.id, function()
-    local changes = plan(group).changes
-    if #changes == 0 then
-      ns.print(group.title .. ": already set up.")
-      finish(onDone)
+  local cancel = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+  cancel:SetSize(120, 24)
+  cancel:SetPoint("BOTTOMLEFT", f, "BOTTOM", 6, 14)
+  cancel:SetText("Cancel")
+  cancel:SetScript("OnClick", function()
+    f:Hide()
+  end)
+
+  -- Confirm, Cancel, the close button and Escape all end up here.
+  f:SetScript("OnHide", function()
+    local onDone = f.onDone
+    f.onDone, f.steps = nil, nil
+    if onDone then
+      onDone()
+    end
+  end)
+  return f
+end
+
+-- Fills the window top to bottom; each line is { font, text, indent, spaceAfter, color }.
+local function layout(f, lines)
+  local y = 34
+  for i, line in ipairs(lines) do
+    local text = f.lines[i] or f:CreateFontString(nil, "OVERLAY")
+    f.lines[i] = text
+    text:SetFontObject(line[1])
+    text:SetJustifyH("LEFT")
+    text:SetWidth(WIDTH - 2 * PAD - line[3])
+    text:ClearAllPoints()
+    text:SetPoint("TOPLEFT", PAD + line[3], -y)
+    text:SetText(line[2])
+    if line[5] then
+      text:SetTextColor(unpack(line[5]))
+    end
+    text:Show()
+    y = y + text:GetStringHeight() + line[4]
+  end
+  for i = #lines + 1, #f.lines do
+    f.lines[i]:Hide()
+  end
+  f:SetHeight(y + 48)
+end
+
+local function show(steps, lost, onDone)
+  window = window or createWindow()
+  local lines = {}
+  for i, step in ipairs(steps) do
+    table.insert(lines, { "GameFontNormal", i .. ". " .. step.group.heading, 0, 4 })
+    table.insert(lines, { "GameFontHighlight", step.group.detail, INDENT, 12 })
+  end
+  if #lost > 0 then
+    local names = {}
+    for _, entry in ipairs(lost) do
+      table.insert(names, actionName(entry.command) .. " (" .. table.concat(entry.keys, ", ") .. ")")
+    end
+    table.insert(lines, { "GameFontNormal", "These will no longer have a key:", 0, 4, { 1, 0.5, 0.25 } })
+    table.insert(lines, { "GameFontHighlight", table.concat(names, ", "), INDENT, 4 })
+    table.insert(lines, { "GameFontDisableSmall", "Rebind them in Key Bindings if you use them.", INDENT, 8 })
+  end
+  layout(window, lines)
+  window.steps, window.onDone = steps, onDone
+  window:Show()
+end
+
+-- Shows the keybind window for every group that isn't set up yet. onDone runs
+-- once the window closes (Confirm or not), or straight away if there's nothing to do.
+function Bindings.request(onDone)
+  ns.combatQueue:run("keybinds", function()
+    if window and window:IsShown() then
       return
     end
-    StaticPopup_Show(POPUP, describe(group, changes), nil, { group = group, changes = changes, onDone = onDone })
+    local all, steps = plans(), {}
+    for i, group in ipairs(ns.BindingGroups) do
+      if #all[i].changes > 0 then
+        table.insert(steps, { group = group, plan = all[i] })
+      end
+    end
+    if #steps == 0 then
+      ns.print("Keybinds are already set up.")
+      if onDone then
+        onDone()
+      end
+      return
+    end
+    local stepPlans = {}
+    for i, step in ipairs(steps) do
+      stepPlans[i] = step.plan
+    end
+    show(steps, ns.BindingPlan.lostActions(stepPlans, GetBindingKey), onDone)
   end)
 end
 
-function Bindings.status(group)
-  return ns.BindingPlan.statusLine(group, plan(group))
-end
-
--- Asks for each group in turn: the next popup shows once the previous one closes.
-function Bindings.requestAll(onDone)
-  local i = 0
-  local function nextGroup()
-    i = i + 1
-    local group = ns.BindingGroups[i]
-    if group then
-      Bindings.request(group, nextGroup)
-    elseif onDone then
-      onDone()
+function Bindings.isSetUp()
+  for _, plan in ipairs(plans()) do
+    if plan.state ~= "applied" then
+      return false
     end
   end
-  nextGroup()
+  return true
+end
+
+function Bindings.statusSentence()
+  return ns.BindingPlan.statusSentence(ns.BindingGroups, plans())
 end

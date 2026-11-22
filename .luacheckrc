@@ -21,6 +21,7 @@ read_globals = {
   "GetCurrentBindingSet",
   "MultiBarBottomLeft",
   "StaticPopup_Show",
+  "GetBindingKey",
   "C_Timer",
   "GetShapeshiftFormInfo",
   "C_Spell",
