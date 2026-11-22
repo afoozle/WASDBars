@@ -12,6 +12,11 @@ The player wants a simple way to check WASDBars isn't hurting frame rate, and fo
 - No other addons, no report scripts, no limits files or baselines
 - Used on demand (when something feels slow, or once before a public release), not on every change
 
+## Decided when grilled (2026-11-22)
+- Every metric the profiler lists (`Enum.AddOnProfilerMetric`) is recorded by name, rather than a guessed few.
+- No Windows PC check here (no PC install yet; belongs with `add-curseforge-publishing`).
+- The 5-session / 600-row limits are unit tested instead of recorded in game.
+
 ## Depends on
 `add-options-panel`
 

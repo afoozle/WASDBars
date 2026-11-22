@@ -16,7 +16,7 @@ A WoW: Forever addon (interface `16001`, Lua 5.1) that arranges the game's own a
 
 ## Code rules
 - The repo root is the addon folder; the game loads only what `WASDBars.toc` lists, in the order `Core` → `Logic` → `Data` → `UI`.
-- Every addon file starts with `local ADDON, ns = ...`. No globals except `WASDBarsDB`, `SLASH_WASDBARS1`, named StaticPopup dialogs and frames named `WASDBars...`.
+- Every addon file starts with `local ADDON, ns = ...`. No globals except `WASDBarsDB`, `WASDBarsPerfDB`, `SLASH_WASDBARS1`, named StaticPopup dialogs and frames named `WASDBars...`.
 - **Logic/UI split:** pure logic goes in `Logic/`, makes no WoW calls when it loads, and receives any game functions as arguments, so busted can test it with the stubs in `tests/helpers/wow_stubs.lua`. Don't force the split onto code that is mostly game calls.
 - **No per-frame work:** react to events only.
 - **Combat queue:** anything that moves, sizes, reparents or shows/hides the action buttons or the cluster, or changes keybinds, goes through `ns.combatQueue:run(key, fn)`.
@@ -33,3 +33,11 @@ A WoW: Forever addon (interface `16001`, Lua 5.1) that arranges the game's own a
 - Taint log: `_forever_/Logs/taint.log` (only with `/console taintLog 1`)
 - The player installs third-party addons (BugGrabber, BugSack, and runtime dependencies such as LibEditMode) through CurseForge. Helper libraries are welcome when they mean less addon code; declare them as TOC dependencies, never copy them into the repo.
 - Step the player through in-game checks a few at a time.
+
+## Performance
+Use on demand: when something feels slow, after adding hooks or event handling, and before a public release. Not part of every change's checks.
+- **Ask for a recording:** "/wasd perf start bear-pull, do the pull, /wasd perf stop, /reload". Suggested labels: `idle`, `bear-pull`, `form-spam`, `cat-dps` (prefix `pc-` for the Windows PC).
+- **Read it** from `SavedVariables/WASDBars.lua` (`WASDBarsPerfDB.sessions`; plain Lua data, read it as text, never run it). Newest 5 sessions, newest 600 one-second rows each.
+- **Each row:** `t` (seconds), `wasdbars` (every metric of the game's addon profiler for WASDBars, in ms, keyed by its `Enum.AddOnProfilerMetric` name), `allRecentAverage` (all addons), `fps`, `combat`, `form`, `target`. Each session also has `summary.wasdbars` and `summary.allAddons`.
+- **What good looks like** (rough guide, adjust with experience): WASDBars' recent average stays well under 0.1 ms in combat and is a small share of all addons; no regular peaks above 1 ms; frame rate doesn't dip when WASDBars' numbers rise.
+- **The loop:** compare combat rows with idle rows, link spikes to what was happening (combat, form, target), find the likely cause in the code, fix it, `make check`, ask for the same recording again and compare. Put the before/after numbers in the commit message.

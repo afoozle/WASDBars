@@ -3,7 +3,7 @@
 ## ADDED Requirements
 
 ### Requirement: Record the built-in profiler's numbers
-The addon SHALL let the player start and stop a labelled recording with `/wasd perf start <label>` and `/wasd perf stop`, and delete recordings with `/wasd perf clear`. While recording, it SHALL save once per second WoW Forever's built-in profiler numbers for WASDBars and for all addons combined, plus frame rate, combat state, form and whether there is a target. On stop it SHALL save the profiler's session-level numbers and remind the player to `/reload`. The addon SHALL NOT time its own functions or depend on any other addon.
+The addon SHALL let the player start and stop a labelled recording with `/wasd perf start <label>` and `/wasd perf stop`, and delete recordings with `/wasd perf clear`. While recording, it SHALL save once per second every metric of WoW Forever's built-in profiler for WASDBars, all addons' recent average, plus frame rate, combat state, form and whether there is a target. On stop it SHALL save the profiler's session-level numbers and remind the player to `/reload`. The addon SHALL NOT time its own functions or depend on any other addon.
 
 #### Scenario: Recording a session
 - **WHEN** the player types `/wasd perf start bear-pull`, tanks a pull, types `/wasd perf stop` and reloads

@@ -4,7 +4,7 @@ exclude_files = { "tests/helpers/**", ".lua/**", ".tools/**", "openspec/**", ".a
 -- every addon file starts with `local ADDON, ns = ...`, even when ADDON is unused
 ignore = { "211/ADDON" }
 -- SlashCmdList is the game's, but registering /wasd writes a field into it
-globals = { "WASDBarsDB", "SLASH_WASDBARS1", "StaticPopupDialogs", "SlashCmdList" }
+globals = { "WASDBarsDB", "WASDBarsPerfDB", "SLASH_WASDBARS1", "StaticPopupDialogs", "SlashCmdList" }
 read_globals = {
   -- grows with each change; only list what is actually used
   "CreateFrame",
@@ -37,6 +37,13 @@ read_globals = {
   "ShowUIPanel",
   "SettingsPanel",
   "EditModeManagerFrame",
+  "C_AddOnProfiler",
+  "GetTime",
+  "GetFramerate",
+  "GetShapeshiftForm",
+  "UnitExists",
+  "GetBuildInfo",
+  "date",
   "Settings",
 }
 files["tests/**"] = { std = "+busted" }
