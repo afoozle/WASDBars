@@ -25,3 +25,5 @@
 Rebinding changes which slot each key fires (Q went from slot 7 to slot 1). During the in-game checks:
 1. A `/run` line saves every form's slot contents into `WASDBarsDB`, and the player reloads.
 2. Claude Code reads the file and writes a one-off `/run` swap script for the player's bars.
+
+Done 2026-11-22 on Zoolefa: Q, E, F and C kept their caster and Bear spells (slot 7→1, 8→2, 9→5, 10→9); the Bear G Bash was removed; on the Cat bar Prowl went to F and Feral Charge to C; Bear Form and Cat Form went to action bar 2's slots 1 and 2 (potion and bandage to 4 and 5); slots 11 and 12 were emptied on every bar. The player will decide later what the mouse side buttons fire; they stay bound to action buttons 11 and 12.

@@ -12,11 +12,11 @@
 - [x] 2.3 `make check` passes
 
 ## 3. In-game checks
-- [ ] 3.1 `/wasd setup status` reports the current state; `/wasd setup keys` WASD popup lists the changes; Cancel changes nothing and the number row popup follows
-- [ ] 3.2 Confirm both: the cluster's key labels match the keys; 1–0, `-`, `=` fire action bar 2
-- [ ] 3.3 After `/reload`, `/wasd setup status` says both are set up and `/wasd setup keys` says they're already set up
-- [ ] 3.4 One-off spell move (design.md section 5)
-- [ ] 3.5 No BugSack errors
+- [x] 3.1 `/wasd setup status` reports the current state; `/wasd setup keys` WASD popup lists the changes; Cancel changes nothing and the number row popup follows
+- [x] 3.2 Confirm both: the cluster's key labels match the keys; 1–0, `-`, `=` fire action bar 2
+- [x] 3.3 After `/reload`, `/wasd setup keys` says both are already set up (no popup)
+- [x] 3.4 One-off spell move (design.md section 5). First popup wording wrapped and read as nonsense; reworked to a question plus short "key: what it does now" lines
+- [x] 3.5 No BugSack errors
 
 ## 4. Wrap-up
 - [ ] 4.1 Merge and archive
