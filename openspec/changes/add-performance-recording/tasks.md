@@ -9,9 +9,9 @@
 - [x] 1.6 `make check` passes
 
 ## 2. In-game checks
-- [ ] 2.1 `/wasd perf start idle`, wait about 2 minutes, `/wasd perf stop`, `/reload`: one session with about 120 rows; record the metric names this client lists in design.md section 1
-- [ ] 2.2 Record a short fight; Claude Code reads the file and summarises it with nothing pasted in
-- [ ] 2.3 No BugSack errors
+- [x] 2.1 `/wasd perf start idle`, wait about 2 minutes, `/wasd perf stop`, `/reload`: one session with about 120 rows; record the metric names this client lists in design.md section 1
+- [x] 2.2 Record a short fight; Claude Code reads the file and summarises it with nothing pasted in
+- [x] 2.3 No BugSack errors
 
 ## 3. Wrap-up
 - [ ] 3.1 Merge and archive

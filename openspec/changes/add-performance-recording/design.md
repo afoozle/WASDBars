@@ -3,6 +3,10 @@
 ## 1. Where the numbers come from
 WoW Forever's built-in addon profiler (`C_AddOnProfiler`) is always on and measures every addon. `C_AddOnProfiler.GetAddOnMetric("WASDBars", metric)` returns WASDBars' numbers in milliseconds; `C_AddOnProfiler.GetOverallMetric(metric)` returns the total for all addons. Rather than naming metrics, the recorder reads every entry of `Enum.AddOnProfilerMetric` (`Logic/PerfLog.lua`, `readMetrics`), so the saved rows show whatever this client measures, keyed by name.
 
+Forever (interface 16001) lists: `RecentAverageTime`, `SessionAverageTime`, `EncounterAverageTime`, `LastTime`, `PeakTime`, and `CountTimeOver1Ms`/`5Ms`/`10Ms`/`50Ms`/`100Ms`/`500Ms`/`1000Ms`. The peak and counts are since login, not since the recording started.
+
+First recordings (2026-11-22, Zoolefa in Cat Form): idle 146 s and a 48 s fight (11 s in combat). WASDBars' recent average was 0.0000 ms nearly throughout (max 0.0003 ms) against 0.10–0.15 ms for all addons; session average 0.0005 ms. Its peak of 3.2 ms and 5 frames over 1 ms are since login, most likely building the cluster at login. Frame rate didn't move with WASDBars' numbers.
+
 WASDBars doesn't time its own functions. If the numbers ever point to a problem, Claude Code finds the cause by reading the code and, if needed, asking for a recording with one feature switched off.
 
 ## 2. Recorder (`Core/Perf.lua`, limits in `Logic/PerfLog.lua`)
