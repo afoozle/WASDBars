@@ -5,7 +5,7 @@ Draft; refine when this change is grilled and after the feasibility check.
 ## 1. Feasibility check (do first)
 A throwaway test, like the spike but smaller, out of combat:
 1. Read the layouts with `C_EditMode.GetLayouts()`; find the active one and the systems for Action Bar 1 (`Enum.EditModeSystem.ActionBar`, main bar index) and Action Bar 2.
-2. Copy the active layout into a new account layout named "WASDBars"; set Action Bar 1's hide-art and hide-scrolling settings and Action Bar 2's anchor to Action Bar 1's old position; `C_EditMode.SaveLayouts(...)`, then `C_EditMode.SetActiveLayout(...)`.
+2. Copy the active layout into a new account layout named "WASDBars"; set Action Bar 1's hide-art, hide-scrolling, always-show-buttons and number-of-icons (12) settings Action Bar 2's anchor to Action Bar 1's old position (relative to the screen, not to Action Bar 1), and Action Bar 1 moved out of the way so its empty frame doesn't cover anything; `C_EditMode.SaveLayouts(...)`, then `C_EditMode.SetActiveLayout(...)`.
 3. Check: the change shows (straight away, or after `/reload`), it survives `/reload` and relog, the WASD cluster is unaffected, opening Edit Mode afterwards shows the "WASDBars" layout with those settings, and BugSack shows no taint or blocked actions (including when entering Edit Mode or combat afterwards).
 4. Record which `Enum` values and setting IDs Forever uses, and whether a reload is needed.
 

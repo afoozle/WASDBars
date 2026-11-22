@@ -6,7 +6,7 @@
 
 ## 2. Logic and tests
 - [ ] 2.1 `Logic/EditModeLayout.lua`: find the action bar systems, build the "WASDBars" copy, check whether it's applied
-- [ ] 2.2 Unit tests using the captured layout table: copy keeps the player's other settings; only Action Bar 1 art/scrolling and Action Bar 2 position change; preset layouts are never chosen for writing; status detects applied / not applied
+- [ ] 2.2 Unit tests using the captured layout table: copy keeps the player's other settings; only Action Bar 1 art/scrolling/always-show/icon-count and Action Bar 2 position change; preset layouts are never chosen for writing; status detects applied / not applied
 
 ## 3. UI and commands
 - [ ] 3.1 `ns.EditModeSetup.status` / `request` with the confirmation popup (design.md section 2)

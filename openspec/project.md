@@ -16,10 +16,10 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 |---|---|---|---|
 | 0 | `spike-button-takeover` ✅ passed 2026-11-22, archived | none (throwaway) | A rough, throwaway addon that proves the game's action buttons can be moved into the WASD shape on Forever and stay there. Go/no-go for the whole project; its findings feed every later change |
 | 1 | `setup-addon-foundation` ✅ done 2026-11-22, archived | `addon-foundation` | git repo in standard addon layout, lint, formatting, unit tests, CLAUDE.md, core skeleton (settings, events, combat queue, slash command) |
-| 2 | `add-wasd-layout` | `wasd-layout` | Move the game's action buttons 1–12 into the WASD shape with size tiers, movement arrows and a mouse outline |
+| 2 | `add-wasd-layout` ✅ done 2026-11-22, archived | `wasd-layout` | Move the game's action buttons 1–12 into the WASD shape with size tiers and movement keys (letters and arrows) |
 | 3 | `add-position-and-scale` | `display-positioning` | Move, lock, scale and reset the display |
 | 4 | `add-key-binding-setup` | `key-binding-setup` | Confirmed setup of the WASD-cluster binds and the number-row binds (`/wasd setup keys`) |
-| 5 | `add-edit-mode-setup` | `edit-mode-setup` | Confirmed Edit Mode arrangement (hide main bar art and scrolling, action bar 2 in action bar 1's old spot) in a "WASDBars" layout (`/wasd setup layout`), and the first-time setup offered once at first login that runs keys then layout |
+| 5 | `add-edit-mode-setup` | `edit-mode-setup` | Confirmed Edit Mode arrangement (hide main bar art and scrolling, always show buttons, 12 icons, action bar 2 in action bar 1's old spot) in a "WASDBars" layout (`/wasd setup layout`), and the first-time setup offered once at first login that runs keys then layout |
 
 **Optional, if it goes public**
 
@@ -115,7 +115,7 @@ No packaging or releases until `add-curseforge-publishing`. The TOC has `## Vers
   | W, A, S, D | movement | – |
 
 - The number row is shown by the game's own action bar 2. WASDBars never draws it; the confirmed Edit Mode setup (`add-edit-mode-setup`) moves it into action bar 1's old spot, with the WASD cluster above it.
-- Keybind labels on the buttons are the game's own, except that the thumb buttons are relabelled "Fwd" and "Back".
+- Keybind labels on the buttons are the game's own (including the thumb buttons; no relabel).
 - Addons can't write files directly. The only way data leaves the game is SavedVariables, which the game writes to the `WTF` folder on `/reload`, logout or exit.
 
 ## Important Constraints

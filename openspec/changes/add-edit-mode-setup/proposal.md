@@ -7,13 +7,13 @@ With action bar 1's buttons moved into the WASD cluster, the screen should look 
 - **Feasibility check first:** confirm on Forever that an addon can create its own Edit Mode layout through `C_EditMode` (copy the active layout, change the settings below, save, switch to it) without taint or blocked actions. If not, this change keeps only the first-time setup and the manual steps (see Fallback).
 - **Edit Mode arrangement** (`/wasd setup layout`), shown and confirmed before applying:
   - Creates (or updates) an Edit Mode layout named "WASDBars", based on the player's current layout, and switches to it. The game's preset layouts are never edited.
-  - In that layout: Action Bar 1 "Hide Bar Art" and "Hide Bar Scrolling" on; Action Bar 2 positioned where Action Bar 1 was.
+  - In that layout: Action Bar 1 "Hide Bar Art", "Hide Bar Scrolling" and "Always Show Buttons" on and "# of Icons" 12; Action Bar 2 positioned where Action Bar 1 was, anchored to the screen rather than to Action Bar 1; Action Bar 1 moved somewhere out of the way (once its buttons are in the cluster it is empty but still catches the mouse, which blocks Action Bar 2's tooltips where they overlap).
   - The WASD cluster's default position sits above action bar 2.
 - **First-time setup:** at the first login with WASDBars, a popup offers "Set up WASDBars? This will bind keys and arrange your action bars." with Set up / Not now. Set up runs the keybind setup (`add-key-binding-setup`), then the Edit Mode arrangement, each with its own confirmation. Either answer is remembered so it isn't offered again.
 - `/wasd setup` runs both parts again; `/wasd setup keys` and `/wasd setup layout` run one part; `/wasd setup status` includes whether the Edit Mode arrangement is in place.
 
 ## Fallback
-If the feasibility check fails (or writing layouts proves fragile), `/wasd setup layout` prints the manual steps instead: in Edit Mode, select Action Bar 1, tick "Hide Bar Art" and "Hide Bar Scrolling", then drag Action Bar 2 into Action Bar 1's old spot.
+If the feasibility check fails (or writing layouts proves fragile), `/wasd setup layout` prints the manual steps instead: in Edit Mode, select Action Bar 1, tick "Hide Bar Art", "Hide Bar Scrolling" and "Always Show Buttons", set "# of Icons" to 12, then drag Action Bar 2 into Action Bar 1's old spot.
 
 ## Depends on
 `add-key-binding-setup`
