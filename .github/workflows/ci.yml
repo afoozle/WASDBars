@@ -16,9 +16,11 @@ jobs:
           luaVersion: "5.1"
       - uses: leafo/gh-actions-luarocks@v6
       - run: luarocks install luacheck && luarocks install busted
+      - id: stylua
+        run: echo "version=$(tr -d '[:space:]' < .stylua-version)" >> "$GITHUB_OUTPUT"
       - uses: JohnnyMorganz/stylua-action@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          version: "2.6.0"
+          version: ${{ steps.stylua.outputs.version }}
           args: --check Core Logic Data UI tests
       - run: make lint test LUA_BIN=

@@ -18,7 +18,7 @@ Needs Homebrew and Python 3. Then, once:
 make setup
 ```
 
-This installs StyLua with Homebrew, and a project-local Lua 5.1 with luacheck and busted in `.lua/` (via hererocks in `.tools/venv`).
+This downloads StyLua (the version in `.stylua-version`, which CI uses too) into `.tools/`, and installs a project-local Lua 5.1 with luacheck and busted in `.lua/` (via hererocks in `.tools/venv`).
 
 | Target | What it does |
 |---|---|

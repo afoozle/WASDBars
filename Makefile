@@ -1,7 +1,9 @@
 LUA_BIN := $(if $(wildcard .lua/bin),.lua/bin/,)
+STYLUA := .tools/bin/stylua
+STYLUA_VERSION := $(shell cat .stylua-version)
 SRC := $(wildcard Core Logic Data UI tests)
 
-.PHONY: setup lint format format-check test check
+.PHONY: setup lint stylua-version format format-check test check
 
 setup:
 	scripts/setup-dev.sh
@@ -9,11 +11,15 @@ setup:
 lint:
 	$(LUA_BIN)luacheck .
 
-format:
-	stylua $(SRC)
+stylua-version:
+	@test "$$($(STYLUA) --version 2>/dev/null)" = "stylua $(STYLUA_VERSION)" \
+		|| { echo "StyLua $(STYLUA_VERSION) isn't installed in .tools; run make setup."; exit 1; }
 
-format-check:
-	stylua --check $(SRC)
+format: stylua-version
+	$(STYLUA) $(SRC)
+
+format-check: stylua-version
+	$(STYLUA) --check $(SRC)
 
 test:
 	$(LUA_BIN)busted
