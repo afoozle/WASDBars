@@ -26,6 +26,8 @@ CurseForge tags every file with game versions, and the CurseForge app uses that 
 3. If CurseForge has no WoW Forever entry at all, stop: GitHub Releases stay the way to install.
 Record the finding in this file.
 
+**Found so far (2026-11-23, `add-github-releases` dry run):** the packager recognises the TOC as WoW Forever ("Build type: non-retail version-forever", "Game version: 1.60.1") and names the zip `...-forever.zip`. Still to check: that CurseForge accepts uploads for that game version.
+
 ## 5. Listing content (`docs/curseforge/`)
 - `description.md`: what it does, a screenshot, feature list, slash commands, how keybind setup works (and that it always asks first, and that binding Q and E replaces the default strafe keys), the known limitation that settings are saved per computer, a link to GitHub issues
 - `icon.png` (square, CurseForge's current size requirement)

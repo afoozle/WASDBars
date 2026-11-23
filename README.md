@@ -41,7 +41,7 @@ Add a section to `CHANGELOG.md` on `main`, commit, then tag and push:
 git tag v1.0.1 && git push origin v1.0.1
 ```
 
-The Release workflow runs the checks, builds `WASDBars-v1.0.1.zip` with the [BigWigs packager](https://github.com/BigWigsMods/packager) (using `.pkgmeta`) and creates the GitHub Release. Tags containing `alpha` or `beta` become pre-releases. To build a zip without releasing, run the Release workflow by hand (dry run is on by default) and download the zip from the run.
+The Release workflow runs the checks, builds `WASDBars-v1.0.1-forever.zip` with the [BigWigs packager](https://github.com/BigWigsMods/packager) (using `.pkgmeta`) and creates the GitHub Release. Tags containing `alpha` or `beta` become pre-releases. To build a zip without releasing, run the Release workflow by hand (dry run is on by default) and download the zip from the run.
 
 Specs and the roadmap live in `openspec/`; start with `openspec/project.md`.
 

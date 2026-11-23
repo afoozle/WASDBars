@@ -21,7 +21,7 @@ Pushing a version tag SHALL, after all checks pass, create a GitHub Release with
 
 #### Scenario: Release tag
 - **WHEN** tag `v1.0.0` is pushed
-- **THEN** GitHub Release `v1.0.0` exists with `WASDBars-v1.0.0.zip` attached
+- **THEN** GitHub Release `v1.0.0` exists with `WASDBars-v1.0.0-forever.zip` attached
 
 #### Scenario: Checks fail
 - **WHEN** a tag is pushed and lint, format check or unit tests fail

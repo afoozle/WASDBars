@@ -41,7 +41,7 @@ If `AddOns\WASDBars` already exists, don't overwrite it: update it instead (see 
 
 Writing under `C:\Program Files (x86)` can need an administrator prompt; if extracting or cloning fails with "Permission denied" or "Access denied", run it from an elevated terminal or ask the player.
 
-**From a release (recommended).** Open https://github.com/afoozle/WASDBars/releases/latest and download `WASDBars-v<version>.zip` (not GitHub's "Source code" archives). It already holds a `WASDBars` folder: extract it straight into the AddOns folder from step 1. On Windows (PowerShell):
+**From a release (recommended).** Open https://github.com/afoozle/WASDBars/releases/latest and download `WASDBars-v<version>-forever.zip` (not GitHub's "Source code" archives). It already holds a `WASDBars` folder: extract it straight into the AddOns folder from step 1. On Windows (PowerShell):
 ```powershell
 $zip = "$env:TEMP\WASDBars.zip"
 $url = (Invoke-RestMethod https://api.github.com/repos/afoozle/WASDBars/releases/latest).assets | Where-Object name -like 'WASDBars-*.zip' | Select-Object -First 1 -ExpandProperty browser_download_url
