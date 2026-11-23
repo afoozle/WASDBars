@@ -28,7 +28,7 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 |---|---|---|---|
 | 7 | `add-options-panel` ✅ done 2026-11-22, archived | `options-panel` | Options in the game's own settings window: Open Edit Mode, show movement keys, large hotkey text, setup buttons |
 | 8 | `add-performance-recording` ✅ done 2026-11-22, archived | `performance-recording` | Save WoW Forever's built-in profiler numbers for WASDBars so Claude Code can read them; used on demand |
-| 9 | `add-github-releases` | `github-releases` | Packager, CI, and versioned GitHub Releases built from tags |
+| 9 | `add-github-releases` ✅ done 2026-11-23, archived | `github-releases` | Packager, CI, and versioned GitHub Releases built from tags |
 | 10 | `add-curseforge-publishing` | `curseforge-publishing` | Uploads to CurseForge, with LibEditMode as a dependency |
 
 If the spike fails there is no fallback build: stop and rethink (for example, configure an existing bar addon into this shape and keep only the keybind and decoration parts).

@@ -15,8 +15,8 @@
 - [x] 3.2 README, `openspec/project.md` and CLAUDE.md: releases, and how to release
 
 ## 4. First release
-- [ ] 4.1 Merge to `main`, tag and push; CI passes on `main`
-- [ ] 4.2 The GitHub Release exists with the zip attached and the CHANGELOG as notes
-- [ ] 4.3 In game (Mac, dev symlink): `/wasd version` still says "Dev build."; the addon loads with no errors
-- [ ] 4.4 Optional, on the Windows PC: replace the clone with the release zip; the addon loads and `/wasd version` shows the release's version
-- [ ] 4.5 Archive this change
+- [x] 4.1 Merge to `main`, tag and push; CI passes on `main`
+- [x] 4.2 The GitHub Release exists with the zip attached and the CHANGELOG as notes
+- [x] 4.3 In game (Mac, dev symlink): `/wasd version` still says "Dev build."; the addon loads with no errors
+- [x] 4.4 Skipped (optional): on the Windows PC: replace the clone with the release zip; the addon loads and `/wasd version` shows the release's version
+- [x] 4.5 Archive this change
