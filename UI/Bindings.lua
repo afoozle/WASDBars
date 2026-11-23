@@ -13,15 +13,10 @@ local function plans()
   return list
 end
 
--- Older clients return the form's name second; newer ones its spell ID fourth.
+-- The form's spell ID is the fourth return.
 local function formName(n)
-  local _, name, _, spellID = GetShapeshiftFormInfo(n)
-  if type(name) == "string" then
-    return name
-  end
-  if type(spellID) == "number" and C_Spell and C_Spell.GetSpellName then
-    return C_Spell.GetSpellName(spellID)
-  end
+  local spellID = select(4, GetShapeshiftFormInfo(n))
+  return spellID and C_Spell.GetSpellName(spellID)
 end
 
 local function actionName(command)
@@ -70,7 +65,7 @@ local function createWindow()
   confirm:SetText("Confirm")
   confirm:SetScript("OnClick", function()
     local steps = f.steps
-    ns.combatQueue:run("keybinds", function()
+    ns.combatQueue:run("keybinds-apply", function()
       apply(steps)
     end)
     f:Hide()
@@ -143,8 +138,18 @@ end
 -- Shows the keybind window for every group that isn't set up yet. onDone runs
 -- once the window closes (Confirm or not), or straight away if there's nothing to do.
 function Bindings.request(onDone)
-  ns.combatQueue:run("keybinds", function()
+  ns.combatQueue:run("keybinds-window", function()
     if window and window:IsShown() then
+      -- run the new follow-up too once the open window closes
+      local earlier = window.onDone
+      if onDone and onDone ~= earlier then
+        window.onDone = function()
+          if earlier then
+            earlier()
+          end
+          onDone()
+        end
+      end
       return
     end
     local all, steps = plans(), {}
