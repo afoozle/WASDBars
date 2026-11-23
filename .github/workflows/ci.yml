@@ -21,4 +21,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: "2.6.0"
           args: --check Core Logic Data UI tests
-      - run: make lint test
+      - run: make lint test LUA_BIN=
