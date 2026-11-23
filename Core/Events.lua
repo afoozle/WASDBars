@@ -26,7 +26,11 @@ Events.on("ADDON_LOADED", function(name)
   end
   WASDBarsDB = ns.Settings.merge(WASDBarsDB, ns.Settings.defaults)
   ns.db = WASDBarsDB
-  ns.createCombatQueue()
+  -- Anything that moves the action buttons or changes keybinds goes through
+  -- ns.combatQueue:run(key, fn).
+  ns.combatQueue = ns.CombatQueue.new(InCombatLockdown, function()
+    ns.print("Will apply after combat.")
+  end)
   ns.debug("loaded")
 end)
 

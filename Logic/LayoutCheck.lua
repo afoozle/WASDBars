@@ -2,49 +2,22 @@ local ADDON, ns = ...
 local LayoutCheck = {}
 ns.LayoutCheck = LayoutCheck
 
--- Each check reads one field of `readings`; a nil field means the game
--- couldn't tell us, and that check is skipped. `fix` is the manual Edit Mode step.
+-- Each check reads one field of `readings` and passes when it equals `want`;
+-- a nil field means the game couldn't tell us, and that check is skipped.
+-- `fix` is the manual Edit Mode step.
 local CHECKS = {
   {
     field = "numIcons",
-    ok = function(v)
-      return v == 12
-    end,
+    want = 12,
     fix = "Action Bar 1: set # of Icons to 12 (otherwise the cluster's last buttons are hidden).",
   },
-  {
-    field = "alwaysShowButtons",
-    ok = function(v)
-      return v
-    end,
-    fix = "Action Bar 1: turn on Always Show Buttons.",
-  },
-  {
-    field = "hideBarArt",
-    ok = function(v)
-      return v
-    end,
-    fix = "Action Bar 1: turn on Hide Bar Art.",
-  },
-  {
-    field = "hideBarScrolling",
-    ok = function(v)
-      return v
-    end,
-    fix = "Action Bar 1: turn on Hide Bar Scrolling.",
-  },
-  {
-    field = "bar2Shown",
-    ok = function(v)
-      return v
-    end,
-    fix = "Action Bar 2: turn it on.",
-  },
+  { field = "alwaysShowButtons", want = true, fix = "Action Bar 1: turn on Always Show Buttons." },
+  { field = "hideBarArt", want = true, fix = "Action Bar 1: turn on Hide Bar Art." },
+  { field = "hideBarScrolling", want = true, fix = "Action Bar 1: turn on Hide Bar Scrolling." },
+  { field = "bar2Shown", want = true, fix = "Action Bar 2: turn it on." },
   {
     field = "bar1OverlapsBar2",
-    ok = function(v)
-      return not v
-    end,
+    want = false,
     fix = "Action Bar 1: drag it away from Action Bar 2 (it blocks Action Bar 2's tooltips).",
   },
 }
@@ -55,7 +28,7 @@ function LayoutCheck.problems(readings)
   local fixes = {}
   for _, check in ipairs(CHECKS) do
     local value = readings[check.field]
-    if value ~= nil and not check.ok(value) then
+    if value ~= nil and value ~= check.want then
       table.insert(fixes, check.fix)
     end
   end

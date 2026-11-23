@@ -1,11 +1,7 @@
 local ADDON, ns = ...
-local Slash = {}
-ns.Slash = Slash
 
--- name -> { help = "one line", run = function(args) }. Later changes add
--- their own commands by inserting into this table.
-Slash.commands = {}
-local commands = Slash.commands
+-- name -> { help = "one line", run = function(args) }
+local commands = {}
 
 local function showHelp()
   local names = {}
@@ -62,7 +58,7 @@ commands.options = {
 }
 
 -- /wasd setup <part>; plain /wasd setup runs the whole setup.
-Slash.setup = {
+local setupParts = {
   [""] = function()
     ns.Setup.run()
   end,
@@ -80,7 +76,7 @@ Slash.setup = {
 commands.setup = {
   help = "run the whole setup; 'keys', 'layout' or 'status' for one part",
   run = function(args)
-    local part = Slash.setup[args:lower()]
+    local part = setupParts[args:lower()]
     if part then
       part()
     else
