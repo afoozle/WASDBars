@@ -6,17 +6,6 @@ On-demand recordings of the game's built-in addon profiler numbers for WASDBars 
 
 ## Requirements
 
-### Requirement: Record the built-in profiler's numbers
-The addon SHALL let the player start and stop a labelled recording with `/wasd perf start <label>` and `/wasd perf stop`, and delete recordings with `/wasd perf clear`. While recording, it SHALL save once per second every metric of WoW Forever's built-in profiler for WASDBars, all addons' recent average, plus frame rate, combat state, form and whether there is a target. On stop it SHALL save the profiler's session-level numbers and remind the player to `/reload`. The addon SHALL NOT time its own functions or depend on any other addon.
-
-#### Scenario: Recording a session
-- **WHEN** the player types `/wasd perf start bear-pull`, tanks a pull, types `/wasd perf stop` and reloads
-- **THEN** the account's `WASDBars.lua` SavedVariables file contains a session labelled `bear-pull` with per-second rows and a summary
-
-#### Scenario: Profiler not available
-- **WHEN** the built-in profiler doesn't exist on the client
-- **THEN** `/wasd perf start` says so and nothing is recorded
-
 ### Requirement: No cost when not recording
 Recording SHALL be off by default, and no timer or extra work SHALL run until the player starts a recording.
 
@@ -41,3 +30,10 @@ Saved recordings SHALL be limited to the 5 most recent sessions and the newest 6
 #### Scenario: Checking performance
 - **WHEN** the player records a session, reloads and asks Claude Code to check performance
 - **THEN** Claude Code reads the file from the game folder and reports what it shows, with no numbers pasted in by the player
+
+### Requirement: Recording the profiler's numbers
+`/wasd perf start <label>`, `/wasd perf stop` and `/wasd perf clear` SHALL start, stop and delete recordings of WoW Forever's built-in addon profiler. Each second of a recording SHALL save every profiler metric for WASDBars, all addons' recent average, frame rate, combat state, form and whether there is a target; stopping SHALL save the session-level numbers and remind the player to `/reload`. The addon SHALL NOT time its own functions.
+
+#### Scenario: Recording a session
+- **WHEN** the player types `/wasd perf start bear-pull`, tanks a pull, types `/wasd perf stop` and reloads
+- **THEN** the account's `WASDBars.lua` SavedVariables file contains a session labelled `bear-pull` with per-second rows and a summary

@@ -15,22 +15,26 @@ The project SHALL use the standard WoW addon repository layout: the repo root is
 - **AND** edits in the repo show up in game after `/reload`
 
 ### Requirement: Dev build version
-Until a packager exists, the addon SHALL report itself as a dev build.
+The addon SHALL report the packaged version without the leading `v`, and SHALL report itself as a dev build when run from a git checkout (the TOC version not replaced by the packager).
 
 #### Scenario: Version
-- **WHEN** the player types `/wasd version`
-- **THEN** chat shows "dev build"
+- **WHEN** the player types `/wasd version` with the addon linked from a git checkout
+- **THEN** chat shows "WASDBars: Dev build."
 
 ### Requirement: Mac development setup
-The project SHALL provide one setup command for the MacBook that installs StyLua and a project-local Lua 5.1 with luacheck and busted, without depending on the system or Homebrew Lua version.
+The project SHALL provide one setup command for the MacBook that installs a pinned StyLua and a project-local Lua 5.1 with luacheck and busted, without depending on the system or Homebrew Lua version. The StyLua version SHALL be set in one file, `.stylua-version`, which CI uses too.
 
 #### Scenario: Fresh Mac
-- **WHEN** `make setup` is run on a Mac with Homebrew and Python 3
-- **THEN** `make check` runs
+- **WHEN** `make setup` is run on a Mac with Homebrew, Python 3 and a C compiler
+- **THEN** `make check` runs, using the StyLua version in `.stylua-version`
 
 #### Scenario: Missing prerequisite
-- **WHEN** Homebrew or Python 3 is missing
+- **WHEN** Homebrew, Python 3 or a C compiler is missing
 - **THEN** setup stops with a message saying what to install
+
+#### Scenario: StyLua version changed
+- **WHEN** `.stylua-version` is changed and `make setup` is run
+- **THEN** `make format` and `make format-check` use the new version, as does CI
 
 ### Requirement: Linting, formatting and unit tests
 The project SHALL provide one command that runs linting (luacheck), a formatting check (StyLua) and unit tests (busted).
@@ -67,7 +71,7 @@ The addon SHALL load in WoW Forever with no errors, create its account-wide save
 - **THEN** the second character sees the changed value
 
 ### Requirement: Combat-safe deferral
-The addon SHALL provide a single queue for work that can't happen in combat. Work requested out of combat SHALL run immediately. Work requested in combat SHALL run, in order, as soon as combat ends, and the player SHALL see one "WASDBars: will apply after combat." message per combat, not one per request. Work is named, and a newer request with the same name SHALL replace the waiting one.
+The addon SHALL provide a single queue for work that can't happen in combat. Work requested out of combat SHALL run immediately. Work requested in combat SHALL run, in order, as soon as combat ends, and the player SHALL see one "WASDBars: Will apply after combat." message per combat, not one per request. Work is named, and a newer request with the same name SHALL replace the waiting one.
 
 #### Scenario: Out of combat
 - **WHEN** work is queued while not in combat
@@ -83,7 +87,7 @@ The addon SHALL provide a single queue for work that can't happen in combat. Wor
 - **THEN** only the 1.3 change runs when combat ends
 
 ### Requirement: Slash command
-The addon SHALL register `/wasd` with `help`, `version` and `debug` subcommands, and SHALL let later features add subcommands without editing the slash command file. `debug` SHALL turn extra chat output on or off for the current session.
+The addon SHALL register `/wasd` with `help`, `version` and `debug` subcommands, alongside the commands of the other capabilities. `debug` SHALL turn extra chat output on or off for the current session.
 
 #### Scenario: Help
 - **WHEN** the player types `/wasd help`

@@ -45,6 +45,14 @@ Setting up keybinds SHALL first show one window describing each group still to b
 - **WHEN** 1 is bound to a shapeshift form and the player confirms
 - **THEN** 1 fires action bar 2's first button and the form bind is gone
 
+#### Scenario: Confirming in combat
+- **WHEN** the player clicks Confirm during combat and then types `/wasd setup` before combat ends
+- **THEN** the confirmed binds are applied when combat ends, and the setup then reports the keybinds already set up
+
+#### Scenario: Window already open
+- **WHEN** the keybind window is open and the player types `/wasd setup`
+- **THEN** no second window opens, and the layout check runs once the window closes
+
 ### Requirement: Spells are never moved
 The keybind setup SHALL NOT pick up, place or swap anything on the action bars.
 
@@ -60,7 +68,7 @@ The keybind setup SHALL NOT pick up, place or swap anything on the action bars.
 - **THEN** chat starts "WASDBars: Keybinds: WASD keys set up, number row 7 of 12 set up."
 
 ### Requirement: Action bar 2 not changed by keybind setup
-The keybind setup SHALL NOT draw, move, show or hide action bar 2 (arranging it belongs to `add-edit-mode-setup`). If the number row is set up while action bar 2 is turned off, the addon SHALL remind the player to turn it on in Edit Mode.
+The keybind setup SHALL NOT draw, move, show or hide action bar 2 (the `edit-mode-setup` layout check lists any manual Edit Mode fixes). If the number row is set up while action bar 2 is turned off, the addon SHALL remind the player to turn it on in Edit Mode.
 
 #### Scenario: Bar turned off
 - **WHEN** the number row is confirmed while action bar 2 is turned off
