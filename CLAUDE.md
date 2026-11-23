@@ -9,6 +9,9 @@ A WoW: Forever addon (interface `16001`, Lua 5.1) that arranges the game's own a
 - **Grill each change's spec at the start of work on it**, using what earlier changes learned (the spike's findings are in `openspec/changes/archive/2026-11-22-spike-button-takeover/design.md`).
 - One branch per change, named after it. Conventional commits, with no `Co-Authored-By` or other AI attribution lines. A change is done when `make check` passes and its in-game checks (end of its `tasks.md`) pass; then merge to `main` and archive it to `openspec/changes/archive/<date>-<change>/`.
 
+## Releasing
+Only when the player asks. On `main` with `make check` passing: add a `CHANGELOG.md` section (fixes bump the patch number, features the minor), commit, `git tag vX.Y.Z`, push `main` and the tag. Watch the Release workflow with `gh run watch`; read failures with `gh run view --log-failed`. Check the zip's contents with a dry run (`gh workflow run release.yml`, then `gh run download`) after changing `.pkgmeta` or adding top-level files. Day-to-day testing never needs a package: the Mac's AddOns folder links to this repo.
+
 ## Commands
 - `make setup`: install dev tools (once)
 - `make lint`, `make format`, `make format-check`, `make test`

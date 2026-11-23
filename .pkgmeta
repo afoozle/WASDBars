@@ -1,0 +1,15 @@
+package-as: WASDBars
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
+
+ignore:
+  - tests
+  - scripts
+  - openspec
+  - Makefile
+  - CLAUDE.md
+  - INSTALL.md
+  - README.md
+  - skills-lock.json

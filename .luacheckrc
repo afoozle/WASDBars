@@ -1,6 +1,6 @@
 std = "lua51"
 max_line_length = 120
-exclude_files = { "tests/helpers/**", ".lua/**", ".tools/**", "openspec/**", ".agents/**", ".claude/**" }
+exclude_files = { "tests/helpers/**", ".lua/**", ".luarocks/**", ".release/**", ".tools/**", "openspec/**", ".agents/**", ".claude/**" }
 -- every addon file starts with `local ADDON, ns = ...`, even when ADDON is unused
 ignore = { "211/ADDON" }
 -- SlashCmdList is the game's, but registering /wasd writes a field into it
