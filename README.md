@@ -8,7 +8,7 @@ It's a personal tool, built for a feral druid who plays with WASD movement.
 
 ## Installing
 
-See **[INSTALL.md](INSTALL.md)** (Windows and macOS). It's written so that a person, or an AI agent told "install this addon: https://github.com/afoozle/WASDBars", can follow it.
+Download the latest zip from [Releases](https://github.com/afoozle/WASDBars/releases/latest), or see **[INSTALL.md](INSTALL.md)** (Windows and macOS). It's written so that a person, or an AI agent told "install this addon: https://github.com/afoozle/WASDBars", can follow it.
 
 ## Development (Mac)
 
@@ -30,6 +30,18 @@ This installs StyLua with Homebrew, and a project-local Lua 5.1 with luacheck an
 | `make check` | lint + format-check + test |
 
 To try it in game, symlink the repo root into `/Applications/World of Warcraft/_forever_/Interface/AddOns/` as `WASDBars` and `/reload`.
+
+GitHub Actions runs lint, format check and tests on every push.
+
+## Releasing
+
+Add a section to `CHANGELOG.md` on `main`, commit, then tag and push:
+
+```sh
+git tag v1.0.1 && git push origin v1.0.1
+```
+
+The Release workflow runs the checks, builds `WASDBars-v1.0.1.zip` with the [BigWigs packager](https://github.com/BigWigsMods/packager) (using `.pkgmeta`) and creates the GitHub Release. Tags containing `alpha` or `beta` become pre-releases. To build a zip without releasing, run the Release workflow by hand (dry run is on by default) and download the zip from the run.
 
 Specs and the roadmap live in `openspec/`; start with `openspec/project.md`.
 

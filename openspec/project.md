@@ -76,10 +76,10 @@ WASDBars/                      repo root = addon folder
 - Anything that moves, sizes or reparents the action buttons or the cluster, or changes keybinds, goes through the combat queue: run now if out of combat, otherwise run on `PLAYER_REGEN_ENABLED` with a single "will apply after combat" message
 
 ### Versioning
-No packaging or releases until `add-github-releases`. The TOC has `## Version: @project-version@`; until a packager replaces it, `/wasd version` shows "dev build". Git tags on milestones are optional.
+Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`.pkgmeta`) and published as GitHub Releases; see CLAUDE.md for the steps. The TOC has `## Version: @project-version@`; the packager replaces it with the tag, and in a git checkout `/wasd version` shows "Dev build."
 
 ### Testing Strategy
-- **Unit tests (busted):** every `Logic/` module, run locally with `make check`, using stubs in `tests/helpers/wow_stubs.lua`. No CI until `add-github-releases`.
+- **Unit tests (busted):** every `Logic/` module, run locally with `make check`, using stubs in `tests/helpers/wow_stubs.lua`. GitHub Actions runs the same checks on every push and pull request.
 - **In-game checks:** anything involving frames, the game's buttons or keybinds, using `/reload` and BugGrabber + BugSack. Each change's tasks.md ends with its in-game checklist. Claude Code reads BugGrabber's saved errors from the game's SavedVariables folder rather than having them copied across.
 - **Performance:** on demand only, once `add-performance-recording` exists
 - A change is done when `make check` passes and its in-game checks pass
@@ -100,7 +100,7 @@ No packaging or releases until `add-github-releases`. The TOC has `## Version: @
   - SavedVariables (written on `/reload`, logout or exit): `_forever_/WTF/Account/AFOOZLE/SavedVariables/` (`WASDBars.lua`, BugGrabber's errors in `!BugGrabber.lua`)
   - Taint log: `_forever_/Logs/taint.log` (only if `/console taintLog 1` is on and something was tainted)
   - Test characters: Zoolefa (druid, level 21, no mount until about level 40) and Deutscheb (rogue alt)
-- **Windows PC:** installs from GitHub by following `INSTALL.md` (a git clone into the Forever AddOns folder; LibEditMode through CurseForge). `add-github-releases` adds packaged releases.
+- **Windows PC:** installs from GitHub by following `INSTALL.md` (a release zip or a git clone in the Forever AddOns folder; LibEditMode through CurseForge).
 - WASDBars settings are account-wide on each machine (`SavedVariables: WASDBarsDB`); they don't sync between machines. Keybinds follow the game's own keybind saving.
 
 ## Domain Context
