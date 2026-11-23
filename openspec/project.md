@@ -28,7 +28,8 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 |---|---|---|---|
 | 7 | `add-options-panel` ✅ done 2026-11-22, archived | `options-panel` | Options in the game's own settings window: Open Edit Mode, show movement keys, large hotkey text, setup buttons |
 | 8 | `add-performance-recording` ✅ done 2026-11-22, archived | `performance-recording` | Save WoW Forever's built-in profiler numbers for WASDBars so Claude Code can read them; used on demand |
-| 9 | `add-curseforge-publishing` | `curseforge-publishing` | Packager, CI, GitHub Releases, Windows PC install, and uploads to CurseForge |
+| 9 | `add-github-releases` | `github-releases` | Packager, CI, and versioned GitHub Releases built from tags |
+| 10 | `add-curseforge-publishing` | `curseforge-publishing` | Uploads to CurseForge, with LibEditMode as a dependency |
 
 If the spike fails there is no fallback build: stop and rethink (for example, configure an existing bar addon into this shape and keep only the keybind and decoration parts).
 
@@ -75,10 +76,10 @@ WASDBars/                      repo root = addon folder
 - Anything that moves, sizes or reparents the action buttons or the cluster, or changes keybinds, goes through the combat queue: run now if out of combat, otherwise run on `PLAYER_REGEN_ENABLED` with a single "will apply after combat" message
 
 ### Versioning
-No packaging or releases until `add-curseforge-publishing`. The TOC has `## Version: @project-version@`; until a packager replaces it, `/wasd version` shows "dev build". Git tags on milestones are optional.
+No packaging or releases until `add-github-releases`. The TOC has `## Version: @project-version@`; until a packager replaces it, `/wasd version` shows "dev build". Git tags on milestones are optional.
 
 ### Testing Strategy
-- **Unit tests (busted):** every `Logic/` module, run locally with `make check`, using stubs in `tests/helpers/wow_stubs.lua`. No CI until `add-curseforge-publishing`.
+- **Unit tests (busted):** every `Logic/` module, run locally with `make check`, using stubs in `tests/helpers/wow_stubs.lua`. No CI until `add-github-releases`.
 - **In-game checks:** anything involving frames, the game's buttons or keybinds, using `/reload` and BugGrabber + BugSack. Each change's tasks.md ends with its in-game checklist. Claude Code reads BugGrabber's saved errors from the game's SavedVariables folder rather than having them copied across.
 - **Performance:** on demand only, once `add-performance-recording` exists
 - A change is done when `make check` passes and its in-game checks pass
@@ -99,7 +100,7 @@ No packaging or releases until `add-curseforge-publishing`. The TOC has `## Vers
   - SavedVariables (written on `/reload`, logout or exit): `_forever_/WTF/Account/AFOOZLE/SavedVariables/` (`WASDBars.lua`, BugGrabber's errors in `!BugGrabber.lua`)
   - Taint log: `_forever_/Logs/taint.log` (only if `/console taintLog 1` is on and something was tainted)
   - Test characters: Zoolefa (druid, level 21, no mount until about level 40) and Deutscheb (rogue alt)
-- **Windows PC:** installs from GitHub by following `INSTALL.md` (a git clone into the Forever AddOns folder; LibEditMode through CurseForge). `add-curseforge-publishing` would add packaged releases.
+- **Windows PC:** installs from GitHub by following `INSTALL.md` (a git clone into the Forever AddOns folder; LibEditMode through CurseForge). `add-github-releases` adds packaged releases.
 - WASDBars settings are account-wide on each machine (`SavedVariables: WASDBarsDB`); they don't sync between machines. Keybinds follow the game's own keybind saving.
 
 ## Domain Context
