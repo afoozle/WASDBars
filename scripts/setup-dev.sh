@@ -18,10 +18,22 @@ if ! command -v cc >/dev/null 2>&1; then
   exit 1
 fi
 
-if command -v stylua >/dev/null 2>&1; then
-  echo "setup: StyLua already installed"
+# StyLua pinned to .stylua-version, the same version CI uses.
+stylua_version=$(tr -d '[:space:]' < .stylua-version)
+if [ "$(.tools/bin/stylua --version 2>/dev/null)" = "stylua $stylua_version" ]; then
+  echo "setup: StyLua $stylua_version already installed"
 else
-  brew install stylua
+  case "$(uname -m)" in
+    arm64) stylua_arch=aarch64 ;;
+    *) stylua_arch=x86_64 ;;
+  esac
+  mkdir -p ".tools/stylua/$stylua_version" .tools/bin
+  curl -fsSL -o .tools/stylua.zip \
+    "https://github.com/JohnnyMorganz/StyLua/releases/download/v$stylua_version/stylua-macos-$stylua_arch.zip"
+  unzip -oq .tools/stylua.zip -d ".tools/stylua/$stylua_version"
+  rm .tools/stylua.zip
+  ln -sf "../stylua/$stylua_version/stylua" .tools/bin/stylua
+  echo "setup: StyLua $stylua_version installed"
 fi
 
 # Homebrew's Python refuses system-wide pip installs, so hererocks gets its own venv.

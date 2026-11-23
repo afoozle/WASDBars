@@ -13,12 +13,12 @@ A WoW: Forever addon (interface `16001`, Lua 5.1) that arranges the game's own a
 Only when the player asks. On `main` with `make check` passing: add a `CHANGELOG.md` section (fixes bump the patch number, features the minor), commit, `git tag vX.Y.Z`, push `main` and the tag. Watch the Release workflow with `gh run watch`; read failures with `gh run view --log-failed`. Check the zip's contents with a dry run (`gh workflow run release.yml`, then `gh run download`) after changing `.pkgmeta` or adding top-level files. Day-to-day testing never needs a package: the Mac's AddOns folder links to this repo.
 
 ## Commands
-- `make setup`: install dev tools (once)
+- `make setup`: install dev tools (once, and again after changing `.stylua-version`; CI uses the same StyLua version)
 - `make lint`, `make format`, `make format-check`, `make test`
 - `make check`: lint + format-check + test; must pass before committing
 
 ## Code rules
-- The repo root is the addon folder; the game loads only what `WASDBars.toc` lists, in the order `Core` → `Logic` → `Data` → `UI`.
+- The repo root is the addon folder; the game loads only what `WASDBars.toc` lists, in the order `Core` (Init, Events) → `Logic` → `Data` → `UI` → `Core` (Perf, Slash).
 - Every addon file starts with `local ADDON, ns = ...`. No globals except `WASDBarsDB`, `WASDBarsPerfDB`, `SLASH_WASDBARS1`, named StaticPopup dialogs and frames named `WASDBars...`.
 - **Logic/UI split:** pure logic goes in `Logic/`, makes no WoW calls when it loads, and receives any game functions as arguments, so busted can test it with the stubs in `tests/helpers/wow_stubs.lua`. Don't force the split onto code that is mostly game calls.
 - **No per-frame work:** react to events only.

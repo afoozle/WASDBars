@@ -20,8 +20,7 @@ end
 
 -- The TOC version, or nil for a dev build (the packager hasn't replaced it).
 function ns.addonVersion()
-  local getMetadata = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
-  local version = getMetadata(ADDON, "Version")
+  local version = C_AddOns.GetAddOnMetadata(ADDON, "Version")
   if not version or version == "@project-version@" then
     return nil
   end
@@ -32,13 +31,4 @@ function ns.debug(...)
   if ns.debugEnabled then
     ns.print("[debug]", ...)
   end
-end
-
--- Called on ADDON_LOADED, once Logic/CombatQueue.lua has loaded.
--- Anything that moves the action buttons or changes keybinds goes through
--- ns.combatQueue:run(key, fn).
-function ns.createCombatQueue()
-  ns.combatQueue = ns.CombatQueue.new(InCombatLockdown, function()
-    ns.print("Will apply after combat.")
-  end)
 end

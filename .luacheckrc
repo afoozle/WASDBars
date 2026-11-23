@@ -12,7 +12,6 @@ read_globals = {
   "InCombatLockdown",
   "DEFAULT_CHAT_FRAME",
   "C_AddOns",
-  "GetAddOnMetadata",
   "LibStub",
   "GetBindingAction",
   "GetBindingName",

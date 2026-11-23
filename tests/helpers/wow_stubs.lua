@@ -40,10 +40,6 @@ function stubs.bindings(keys)
     table.sort(found)
     return unpack(found)
   end
-  b.SetBinding = function(key, command)
-    b.keys[key] = command
-    return true
-  end
   return b
 end
 

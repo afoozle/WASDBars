@@ -83,11 +83,6 @@ function Setup.run()
   ns.Bindings.request(Setup.checkLayout)
 end
 
--- The realm name isn't ready yet at PLAYER_LOGIN; the GUID is.
-local function characterKey()
-  return UnitGUID("player")
-end
-
 StaticPopupDialogs[OFFER] = {
   text = "Set up WASDBars?\n\nIt binds your keys to the WASD cluster and action bar 2, "
     .. "then checks your Edit Mode layout. You'll see what changes before anything does.",
@@ -103,7 +98,8 @@ StaticPopupDialogs[OFFER] = {
 
 -- Offered once per character, and only while its keys aren't set up.
 ns.Events.on("PLAYER_LOGIN", function()
-  local key = characterKey()
+  -- the realm name isn't ready yet at PLAYER_LOGIN; the GUID is
+  local key = UnitGUID("player")
   if ns.db.setupOffered[key] or ns.Bindings.isSetUp() then
     return
   end

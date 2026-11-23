@@ -7,10 +7,6 @@ ns.Perf = Perf
 -- Nothing runs until a recording starts.
 local ticker, session, started
 
-local function profiler()
-  return C_AddOnProfiler and Enum and Enum.AddOnProfilerMetric and C_AddOnProfiler
-end
-
 local function addonMetrics()
   return ns.PerfLog.readMetrics(Enum.AddOnProfilerMetric, function(metric)
     return C_AddOnProfiler.GetAddOnMetric(ADDON, metric)
@@ -27,8 +23,7 @@ local function sample()
   ns.PerfLog.addSample(session, {
     t = math.floor(GetTime() - started + 0.5),
     wasdbars = addonMetrics(),
-    allRecentAverage = Enum.AddOnProfilerMetric.RecentAverageTime
-      and C_AddOnProfiler.GetOverallMetric(Enum.AddOnProfilerMetric.RecentAverageTime),
+    allRecentAverage = C_AddOnProfiler.GetOverallMetric(Enum.AddOnProfilerMetric.RecentAverageTime),
     fps = math.floor(GetFramerate() + 0.5),
     combat = InCombatLockdown(),
     form = GetShapeshiftForm(),
@@ -37,10 +32,6 @@ local function sample()
 end
 
 function Perf.start(label)
-  if not profiler() then
-    ns.print("This client has no built-in addon profiler, so there's nothing to record.")
-    return
-  end
   if ticker then
     ns.print("Already recording '" .. session.label .. "'. Use /wasd perf stop first.")
     return
