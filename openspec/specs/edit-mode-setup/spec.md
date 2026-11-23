@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Getting a character ready for WASDBars: the setup offered once per character (keybinds, then a read-only check of the Edit Mode layout that lists manual fixes), re-run with `/wasd setup` or the Run setup button. The addon never writes Edit Mode layouts.
+Getting a character ready for WASDBars: the setup offered once per character (keybinds, then a read-only check of the Edit Mode layout that lists manual fixes), re-run with `/wasd setup` or the options panel's setup buttons. The addon never writes Edit Mode layouts.
 
 ## Requirements
 

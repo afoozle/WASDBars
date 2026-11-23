@@ -2,6 +2,15 @@
 
 All notable changes to WASDBars. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] - 2026-11-23
+
+### Fixed
+- Confirming keybinds during combat and then running `/wasd setup` before combat ended could drop the confirmed keybinds.
+- Running `/wasd setup` while the keybind window was already open skipped the Edit Mode layout check.
+
+### Changed
+- Removed fallback code for game clients other than WoW Forever.
+
 ## [1.0.0] - 2026-11-23
 
 First release, for World of Warcraft: Forever. Requires LibEditMode.

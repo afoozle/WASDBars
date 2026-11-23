@@ -5,7 +5,7 @@ WASDBars is a small World of Warcraft: Forever addon that rearranges the game's 
 
 **It's a personal tool first:** built for the author's feral druid (bear tank / cat), who plays with WASD movement. Other classes must not break, but other players' setups don't drive the design. Publishing it for other players is an optional final step, not a goal.
 
-**Lean by default:** build only what the personal version needs now. Release machinery, an options window and performance tooling come later, and only if the addon goes public.
+**Lean by default:** build only what's needed now, and remove code that only exists for other clients or for needs that never came.
 
 ## Roadmap (build in this order)
 Each change builds on the ones before it. Grill the change's spec at the start of work on it, using what earlier changes learned. Implement, check in game, merge and archive one change before starting the next.
@@ -22,7 +22,7 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 | 5 | `add-edit-mode-setup` ✅ done 2026-11-22, archived | `edit-mode-setup` | First-time setup offered once per character (keys, then a read-only Edit Mode layout check that lists manual fixes), `/wasd setup`, and a Run setup button in the AddOns settings |
 | 6 | `polish-look-and-messages` ✅ done 2026-11-22, archived | changes to `wasd-layout`, `key-binding-setup`, `edit-mode-setup` | Tighter key spacing, clearer key labels, and binding popups and chat messages that read well |
 
-**Optional, if it goes public**
+**Optional extras**
 
 | # | Change | Capability | What it adds |
 |---|---|---|---|
@@ -36,34 +36,35 @@ If the spike fails there is no fallback build: stop and rethink (for example, co
 ## Tech Stack
 - Lua 5.1 (WoW addon runtime)
 - The game's own action buttons (`ActionButton1`–`ActionButton12`), arranged by the addon
-- Target client: WoW Forever, interface `16001`, TOC suffix `_Forever`. Other addons treat Forever (`WOW_PROJECT_ID == WOW_PROJECT_CAMELOT`) like the modern retail UI, so expect retail-style frames and possibly Edit Mode; the spike confirms
+- Target client: WoW Forever, interface `16001`, one plain `WASDBars.toc`. Forever (`WOW_PROJECT_ID == WOW_PROJECT_CAMELOT`) has the modern retail UI: retail-style frames, Edit Mode and the built-in addon profiler (confirmed by the spike). It's the only client, so no fallbacks for others
 - Helper libraries are welcome when they mean less addon code. The player installs them from CurseForge and WASDBars declares them as TOC dependencies; they are never copied into the repo. In use: LibEditMode (bundles LibStub). The addon still never replaces the game's action buttons, so no LibActionButton
-- Development tooling (not shipped): luacheck, StyLua, busted
+- Development tooling (not shipped): luacheck, StyLua (pinned in `.stylua-version`), busted; GitHub Actions and the BigWigs packager for CI and releases
 
 ## Folder Layout
 Standard WoW addon repository layout: **the repo root is the addon folder**. The TOC sits at the root and the game only loads files the TOC lists, so development files alongside are harmless. Folders are created when first needed.
 ```
 WASDBars/                      repo root = addon folder
   WASDBars.toc
-  Core/                        init, events, slash command
+  Core/                        init, events, perf recording, slash command
   Logic/                       pure Lua, no WoW API calls at load time; unit tested
-  UI/                          the cluster, decorations, mover, binding confirmation
   Data/                        editable data tables (layout, binding groups)
-  Media/                       textures (if any)
+  UI/                          the cluster, movement keys, Edit Mode, keybind window, setup, options
   tests/                       busted unit tests + WoW API stubs
   scripts/                     dev setup
   openspec/                    specs and changes
+  .github/workflows/           CI and releases
   .agents/  .claude/  skills-lock.json      Claude Code skills for this repo
-  .luacheckrc  .stylua.toml  .busted  .editorconfig  .gitattributes  .gitignore
-  Makefile  README.md  CLAUDE.md
+  .pkgmeta                     packager config (what goes in the release zip)
+  .luacheckrc  .stylua.toml  .stylua-version  .busted  .editorconfig  .gitattributes  .gitignore
+  Makefile  README.md  INSTALL.md  CHANGELOG.md  LICENSE  CLAUDE.md
 ```
 
 ## Project Conventions
 
 ### Code Style
-- Every addon file starts with `local ADDON, ns = ...`; the only globals are the SavedVariables table (`WASDBarsDB`), the `SLASH_WASDBARS1` slash command, named StaticPopup dialogs, and named frames, which always start with `WASDBars` (for example `WASDBarsCluster`)
+- Every addon file starts with `local ADDON, ns = ...`; the only globals are the SavedVariables tables (`WASDBarsDB`, `WASDBarsPerfDB`), the `SLASH_WASDBARS1` slash command, named StaticPopup dialogs, and named frames, which always start with `WASDBars` (for example `WASDBarsCluster`)
 - **Logic/UI split, only where it pays:** genuinely pure logic (layout maths, binding plans, settings merge, combat queue) lives in `Logic/` as functions that receive any WoW API functions as arguments, so it can be unit tested. Don't force the split onto code that is mostly game calls.
-- Load order is set in the TOC: `Core` → `Logic` → `Data` → `UI`
+- Load order is set in the TOC: `Core` (Init, Events) → `Logic` → `Data` → `UI` → `Core` (Perf, Slash, which use the rest)
 - StyLua formatting; luacheck must pass with zero warnings
 - Plain-language user messages, prefixed `WASDBars:`
 - **No per-frame work:** the addon reacts to events only; nothing runs every frame
@@ -117,7 +118,7 @@ Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`
   | W, A, S, D | movement | – |
 
 - The number row is shown by the game's own action bar 2. WASDBars never draws or moves it; the player places it in Edit Mode (`/wasd setup layout` lists what's still off).
-- Keybind labels on the buttons are the game's own (including the thumb buttons; no relabel).
+- Keybind labels on the buttons are the game's own text, restyled larger and centred, with mouse buttons shortened ("Mouse Button 5" → M5).
 - Addons can't write files directly. The only way data leaves the game is SavedVariables, which the game writes to the `WTF` folder on `/reload`, logout or exit.
 
 ## Important Constraints
@@ -127,4 +128,4 @@ Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`
 
 ## External Dependencies
 - Runtime: LibEditMode (CurseForge, installed by the player; a TOC dependency).
-- Development (Mac): Homebrew, Python 3, StyLua, and a project-local Lua 5.1 + LuaRocks (luacheck, busted), installed by `make setup`. BugGrabber + BugSack in game.
+- Development (Mac): Homebrew, Python 3, a pinned StyLua in `.tools/`, and a project-local Lua 5.1 + LuaRocks (luacheck, busted), installed by `make setup`. BugGrabber + BugSack in game.
