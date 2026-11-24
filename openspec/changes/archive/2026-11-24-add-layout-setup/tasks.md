@@ -24,7 +24,7 @@
 ## 4. Docs
 - [x] 4.1 `openspec/project.md`: "only writes its own WASDBars layout, after the player confirms"; the mouse fix; restore; LibEditModeOverride under dependencies
 - [x] 4.2 `README.md`: setup and how to roll back (`/wasd restore`)
-- [ ] 4.3 At archive: update the Purpose lines of `edit-mode-setup` ("never writes Edit Mode layouts") and `key-binding-setup` (`/wasd setup keys`) in `openspec/specs/`
+- [x] 4.3 At archive: update the Purpose lines of `edit-mode-setup` ("never writes Edit Mode layouts") and `key-binding-setup` (`/wasd setup keys`) in `openspec/specs/`
 
 ## 5. In-game checks (Mac)
 Reset first: on both characters pick Modern in Edit Mode, delete "UI", "DeutchebAnkh Layout" and "WASDTestLayout", turn Action Bar 2 off; on the druid untick Character Specific Keybindings; reset the account-wide keybinds to default. Claude Code clears `setupOffered` in `WASDBars.lua` while logged out. Install LibEditModeOverride from CurseForge.
@@ -47,4 +47,4 @@ Reset first: on both characters pick Modern in Edit Mode, delete "UI", "Deutcheb
 - [x] 5.17 No BugSack errors; no "Interface action blocked"
 
 ## 6. Wrap-up
-- [ ] 6.1 Merge and archive
+- [x] 6.1 Merge and archive

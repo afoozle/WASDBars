@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The WASDBars page under AddOns in the game's options: a way into Edit Mode, the appearance options (movement keys, large hotkey text) and the setup buttons, opened with `/wasd options`.
+The WASDBars page under AddOns in the game's options: a way into Edit Mode, the appearance options (movement keys, large hotkey text) and the Run setup and Restore buttons, opened with `/wasd options`.
 
 ## Requirements
 
@@ -35,16 +35,20 @@ The page SHALL have "Show movement keys" and "Large hotkey text" checkboxes, bot
 - **WHEN** the player unticks "Large hotkey text"
 - **THEN** the cluster's buttons show the game's small corner hotkey text
 
-### Requirement: Setup buttons
-The page SHALL have a Set up keybinds button that opens the keybind window and a Check layout button that runs the Edit Mode layout check.
-
-#### Scenario: Keybinds from the page
-- **WHEN** the player clicks Set up keybinds and confirms
-- **THEN** the keys are bound exactly as with `/wasd setup keys`
-
 ### Requirement: Page shows current values
 Every checkbox SHALL show the current saved value when the page opens.
 
 #### Scenario: After reload
 - **WHEN** the player unticks a checkbox, reloads and opens the page
 - **THEN** that checkbox is still unticked
+
+### Requirement: Setup and restore buttons
+The page's Setup section SHALL have a Run setup button that does what `/wasd setup` does, and a Restore button that does what `/wasd restore` does, each with a one-line description.
+
+#### Scenario: Run setup from the page
+- **WHEN** the player clicks Run setup and then Set up in the window
+- **THEN** the layout and keys are set up exactly as with `/wasd setup`
+
+#### Scenario: Restore from the page
+- **WHEN** the player clicks Restore
+- **THEN** the same restore popups appear as with `/wasd restore`
