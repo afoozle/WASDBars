@@ -20,7 +20,7 @@
 Actions:
 1. `create` "Create a WASDBars layout from '<name>' and switch to it" (no "WASDBars"), or `switch` "Switch to your WASDBars layout" (exists, not active). With `create`, also `place` "Put the WASD keys bottom left and move the chat window up".
 2. `bar1` "Action Bar 1: 12 icons, always show buttons, hide bar art and scrolling" if any of the four is off.
-3. `bar2Shape` "Action Bar 2: same size and shape as Action Bar 1, 12 icons" if any differs.
+3. `bar2Shape` "Action Bar 2: same size and shape as Action Bar 1, 12 icons", only with `create` (later the player may resize action bar 2; Action Bar 1 no longer catches the mouse, so a different size breaks nothing).
 4. `bar2Place` "Put Action Bar 2 on Action Bar 1" if `create`, or if `onBar1` is false.
 5. `endCaps` "Hide the gryphons" if either shows.
 6. `bar2On` "Turn on Action Bar 2" if not shown.

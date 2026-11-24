@@ -241,7 +241,7 @@ local function apply(p, steps)
     elseif has(actions, "switch") then
       data.activeLayout = ns.LayoutCopy.find(data, NAME)
     end
-    ns.LayoutPlan.edit(data.layouts[data.activeLayout], ids)
+    ns.LayoutPlan.edit(data.layouts[data.activeLayout], ids, creating)
     save(data)
   end
   if has(actions, "bar2On") then

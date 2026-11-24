@@ -35,7 +35,11 @@ Setup SHALL only ever change an account-wide Edit Mode layout named "WASDBars". 
 - **THEN** chat says to delete a layout first, and nothing changes
 
 ### Requirement: Layout settings
-In "WASDBars", setup SHALL set Action Bar 1 to 12 icons with Always Show Buttons, Hide Bar Art and Hide Bar Scrolling on; give Action Bar 2 12 icons and Action Bar 1's orientation, rows, icon size and icon padding; and hide both end caps (gryphons). Every run SHALL fix whichever of these is off.
+In "WASDBars", setup SHALL set Action Bar 1 to 12 icons with Always Show Buttons, Hide Bar Art and Hide Bar Scrolling on, and hide both end caps (gryphons); every run SHALL fix whichever of these is off. When it creates the layout, setup SHALL also give Action Bar 2 12 icons and Action Bar 1's orientation, rows, icon size and icon padding; later runs SHALL leave Action Bar 2's shape alone.
+
+#### Scenario: Player resizes Action Bar 2
+- **WHEN** the player changes Action Bar 2's icon size in "WASDBars" and runs `/wasd setup layout`
+- **THEN** setup doesn't list Action Bar 2's shape and leaves its size as the player set it
 
 #### Scenario: Fixing one setting later
 - **WHEN** the player turns Hide Bar Art off in "WASDBars" and runs `/wasd setup layout`

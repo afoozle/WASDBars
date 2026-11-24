@@ -94,23 +94,31 @@ describe("LayoutPlan", function()
 
     it("switches without placing when the layout exists", function()
       local done = layout()
-      LayoutPlan.edit(done, ids)
+      LayoutPlan.edit(done, ids, true)
       local r = { step = "switch", layout = LayoutPlan.read(done, ids), bar2On = true }
       assert.same({ "switch" }, ids_of(LayoutPlan.actions(r)))
     end)
 
     it("finds nothing to do on a finished layout", function()
       local done = layout()
-      LayoutPlan.edit(done, ids)
+      LayoutPlan.edit(done, ids, true)
       local r = { layout = LayoutPlan.read(done, ids), bar2On = true, onBar1 = true }
       assert.same({}, LayoutPlan.actions(r))
     end)
 
     it("puts action bar 2 back when it has drifted", function()
       local done = layout()
-      LayoutPlan.edit(done, ids)
+      LayoutPlan.edit(done, ids, true)
       local r = { layout = LayoutPlan.read(done, ids), bar2On = true, onBar1 = false }
       assert.same({ "bar2Place" }, ids_of(LayoutPlan.actions(r)))
+    end)
+
+    it("leaves a resized action bar 2 alone once the layout exists", function()
+      local done = layout()
+      LayoutPlan.edit(done, ids, true)
+      done.systems[2].settings = settings({ [0] = 0, [1] = 2, [2] = 8, [3] = 9, [4] = 4 })
+      local r = { layout = LayoutPlan.read(done, ids), bar2On = true, onBar1 = true }
+      assert.same({}, LayoutPlan.actions(r))
     end)
 
     it("skips what the game couldn't tell", function()
@@ -121,7 +129,7 @@ describe("LayoutPlan", function()
   describe("edit", function()
     it("sets action bar 1, copies its shape to action bar 2 and hides the gryphons", function()
       local l = layout()
-      LayoutPlan.edit(l, ids)
+      LayoutPlan.edit(l, ids, true)
       local r = LayoutPlan.read(l, ids)
       assert.same(
         { 12, 1, 1, 1 },
@@ -132,6 +140,12 @@ describe("LayoutPlan", function()
         { r.bar2.numIcons, r.bar2.orientation, r.bar2.numRows, r.bar2.iconSize, r.bar2.iconPadding }
       )
       assert.same({ left = 1, right = 1 }, r.capsHidden)
+    end)
+
+    it("leaves action bar 2's shape alone without withShape", function()
+      local l = layout()
+      LayoutPlan.edit(l, ids)
+      assert.equal(8, LayoutPlan.read(l, ids).bar2.numIcons)
     end)
 
     it("adds a setting the layout doesn't have yet", function()

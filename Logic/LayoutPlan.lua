@@ -102,9 +102,10 @@ function LayoutPlan.actions(readings)
       break
     end
   end
-  local shapeOff = differs(bar2.numIcons, 12)
+  -- only when the layout is created: later the player may resize action bar 2
+  local shapeOff = readings.step == "create" and differs(bar2.numIcons, 12)
   for _, name in ipairs(LayoutPlan.SHAPE) do
-    shapeOff = shapeOff or differs(bar2[name], bar1[name])
+    shapeOff = shapeOff or (readings.step == "create" and differs(bar2[name], bar1[name]))
   end
   if shapeOff then
     add("bar2Shape", "Action Bar 2: same size and shape as Action Bar 1, 12 icons")
@@ -131,19 +132,21 @@ function LayoutPlan.has(actions, id)
   return false
 end
 
--- Sets the WASDBars settings in the layout: action bar 1's, action bar 2's
--- (12 icons and action bar 1's shape) and the hidden end caps.
-function LayoutPlan.edit(layout, ids)
+-- Sets the WASDBars settings in the layout: action bar 1's and the hidden end
+-- caps, and with withShape (a new layout) action bar 2's 12 icons and action bar 1's shape.
+function LayoutPlan.edit(layout, ids, withShape)
   local bar1 = findSystem(layout, ids.actionBar, ids.bar1)
   local bar2 = findSystem(layout, ids.actionBar, ids.bar2)
   for name, value in pairs(LayoutPlan.BAR1) do
     setSetting(bar1, ids.bar[name], value)
   end
-  setSetting(bar2, ids.bar.numIcons, 12)
-  for _, name in ipairs(LayoutPlan.SHAPE) do
-    local value = getSetting(bar1, ids.bar[name])
-    if value ~= nil then
-      setSetting(bar2, ids.bar[name], value)
+  if withShape then
+    setSetting(bar2, ids.bar.numIcons, 12)
+    for _, name in ipairs(LayoutPlan.SHAPE) do
+      local value = getSetting(bar1, ids.bar[name])
+      if value ~= nil then
+        setSetting(bar2, ids.bar[name], value)
+      end
     end
   end
   for _, index in ipairs({ ids.capLeft, ids.capRight }) do
