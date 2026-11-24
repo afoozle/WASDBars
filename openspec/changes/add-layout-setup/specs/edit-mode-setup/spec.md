@@ -75,7 +75,7 @@ On a character whose layout step has finished with the layout ready, the addon S
 - **THEN** Action Bar 1's mouse handling is left as the game has it
 
 ### Requirement: One setup window
-Setup SHALL show one window listing, under a Layout heading, the layout actions still needed and, under a Keys heading, the keybind steps and the actions that would lose their key. Set up SHALL apply all of them; Not now, the close button and Escape SHALL change nothing. Headings with nothing to do SHALL be left out. Setup SHALL change nothing while Edit Mode is open.
+Setup SHALL show one window listing, under a Layout heading, the layout actions still needed and, under a Keys heading, the keybind steps and the actions that would lose their key. Set up SHALL apply all of them; Not now, the close button and Escape SHALL change nothing. Headings with nothing to do SHALL be left out. Setup SHALL change nothing while Edit Mode is open or in combat.
 
 #### Scenario: Back out
 - **WHEN** the player reads the window and clicks Not now
@@ -90,8 +90,8 @@ Setup SHALL show one window listing, under a Layout heading, the layout actions 
 - **THEN** chat says to close Edit Mode and run `/wasd setup layout`, and nothing changes
 
 #### Scenario: In combat
-- **WHEN** the player confirms during combat
-- **THEN** chat shows "WASDBars: Will apply after combat." and everything is applied when combat ends
+- **WHEN** the player runs setup, or clicks Set up, during combat
+- **THEN** chat says setup can't be done in combat, and nothing changes
 
 ### Requirement: First-time offer
 At login, if the character hasn't been offered setup and either its keys or its layout aren't set up, the addon SHALL offer setup once for that character. Set up SHALL open the setup window; Not now SHALL change nothing. Switching to another layout later SHALL NOT bring the offer back.
@@ -120,7 +120,7 @@ At login, if the character hasn't been offered setup and either its keys or its 
 - **THEN** chat says everything is set up and no window opens
 
 ### Requirement: Restore
-`/wasd restore` SHALL ask to switch the character back to the layout it was on before setup (Modern if that layout is gone) and set Action Bar 2 back to how it was, then, if keys were changed by setup, ask separately whether to put the 24 keys back to what they were before. It SHALL never delete "WASDBars", and SHALL end by telling the player how to turn the addon off.
+`/wasd restore` SHALL ask to switch the character back to the layout it was on before setup (Modern if that layout is gone) and set Action Bar 2 back to how it was, then, if keys were changed by setup, ask separately whether to put the 24 keys back to what they were before. It SHALL refuse in combat, SHALL never delete "WASDBars", and SHALL end by telling the player how to turn the addon off.
 
 #### Scenario: Full restore
 - **WHEN** the player types `/wasd restore`, confirms, and answers Yes to the keybinds

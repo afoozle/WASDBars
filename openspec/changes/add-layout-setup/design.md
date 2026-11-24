@@ -31,7 +31,7 @@ After `create`/`switch`, the other checks are judged against the "WASDBars" layo
 `LayoutCopy.build(presets, saved, name, accountType)` where `presets` is `EditModePresetLayoutManager:GetCopyOfPresetLayouts()` and `saved` is `C_EditMode.GetLayouts()` (custom layouts only; `activeLayout` counts presets first, the same indexing LibEditModeOverride uses). Returns `{ layouts, activeLayout }` ready for `C_EditMode.SaveLayouts`: all layouts with a deep copy of the active one renamed `name`, type account, inserted after the last account layout (LibEditModeOverride's `AddLayout` index rule), and `activeLayout` pointing at it. UI side: `C_EditMode.SaveLayouts(result)`, `C_EditMode.SetActiveLayout(result.activeLayout)`, then `LoadLayouts()` again before the edits. At the account cap (`Constants.EditModeConsts.EditModeMaxLayoutsPerType`), setup says "WASDBars: You have the most Edit Mode layouts the game allows. Delete one, then run /wasd setup layout." and stops.
 
 ## 5. Applying (`UI/Setup.lua`)
-Order, inside `ns.combatQueue:run("setup-apply", fn)` (positions in a second job, `"setup-place"`):
+Setup and restore refuse in combat ("WASDBars: Can't set up in combat.") instead of queueing; only the positions pass, a frame later, goes through `ns.combatQueue:run("setup-place", fn)`. Order:
 1. Save `restore[guid]` (current layout name, action bar 2 shown) if not already saved; save `keyCopy` if nil and keys will change.
 2. Copy or switch (section 4, or `SetActiveLayout("WASDBars")`).
 3. `LayoutPlan.edit` sets the settings on the layout table itself, as Edit Mode stores them: action bar 1's, action bar 2's (12 icons and action bar 1's shape) and the end caps' Hidden. Editing the table rather than calling LibEditModeOverride's `SetFrameSetting` matters for icon size: Edit Mode stores it as a slider step (5 = 100%), `SetFrameSetting` takes the percentage, and copying the stored value from bar 1 to bar 2 needs no conversion. Then `C_EditMode.SaveLayouts` + `SetActiveLayout`, and LibEditModeOverride's `LoadLayouts()` + `ApplyChanges()` make the game apply it.
@@ -57,7 +57,7 @@ At `PLAYER_LOGIN` (after the cluster takes the buttons) and straight after setup
 - Popup 2 "Restore your keybinds too?" (only with `keyCopy`): Yes sets each of the 24 keys back (`SetBinding(key, command)`, or `SetBinding(key)` for unbound), `SaveBindings(GetCurrentBindingSet())`, clears `keyCopy`. No and Escape leave them.
 - Then: "WASDBars: Restored. You can delete the WASDBars layout in Edit Mode whenever you like. Turn WASDBars off in the AddOns list, or uninstall it, then reload to finish."
 - No `restore[guid]`: "WASDBars: Nothing to restore on this character."
-- Same combat and Edit Mode rules as setup.
+- Same rules as setup: refused in combat or with Edit Mode open.
 
 ## 9. Why not hide action bar 1 (`hide-main-bar`, optional)
 Bartender4 hides `MainActionBar` with `HideBase()` and a hidden parent (never `:Hide()`, which taints Edit Mode frames). On WoW Forever, `EditModeManagerFrameMixin:UpdateBottomActionBarPositions` stacks every default-positioned bar on action bar 1 and skips hidden bars, so the stack would drop into action bar 1's spot, and jump back up whenever Edit Mode opens (which shows every bar). With the mouse fix, action bar 1 has no visible or clickable part left; the only gain would be its Edit Mode box, which the selection fix already makes unclickable.

@@ -79,7 +79,7 @@ WASDBars/                      repo root = addon folder
 - The addon only ever writes its own account-wide "WASDBars" Edit Mode layout, and only after the player confirms setup (`add-layout-setup`); it never changes another layout. The cluster is its own Edit Mode element through LibEditMode
 - On characters that are set up, action bar 1's empty frame and its Edit Mode selection stop catching the mouse (`EnableMouse(false)` at each login), because action bar 2 sits on top of it
 - `/wasd restore` switches a character back to its layout from before setup and, if the player says yes, the keys
-- Anything that moves, sizes or reparents the action buttons or the cluster, or changes keybinds, goes through the combat queue: run now if out of combat, otherwise run on `PLAYER_REGEN_ENABLED` with a single "will apply after combat" message
+- Anything that moves, sizes or reparents the action buttons or the cluster, or changes keybinds, goes through the combat queue: run now if out of combat, otherwise run on `PLAYER_REGEN_ENABLED` with a single "will apply after combat" message. Exception: setup and restore refuse in combat instead
 
 ### Versioning
 Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`.pkgmeta`) and published as GitHub Releases; see CLAUDE.md for the steps. The TOC has `## Version: @project-version@`; the packager replaces it with the tag, and in a git checkout `/wasd version` shows "Dev build."

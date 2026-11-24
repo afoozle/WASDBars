@@ -192,7 +192,19 @@ local function place(ids, withClusterAndChat)
   save(data)
 end
 
+-- Setup and restore refuse in combat rather than waiting for it to end.
+local function refuseInCombat(what)
+  if InCombatLockdown() then
+    ns.print("Can't " .. what .. " in combat.")
+    return true
+  end
+  return false
+end
+
 local function apply(p, steps)
+  if refuseInCombat("set up") then
+    return
+  end
   if EditModeManagerFrame:IsEditModeActive() then
     ns.print("Close Edit Mode, then run /wasd setup layout.")
     return
@@ -258,30 +270,26 @@ end
 
 -- /wasd setup, /wasd setup layout and the Run setup button.
 function Setup.open()
-  ns.combatQueue:run("setup-window", function()
-    if ns.SetupWindow.isShown() then
-      return
-    end
-    if EditModeManagerFrame:IsEditModeActive() then
-      ns.print("Close Edit Mode, then run /wasd setup layout.")
-      return
-    end
-    local p, why = plan()
-    if not p then
-      ns.print(why)
-      return
-    end
-    local steps, lost = ns.Bindings.steps()
-    if #p.actions == 0 and #steps == 0 then
-      markSetUp()
-      ns.print("Everything is set up.")
-      return
-    end
-    ns.SetupWindow.show(p.actions, steps, lost, function()
-      ns.combatQueue:run("setup-apply", function()
-        apply(p, steps)
-      end)
-    end)
+  if refuseInCombat("set up") or ns.SetupWindow.isShown() then
+    return
+  end
+  if EditModeManagerFrame:IsEditModeActive() then
+    ns.print("Close Edit Mode, then run /wasd setup layout.")
+    return
+  end
+  local p, why = plan()
+  if not p then
+    ns.print(why)
+    return
+  end
+  local steps, lost = ns.Bindings.steps()
+  if #p.actions == 0 and #steps == 0 then
+    markSetUp()
+    ns.print("Everything is set up.")
+    return
+  end
+  ns.SetupWindow.show(p.actions, steps, lost, function()
+    apply(p, steps)
   end)
 end
 
@@ -351,18 +359,19 @@ StaticPopupDialogs[RESTORE_KEYS] = {
   button1 = "Yes",
   button2 = "No",
   OnAccept = function()
-    ns.combatQueue:run("restore-keys", function()
-      for _, change in ipairs(ns.Restore.keyChanges(ns.db.keyCopy)) do
-        if change.command then
-          SetBinding(change.key, change.command)
-        else
-          SetBinding(change.key)
-        end
+    if refuseInCombat("restore keybinds") then
+      return
+    end
+    for _, change in ipairs(ns.Restore.keyChanges(ns.db.keyCopy)) do
+      if change.command then
+        SetBinding(change.key, change.command)
+      else
+        SetBinding(change.key)
       end
-      SaveBindings(GetCurrentBindingSet())
-      ns.db.keyCopy = nil
-      finishRestore()
-    end)
+    end
+    SaveBindings(GetCurrentBindingSet())
+    ns.db.keyCopy = nil
+    finishRestore()
   end,
   OnCancel = finishRestore,
   timeout = 0,
@@ -375,23 +384,24 @@ StaticPopupDialogs[RESTORE] = {
   button1 = "Restore",
   button2 = "Cancel",
   OnAccept = function(_, data)
-    ns.combatQueue:run("restore-apply", function()
-      if EditModeManagerFrame:IsEditModeActive() then
-        ns.print("Close Edit Mode, then run /wasd restore.")
-        return
-      end
-      LEMO:LoadLayouts()
-      LEMO:SetActiveLayout(data.layout)
-      LEMO:ApplyChanges()
-      Settings.SetValue("PROXY_SHOW_ACTIONBAR_2", data.bar2)
-      local guid = UnitGUID("player")
-      ns.db.restore[guid], ns.db.setUp[guid] = nil, nil
-      if ns.db.keyCopy then
-        StaticPopup_Show(RESTORE_KEYS)
-      else
-        finishRestore()
-      end
-    end)
+    if refuseInCombat("restore") then
+      return
+    end
+    if EditModeManagerFrame:IsEditModeActive() then
+      ns.print("Close Edit Mode, then run /wasd restore.")
+      return
+    end
+    LEMO:LoadLayouts()
+    LEMO:SetActiveLayout(data.layout)
+    LEMO:ApplyChanges()
+    Settings.SetValue("PROXY_SHOW_ACTIONBAR_2", data.bar2)
+    local guid = UnitGUID("player")
+    ns.db.restore[guid], ns.db.setUp[guid] = nil, nil
+    if ns.db.keyCopy then
+      StaticPopup_Show(RESTORE_KEYS)
+    else
+      finishRestore()
+    end
   end,
   timeout = 0,
   whileDead = true,
@@ -400,22 +410,23 @@ StaticPopupDialogs[RESTORE] = {
 
 -- /wasd restore and the Restore button.
 function Setup.restore()
-  ns.combatQueue:run("restore-window", function()
-    local saved = ns.db.restore[UnitGUID("player")]
-    if not saved then
-      ns.print("Nothing to restore on this character.")
-      return
-    end
-    if EditModeManagerFrame:IsEditModeActive() then
-      ns.print("Close Edit Mode, then run /wasd restore.")
-      return
-    end
-    if not ready() then
-      ns.print("Edit Mode isn't ready yet. Try again in a moment.")
-      return
-    end
-    local target, missing = ns.Restore.target(loadData(), saved.layout, Enum.EditModeLayoutType.Preset)
-    local lines = ns.Restore.lines(target, missing, saved.layout, saved.bar2)
-    StaticPopup_Show(RESTORE, table.concat(lines, "\n"), nil, { layout = target, bar2 = saved.bar2 })
-  end)
+  if refuseInCombat("restore") then
+    return
+  end
+  local saved = ns.db.restore[UnitGUID("player")]
+  if not saved then
+    ns.print("Nothing to restore on this character.")
+    return
+  end
+  if EditModeManagerFrame:IsEditModeActive() then
+    ns.print("Close Edit Mode, then run /wasd restore.")
+    return
+  end
+  if not ready() then
+    ns.print("Edit Mode isn't ready yet. Try again in a moment.")
+    return
+  end
+  local target, missing = ns.Restore.target(loadData(), saved.layout, Enum.EditModeLayoutType.Preset)
+  local lines = ns.Restore.lines(target, missing, saved.layout, saved.bar2)
+  StaticPopup_Show(RESTORE, table.concat(lines, "\n"), nil, { layout = target, bar2 = saved.bar2 })
 end
