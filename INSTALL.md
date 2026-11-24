@@ -6,7 +6,7 @@ WASDBars is an addon for **World of Warcraft: Forever** only (interface `16001`)
 
 ## Summary
 1. Find the Forever AddOns folder.
-2. Install the required library, **LibEditMode**, through CurseForge.
+2. Install the required libraries, **LibEditMode** and **LibEditModeOverride**, through CurseForge.
 3. Put WASDBars (a release zip or a git clone) in the AddOns folder as a folder named exactly `WASDBars`.
 4. Check it in game.
 
@@ -25,14 +25,16 @@ If it isn't there:
 
 Agents: confirm the folder with the player before writing to it.
 
-## 2. Install LibEditMode (required)
-WASDBars won't load without it. The player installs it through CurseForge, like their other addons:
+## 2. Install LibEditMode and LibEditModeOverride (required)
+WASDBars won't load without them. The player installs them through CurseForge, like their other addons:
 - **CurseForge app:** World of Warcraft → make sure the **Forever** version is selected → search **"LibEditMode"** (listed as "Lib: EditMode") → Install.
 - **Or the website:** https://www.curseforge.com/wow/addons/libeditmode → download the latest file and extract it into the AddOns folder, so it holds `LibEditMode\LibEditMode.toc`.
 
 Use the CurseForge package rather than the library's own source repository: the package includes LibStub, which the source doesn't.
 
-Agents: ask the player to do this step (or to confirm it's done), then check that `AddOns\LibEditMode\LibEditMode.toc` exists.
+Then the same for **LibEditModeOverride**: search **"LibEditModeOverride"** in the app, or download it from https://www.curseforge.com/wow/addons/libeditmodeoverride, so the AddOns folder holds `LibEditModeOverride\LibEditModeOverride.toc`.
+
+Agents: ask the player to do this step (or to confirm it's done), then check that `AddOns\LibEditMode\LibEditMode.toc` and `AddOns\LibEditModeOverride\LibEditModeOverride.toc` exist.
 
 ## 3. Install WASDBars
 The folder must be named exactly `WASDBars`, with `WASDBars.toc` directly inside it: `AddOns\WASDBars\WASDBars.toc`. Any other name or extra nesting (such as `WASDBars-main\WASDBars-main\...`) means the game won't load it.
@@ -66,7 +68,7 @@ git clone https://github.com/afoozle/WASDBars.git "/Applications/World of Warcra
 A clone also holds development files (`openspec/`, `tests/`, `.agents/` and so on). They're harmless: the game only loads the files `WASDBars.toc` lists. Release zips leave them out.
 
 ## 4. Check it in game
-1. Start the game (or `/reload` if it's running) and open **AddOns** on the character select screen: **WASDBars** and **Lib: EditMode** are listed and ticked. If WASDBars shows "Dependency missing", step 2 isn't done.
+1. Start the game (or `/reload` if it's running) and open **AddOns** on the character select screen: **WASDBars**, **Lib: EditMode** and **LibEditModeOverride** are listed and ticked. If WASDBars shows "Dependency missing", step 2 isn't done.
 2. Log in: action bar 1's buttons appear as a cluster shaped like the keys around WASD.
 3. On a character whose keys aren't set up, WASDBars offers to set them up. It always shows what will change before changing any keybind.
 4. `/wasd` lists the commands; `/wasd options` opens its options; move and scale the cluster in the game's Edit Mode (select "WASDBars").

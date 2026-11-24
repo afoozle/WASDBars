@@ -4,6 +4,10 @@ manual-changelog:
   filename: CHANGELOG.md
   markup-type: markdown
 
+required-dependencies:
+  - libeditmode
+  - libeditmodeoverride
+
 ignore:
   - tests
   - scripts

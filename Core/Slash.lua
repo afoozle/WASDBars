@@ -60,13 +60,10 @@ commands.options = {
 -- /wasd setup <part>; plain /wasd setup runs the whole setup.
 local setupParts = {
   [""] = function()
-    ns.Setup.run()
-  end,
-  keys = function()
-    ns.Bindings.request()
+    ns.Setup.open()
   end,
   layout = function()
-    ns.Setup.checkLayout()
+    ns.Setup.open()
   end,
   status = function()
     ns.print(ns.Bindings.statusSentence() .. " " .. ns.Setup.layoutStatusSentence())
@@ -74,14 +71,21 @@ local setupParts = {
 }
 
 commands.setup = {
-  help = "run the whole setup; 'keys', 'layout' or 'status' for one part",
+  help = "set up the WASDBars layout and keybinds; 'status' to check them",
   run = function(args)
     local part = setupParts[args:lower()]
     if part then
       part()
     else
-      ns.print("Use /wasd setup, or /wasd setup keys, layout or status.")
+      ns.print("Use /wasd setup, or /wasd setup status.")
     end
+  end,
+}
+
+commands.restore = {
+  help = "switch back to your layout from before setup, and optionally your keybinds",
+  run = function()
+    ns.Setup.restore()
   end,
 }
 

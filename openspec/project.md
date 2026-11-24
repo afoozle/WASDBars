@@ -40,7 +40,7 @@ If the spike fails there is no fallback build: stop and rethink (for example, co
 - Lua 5.1 (WoW addon runtime)
 - The game's own action buttons (`ActionButton1`–`ActionButton12`), arranged by the addon
 - Target client: WoW Forever, interface `16001`, one plain `WASDBars.toc`. Forever (`WOW_PROJECT_ID == WOW_PROJECT_CAMELOT`) has the modern retail UI: retail-style frames, Edit Mode and the built-in addon profiler (confirmed by the spike). It's the only client, so no fallbacks for others
-- Helper libraries are welcome when they mean less addon code. The player installs them from CurseForge and WASDBars declares them as TOC dependencies; they are never copied into the repo. In use: LibEditMode (bundles LibStub). The addon still never replaces the game's action buttons, so no LibActionButton
+- Helper libraries are welcome when they mean less addon code. The player installs them from CurseForge and WASDBars declares them as TOC dependencies; they are never copied into the repo. In use: LibEditMode (bundles LibStub) and LibEditModeOverride. The addon still never replaces the game's action buttons, so no LibActionButton
 - Development tooling (not shipped): luacheck, StyLua (pinned in `.stylua-version`), busted; GitHub Actions and the BigWigs packager for CI and releases
 
 ## Folder Layout
@@ -51,7 +51,7 @@ WASDBars/                      repo root = addon folder
   Core/                        init, events, perf recording, slash command
   Logic/                       pure Lua, no WoW API calls at load time; unit tested
   Data/                        editable data tables (layout, binding groups)
-  UI/                          the cluster, movement keys, Edit Mode, keybind window, setup, options
+  UI/                          the cluster, movement keys, Edit Mode, setup window, setup and restore, options
   tests/                       busted unit tests + WoW API stubs
   scripts/                     dev setup
   openspec/                    specs and changes
@@ -75,8 +75,10 @@ WASDBars/                      repo root = addon folder
 ### Architecture Patterns
 - The addon **arranges the game's own action buttons**; it never creates action buttons, and never manages spells or macros. Everything an action button does (feedback, form following, drag and drop) is the game's
 - The addon only adds to the game's functions with `hooksecurefunc`; it never replaces them
-- The addon changes keybinds only through the keybind setup (`add-key-binding-setup`), only after the player confirms, and only the keys listed in the keybind layout below
-- The addon never writes Edit Mode layouts, frames or tables. It only reads the action bars' Edit Mode settings to list manual fixes (`/wasd setup layout`); the cluster is its own Edit Mode element through LibEditMode
+- The addon changes keybinds only through setup and restore, only after the player confirms, and only the keys listed in the keybind layout below
+- The addon only ever writes its own account-wide "WASDBars" Edit Mode layout, and only after the player confirms setup (`add-layout-setup`); it never changes another layout. The cluster is its own Edit Mode element through LibEditMode
+- On characters that are set up, action bar 1's empty frame and its Edit Mode selection stop catching the mouse (`EnableMouse(false)` at each login), because action bar 2 sits on top of it
+- `/wasd restore` switches a character back to its layout from before setup and, if the player says yes, the keys
 - Anything that moves, sizes or reparents the action buttons or the cluster, or changes keybinds, goes through the combat queue: run now if out of combat, otherwise run on `PLAYER_REGEN_ENABLED` with a single "will apply after combat" message
 
 ### Versioning
@@ -104,7 +106,7 @@ Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`
   - SavedVariables (written on `/reload`, logout or exit): `_forever_/WTF/Account/AFOOZLE/SavedVariables/` (`WASDBars.lua`, BugGrabber's errors in `!BugGrabber.lua`)
   - Taint log: `_forever_/Logs/taint.log` (only if `/console taintLog 1` is on and something was tainted)
   - Test characters: Zoolefa (druid, level 21, no mount until about level 40) and Deutscheb (rogue alt)
-- **Windows PC:** installs from GitHub by following `INSTALL.md` (a release zip or a git clone in the Forever AddOns folder; LibEditMode through CurseForge).
+- **Windows PC:** installs from GitHub by following `INSTALL.md` (a release zip or a git clone in the Forever AddOns folder; LibEditMode and LibEditModeOverride through CurseForge).
 - WASDBars settings are account-wide on each machine (`SavedVariables: WASDBarsDB`); they don't sync between machines. Keybinds follow the game's own keybind saving.
 
 ## Domain Context
@@ -120,7 +122,7 @@ Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`
   | Mouse back side button (usually `BUTTON4`) | `ACTIONBUTTON12` | Action bar 1 |
   | W, A, S, D | movement | – |
 
-- The number row is shown by the game's own action bar 2. WASDBars never draws or moves it; the player places it in Edit Mode (`/wasd setup layout` lists what's still off).
+- The number row is shown by the game's own action bar 2. WASDBars never draws it; setup turns it on and places it exactly on action bar 1 in the WASDBars layout.
 - Keybind labels on the buttons are the game's own text, restyled larger and centred, with mouse buttons shortened ("Mouse Button 5" → M5).
 - Addons can't write files directly. The only way data leaves the game is SavedVariables, which the game writes to the `WTF` folder on `/reload`, logout or exit.
 
@@ -130,5 +132,5 @@ Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`
 - Fail quietly: no chat spam, no errors with Lua error reporting off.
 
 ## External Dependencies
-- Runtime: LibEditMode (CurseForge, installed by the player; a TOC dependency).
+- Runtime: LibEditMode and LibEditModeOverride (CurseForge, installed by the player; TOC dependencies and `.pkgmeta` required dependencies).
 - Development (Mac): Homebrew, Python 3, a pinned StyLua in `.tools/`, and a project-local Lua 5.1 + LuaRocks (luacheck, busted), installed by `make setup`. BugGrabber + BugSack in game.

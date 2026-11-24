@@ -3,7 +3,7 @@
 ## 1. Dependencies
 - TOC: `## Dependencies: LibEditMode, LibEditModeOverride`.
 - `.pkgmeta`: `required-dependencies:` with `libeditmode` and `libeditmodeoverride` (CurseForge slugs), so the CurseForge app installs both.
-- LibEditModeOverride (plusmouse, MIT, supports Forever 1.60.1): `LoadLayouts`, `SetFrameSetting`, `ReanchorFrame`, `SetActiveLayout`, `ApplyChanges`. `ApplyChanges` saves with `C_EditMode.SaveLayouts` and then opens and closes Edit Mode so the game applies the layout; it refuses in combat. `LoadLayouts` needs `EDIT_MODE_LAYOUTS_UPDATED` to have fired (`IsReady()`).
+- LibEditModeOverride (plusmouse, MIT, supports Forever 1.60.1): used for `IsReady`, `LoadLayouts`, `SetActiveLayout` and `ApplyChanges`; the settings and anchors are edited on the layout tables directly (section 5). `ApplyChanges` saves with `C_EditMode.SaveLayouts` and then opens and closes Edit Mode so the game applies the layout; it refuses in combat. `LoadLayouts` needs `EDIT_MODE_LAYOUTS_UPDATED` to have fired (`IsReady()`).
 
 ## 2. Saved data (`Logic/Settings.lua` defaults)
 - `setUp`: character GUID → true once that character's layout step finished with the layout ready (turns on the mouse fix, section 6).
@@ -31,15 +31,14 @@ After `create`/`switch`, the other checks are judged against the "WASDBars" layo
 `LayoutCopy.build(presets, saved, name, accountType)` where `presets` is `EditModePresetLayoutManager:GetCopyOfPresetLayouts()` and `saved` is `C_EditMode.GetLayouts()` (custom layouts only; `activeLayout` counts presets first, the same indexing LibEditModeOverride uses). Returns `{ layouts, activeLayout }` ready for `C_EditMode.SaveLayouts`: all layouts with a deep copy of the active one renamed `name`, type account, inserted after the last account layout (LibEditModeOverride's `AddLayout` index rule), and `activeLayout` pointing at it. UI side: `C_EditMode.SaveLayouts(result)`, `C_EditMode.SetActiveLayout(result.activeLayout)`, then `LoadLayouts()` again before the edits. At the account cap (`Constants.EditModeConsts.EditModeMaxLayoutsPerType`), setup says "WASDBars: You have the most Edit Mode layouts the game allows. Delete one, then run /wasd setup layout." and stops.
 
 ## 5. Applying (`UI/Setup.lua`)
-Order, all inside one `ns.combatQueue:run("setup-apply", fn)`:
+Order, inside `ns.combatQueue:run("setup-apply", fn)` (positions in a second job, `"setup-place"`):
 1. Save `restore[guid]` (current layout name, action bar 2 shown) if not already saved; save `keyCopy` if nil and keys will change.
 2. Copy or switch (section 4, or `SetActiveLayout("WASDBars")`).
-3. `LoadLayouts()`, then `SetFrameSetting` for action bar 1 (`MainActionBar`), action bar 2 (`MultiBarBottomLeft`, settings copied from action bar 1's values in "WASDBars") and the end caps (`Enum.EditModeMainActionBarEndCapSetting.Hidden`).
-4. Positions (only with `create`, or `bar2Place`): action bar 2 by `ReanchorFrame(MultiBarBottomLeft, "BOTTOMLEFT", UIParent, "BOTTOMLEFT", x, y)` from `MainActionBarButtonContainer1`'s scaled rect less action bar 2's offset from its own first button; chat by `ReanchorFrame(ChatFrame1, ...)` raised by the cluster's scaled height plus 8; the cluster by `ns.Placement.save(ns.db.layouts, "WASDBars", { point = "BOTTOMLEFT", x, y })`.
-5. `ApplyChanges()`.
-6. `Settings.SetValue("PROXY_SHOW_ACTIONBAR_2", true)`, the game's own path for the Action Bars setting.
-7. Keybinds (unchanged `apply` from `UI/Bindings.lua`).
-8. Read again; if ready, `setUp[guid] = true` and the mouse fix runs.
+3. `LayoutPlan.edit` sets the settings on the layout table itself, as Edit Mode stores them: action bar 1's, action bar 2's (12 icons and action bar 1's shape) and the end caps' Hidden. Editing the table rather than calling LibEditModeOverride's `SetFrameSetting` matters for icon size: Edit Mode stores it as a slider step (5 = 100%), `SetFrameSetting` takes the percentage, and copying the stored value from bar 1 to bar 2 needs no conversion. Then `C_EditMode.SaveLayouts` + `SetActiveLayout`, and LibEditModeOverride's `LoadLayouts()` + `ApplyChanges()` make the game apply it.
+4. Positions (with `create`, or `bar2Place`), a frame later so the bars are laid out with their new settings: action bar 2 is anchored `BOTTOMLEFT` to `UIParent` so its first button lands on `MainActionBarButtonContainer1` (measured in screen pixels); the cluster goes to `BOTTOMLEFT` at the chat window's left edge, 12 up (`ns.Placement.save(ns.db.layouts, "WASDBars", ...)`); the chat window keeps its left edge and moves to 40 above the cluster's top (room for its edit box). Saved and applied the same way.
+5. `Settings.SetValue("PROXY_SHOW_ACTIONBAR_2", true)`, the game's own path for the Action Bars setting.
+6. Keybinds (`ns.Bindings.apply`).
+7. `setUp[guid] = true` and the mouse fix runs: after a successful apply the layout is ready by construction.
 
 Edit Mode open (`EditModeManagerFrame:IsShown()`): "WASDBars: Close Edit Mode, then run /wasd setup layout." and nothing changes.
 
@@ -47,9 +46,9 @@ Edit Mode open (`EditModeManagerFrame:IsShown()`): "WASDBars: Close Edit Mode, t
 At `PLAYER_LOGIN` (after the cluster takes the buttons) and straight after setup, for characters with `setUp[guid]`, through `ns.combatQueue:run("bar1-mouse", fn)`: `MainActionBar:EnableMouse(false)` and `MainActionBar.Selection:EnableMouse(false)`. Nothing is saved by the game, so it runs every login. Restore stops it from the next login (no attempt to turn it back on).
 
 ## 7. Setup window and offer
-- **One window** (the keybind window from `UI/Bindings.lua`, retitled "Set up WASDBars"): a **Layout** heading with section 3's actions, then a **Keys** heading with the existing keybind steps and "These will no longer have a key:". Headings with nothing under them are left out. Set up applies section 5; Not now, the close button and Escape change nothing.
+- **One window** (`UI/SetupWindow.lua`, the former keybind window, retitled "Set up WASDBars"): a **Layout** heading with section 3's actions, then a **Keys** heading with the existing keybind steps and "These will no longer have a key:". Headings with nothing under them are left out. Set up applies section 5; Not now, the close button and Escape change nothing.
 - Nothing to do: "WASDBars: Everything is set up." (and the mouse fix runs, which also sets `setUp` if missing).
-- **Offer:** at `PLAYER_LOGIN`, once LibEditModeOverride is ready, if `setupOffered[guid]` isn't set and either the keys or the layout aren't set up, show the offer popup (combat queue), record the offer. Set up opens the window.
+- **Offer:** at the first `EDIT_MODE_LAYOUTS_UPDATED` after login (layouts aren't loaded at `PLAYER_LOGIN`), if `setupOffered[guid]` isn't set and either the keys or the layout aren't set up, show the offer popup (combat queue), record the offer. Set up opens the window.
 - Switching to another layout later shows nothing; the status line says so.
 
 ## 8. Restore (`Logic/Restore.lua` pure, UI in `UI/Setup.lua`)

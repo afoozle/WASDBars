@@ -4,7 +4,13 @@ A small World of Warcraft: Forever addon that arranges the game's own action bar
 
 It's a personal tool, built for a feral druid who plays with WASD movement.
 
-**Requires [LibEditMode](https://www.curseforge.com/wow/addons/libeditmode)**, installed from CurseForge. Move and scale the cluster in the game's Edit Mode.
+**Requires [LibEditMode](https://www.curseforge.com/wow/addons/libeditmode) and [LibEditModeOverride](https://www.curseforge.com/wow/addons/libeditmodeoverride)**, installed from CurseForge. Move and scale the cluster in the game's Edit Mode.
+
+## Setup and undoing it
+
+On first login WASDBars offers to set up (or type `/wasd setup`). One window lists every change before anything happens: it creates a **WASDBars** Edit Mode layout as a copy of the one you're using, puts action bar 2 exactly where action bar 1 was, moves the chat window up to make room for the cluster, and binds the keys around WASD to the cluster and the number row to action bar 2. Your other layouts are never changed.
+
+To undo it, type `/wasd restore` (or use Restore in the options): you're switched back to your old layout, and asked whether to put your keybinds back too. Then delete the WASDBars layout in Edit Mode if you like, and turn the addon off or uninstall it.
 
 ## Installing
 

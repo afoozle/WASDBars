@@ -5,25 +5,25 @@
 - [x] 0.2 Settle the open points (`/wasd setup keys` removed; options page Run setup and Restore) and write the `key-binding-setup` and `options-panel` deltas
 
 ## 1. Dependencies and data
-- [ ] 1.1 TOC `## Dependencies: LibEditMode, LibEditModeOverride`; `.pkgmeta` `required-dependencies` (design.md section 1); `INSTALL.md` lists both
-- [ ] 1.2 `Logic/Settings.lua` defaults `setUp`, `restore`, `keyCopy` (design.md section 2)
+- [x] 1.1 TOC `## Dependencies: LibEditMode, LibEditModeOverride`; `.pkgmeta` `required-dependencies` (design.md section 1); `INSTALL.md` lists both
+- [x] 1.2 `Logic/Settings.lua` defaults `setUp`, `restore`, `keyCopy` (design.md section 2)
 
 ## 2. Logic and tests
-- [ ] 2.1 `Logic/LayoutPlan.lua` and `layout_plan_spec.lua`: each action from its readings, in order; create vs switch; nil readings skipped; status sentences (design.md section 3). Remove `Logic/LayoutCheck.lua` and its tests
-- [ ] 2.2 `Logic/LayoutCopy.lua` and `layout_copy_spec.lua`: copy of a preset and of a custom layout, renamed and account-typed, inserted after the last account layout, active index; source unchanged (design.md section 4)
-- [ ] 2.3 `Logic/Restore.lua` and `restore_spec.lua`: actions for saved layout present or gone, action bar 2 was on or off, keybind question only with a key copy (design.md section 8)
+- [x] 2.1 `Logic/LayoutPlan.lua` and `layout_plan_spec.lua`: each action from its readings, in order; create vs switch; nil readings skipped; status sentences (design.md section 3). Remove `Logic/LayoutCheck.lua` and its tests
+- [x] 2.2 `Logic/LayoutCopy.lua` and `layout_copy_spec.lua`: copy of a preset and of a custom layout, renamed and account-typed, inserted after the last account layout, active index; source unchanged (design.md section 4)
+- [x] 2.3 `Logic/Restore.lua` and `restore_spec.lua`: actions for saved layout present or gone, action bar 2 was on or off, keybind question only with a key copy (design.md section 8)
 
 ## 3. UI and commands
-- [ ] 3.1 Readings from LibEditModeOverride and the live frames; applying (design.md section 5)
-- [ ] 3.2 Mouse fix at login and after setup (design.md section 6)
-- [ ] 3.3 One setup window, offer, Edit Mode open refusal (design.md section 7)
-- [ ] 3.4 Restore popups and messages (design.md section 8)
-- [ ] 3.5 Commands, status and options page buttons (design.md section 10)
-- [ ] 3.6 `make check` passes
+- [x] 3.1 Readings from LibEditModeOverride and the live frames; applying (design.md section 5)
+- [x] 3.2 Mouse fix at login and after setup (design.md section 6)
+- [x] 3.3 One setup window, offer, Edit Mode open refusal (design.md section 7)
+- [x] 3.4 Restore popups and messages (design.md section 8)
+- [x] 3.5 Commands, status and options page buttons (design.md section 10)
+- [x] 3.6 `make check` passes
 
 ## 4. Docs
-- [ ] 4.1 `openspec/project.md`: "only writes its own WASDBars layout, after the player confirms"; the mouse fix; restore; LibEditModeOverride under dependencies
-- [ ] 4.2 `README.md`: setup and how to roll back (`/wasd restore`)
+- [x] 4.1 `openspec/project.md`: "only writes its own WASDBars layout, after the player confirms"; the mouse fix; restore; LibEditModeOverride under dependencies
+- [x] 4.2 `README.md`: setup and how to roll back (`/wasd restore`)
 - [ ] 4.3 At archive: update the Purpose lines of `edit-mode-setup` ("never writes Edit Mode layouts") and `key-binding-setup` (`/wasd setup keys`) in `openspec/specs/`
 
 ## 5. In-game checks (Mac)

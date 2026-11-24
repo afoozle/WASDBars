@@ -8,6 +8,11 @@ Settings.defaults = {
   layouts = {},
   -- character GUID -> true once the first-time setup has been offered on that character
   setupOffered = {},
+  -- character GUID -> true once its layout step finished with the layout ready (turns on the action bar 1 mouse fix)
+  setUp = {},
+  -- character GUID -> { layout = name, bar2 = was action bar 2 on } from before setup, for /wasd restore
+  restore = {},
+  -- keyCopy: nil, or the 24 setup keys' binds from before setup first changed them ({ [key] = command | false })
   -- options page (UI/Options.lua)
   showMovementKeys = true,
   largeHotkeys = true,
