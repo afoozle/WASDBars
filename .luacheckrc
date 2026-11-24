@@ -44,5 +44,10 @@ read_globals = {
   "GetBuildInfo",
   "date",
   "Settings",
+  "C_EditMode",
+  "EditModePresetLayoutManager",
+  "GetActionBarToggles",
+  "ChatFrame1",
+  "Constants",
 }
 files["tests/**"] = { std = "+busted" }

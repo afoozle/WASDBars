@@ -22,7 +22,7 @@ Only when the player asks. On `main` with `make check` passing: add a `CHANGELOG
 - Every addon file starts with `local ADDON, ns = ...`. No globals except `WASDBarsDB`, `WASDBarsPerfDB`, `SLASH_WASDBARS1`, named StaticPopup dialogs and frames named `WASDBars...`.
 - **Logic/UI split:** pure logic goes in `Logic/`, makes no WoW calls when it loads, and receives any game functions as arguments, so busted can test it with the stubs in `tests/helpers/wow_stubs.lua`. Don't force the split onto code that is mostly game calls.
 - **No per-frame work:** react to events only.
-- **Combat queue:** anything that moves, sizes, reparents or shows/hides the action buttons or the cluster, or changes keybinds, goes through `ns.combatQueue:run(key, fn)`.
+- **Combat queue:** anything that moves, sizes, reparents or shows/hides the action buttons or the cluster, or changes keybinds, goes through `ns.combatQueue:run(key, fn)`. Setup and restore refuse in combat instead.
 - Add to the game's functions with `hooksecurefunc`; never replace them.
 - Never change keybind or action-button code without updating the in-game checklist in the change's `tasks.md`.
 - User messages are plain language, prefixed `WASDBars:`. Fail quietly.

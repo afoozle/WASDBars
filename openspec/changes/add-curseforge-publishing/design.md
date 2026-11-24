@@ -1,12 +1,7 @@
 # Design: CurseForge publishing
 
 ## 1. Packaging
-`.pkgmeta` gains:
-```yaml
-required-dependencies:
-  - libeditmode
-```
-and `docs` in its ignore list. The packager sends the dependency with each upload, so the CurseForge app installs LibEditMode alongside WASDBars. Check the slug on LibEditMode's CurseForge page.
+`.pkgmeta` gains `docs` in its ignore list. Its `required-dependencies` (`libeditmode`, `libeditmodeoverride`) come from `add-layout-setup`; the packager sends them with each upload, so the CurseForge app installs both alongside WASDBars. Check the slugs on their CurseForge pages.
 
 ## 2. Release workflow
 `.github/workflows/release.yml` passes `CF_API_KEY: ${{ secrets.CF_API_KEY }}` to the packager. With the key and `## X-Curse-Project-ID` in the TOC, the packager uploads the zip to that project as well as creating the GitHub Release.

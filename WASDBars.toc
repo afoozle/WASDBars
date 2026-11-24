@@ -5,7 +5,7 @@
 ## X-License: MIT
 ## Version: @project-version@
 ## SavedVariables: WASDBarsDB, WASDBarsPerfDB
-## Dependencies: LibEditMode
+## Dependencies: LibEditMode, LibEditModeOverride
 
 Core/Init.lua
 Core/Events.lua
@@ -14,7 +14,9 @@ Logic/CombatQueue.lua
 Logic/LayoutGeometry.lua
 Logic/Placement.lua
 Logic/BindingPlan.lua
-Logic/LayoutCheck.lua
+Logic/LayoutPlan.lua
+Logic/LayoutCopy.lua
+Logic/Restore.lua
 Logic/HotkeyText.lua
 Logic/PerfLog.lua
 Data/Layout.lua
@@ -23,6 +25,7 @@ UI/Cluster.lua
 UI/MovementKeys.lua
 UI/EditMode.lua
 UI/Bindings.lua
+UI/SetupWindow.lua
 UI/Setup.lua
 UI/Options.lua
 Core/Perf.lua

@@ -54,3 +54,8 @@ ns.Events.on("PLAYER_LOGIN", function()
   LibEditMode:RegisterCallback("layout", apply)
   apply(LibEditMode:GetActiveLayoutName())
 end)
+
+-- Applies the active layout's saved position again, after setup saves one.
+function EditMode.refresh()
+  apply(LibEditMode:GetActiveLayoutName())
+end
