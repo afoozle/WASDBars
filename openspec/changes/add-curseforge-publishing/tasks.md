@@ -9,7 +9,7 @@
 - [ ] 2.2 Add `## X-Curse-Project-ID` to the TOC
 
 ## 3. Packaging and workflow
-- [ ] 3.1 `.pkgmeta`: LibEditMode as a required dependency, `docs` ignored (design.md section 1)
+- [ ] 3.1 `.pkgmeta`: `docs` ignored (design.md section 1; the dependencies are declared by `add-layout-setup`)
 - [ ] 3.2 `release.yml` passes `CF_API_KEY` (design.md section 2)
 
 ## 4. Listing content
