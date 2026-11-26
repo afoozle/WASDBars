@@ -30,9 +30,10 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 | 8 | `add-performance-recording` ✅ done 2026-11-22, archived | `performance-recording` | Save WoW Forever's built-in profiler numbers for WASDBars so Claude Code can read them; used on demand |
 | 9 | `add-github-releases` ✅ done 2026-11-23, archived | `github-releases` | Packager, CI, and versioned GitHub Releases built from tags |
 | 10 | `add-layout-setup` ✅ done 2026-11-24, archived | changes to `edit-mode-setup`, `key-binding-setup`, `options-panel` | Setup makes the Edit Mode changes itself in its own "WASDBars" layout (LibEditModeOverride), keys and layout in one window, action bar 1 stops catching the mouse, and `/wasd restore` |
-| 11 | `add-curseforge-publishing` | `curseforge-publishing` | Uploads to CurseForge (dependencies already declared in `.pkgmeta` by `add-layout-setup`) |
-| 12 | `upstream-layout-copy` | none | Pull request to LibEditModeOverride: `AddLayout` copying a chosen layout, then swap WASDBars' own copy step for it |
-| 13 | `hide-main-bar` | changes to `edit-mode-setup` | Hide action bar 1 the Bartender4 way. Only if its Edit Mode box bothers; a hidden action bar 1 makes the bottom bar stack drop into its spot and jump when Edit Mode opens (see `add-layout-setup` design.md section 9) |
+| 11 | `ask-before-moving-buttons` | changes to `wasd-layout`, `edit-mode-setup` | Action bar 1's buttons move into the cluster only after the player confirms setup, never before; "Not now" leaves the game's bar as it was, and `/wasd restore` puts the buttons back |
+| 12 | `hide-main-bar` | changes to `edit-mode-setup` | Hide action bar 1 the Bartender4 way and draw its bar art (border, dividers) on action bar 2, with a Hide Bar Art checkbox for action bar 2 (LibEditMode). Hiding action bar 1 makes the bottom bar stack drop into its spot and jump when Edit Mode opens (see `add-layout-setup` design.md section 9); research in `openspec/changes/hide-main-bar/research.md` |
+| 13 | `add-curseforge-publishing` | `curseforge-publishing` | Uploads to CurseForge (dependencies already declared in `.pkgmeta` by `add-layout-setup`) |
+| 14 | `upstream-layout-copy` | none | Pull request to LibEditModeOverride: `AddLayout` copying a chosen layout, then swap WASDBars' own copy step for it |
 
 If the spike fails there is no fallback build: stop and rethink (for example, configure an existing bar addon into this shape and keep only the keybind and decoration parts).
 
