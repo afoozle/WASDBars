@@ -2,6 +2,22 @@
 
 All notable changes to WASDBars. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-11-26
+
+Now also requires LibEditModeOverride.
+
+### Added
+- Setup makes the Edit Mode changes itself, in its own **WASDBars** layout copied from the one you're using: action bar 2 placed exactly where action bar 1 was, the gryphons hidden, the cluster bottom left and the chat window moved up to make room. Your other layouts are never changed.
+- Keys and layout are set up in one window that lists every change before anything happens.
+- Action bar 2 takes action bar 1's place on the WASDBars layout: action bar 1 goes invisible (the bars above it stay where they are), and action bar 2 gets action bar 1's border, dividers and button frames. Untick them with **Hide Bar Art** in action bar 2's Edit Mode settings.
+- `/wasd restore` switches you back to your old layout, puts action bar 1's buttons back, and asks whether to put your keybinds back too.
+- A one-line reminder at login on characters that aren't set up.
+
+### Changed
+- Nothing moves until you agree: action bar 1's buttons go into the WASD shape only when you confirm setup, and only while the WASDBars layout is active. Switch to another layout and they're back on action bar 1.
+- Setup and restore end with a **Reload to finish** button, so your action bars can't be blocked in your next fight.
+- Setup and restore refuse to run in combat instead of waiting for it to end.
+
 ## [1.0.1] - 2026-11-23
 
 ### Fixed
