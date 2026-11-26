@@ -12,10 +12,10 @@
 
 ## 3. Docs
 - [x] 3.1 `openspec/project.md` (architecture: the buttons and mouse fix follow the WASDBars layout) and `README.md` (setup asks before moving anything; restore)
-- [ ] 3.2 At archive: update the `edit-mode-setup` Purpose line in `openspec/specs/`
+- [x] 3.2 At archive: update the `edit-mode-setup` Purpose line in `openspec/specs/`
 
 ## 4. In-game checks (Mac)
-- [ ] 4.1 Run together with `hide-main-bar`: every **[buttons]** and **[both]** check in `openspec/changes/hide-main-bar/tasks.md` section 4 passes (the combat layout switch is left out: Edit Mode can't open in combat)
+- [x] 4.1 Run together with `hide-main-bar`: replaced by the trimmed run in `openspec/changes/hide-main-bar/tasks.md` section 4b, which passed (the combat layout switch is left out: Edit Mode can't open in combat)
 
 ## 5. Wrap-up
-- [ ] 5.1 Merge and archive, with `hide-main-bar` (same branch)
+- [x] 5.1 Merge and archive, with `hide-main-bar` (same branch)

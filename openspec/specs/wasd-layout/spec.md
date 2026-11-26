@@ -10,7 +10,7 @@ Shows the game's own action bar 1 buttons in the shape of the keys around WASD, 
 The addon SHALL move the game's own action buttons 1–12 into a cluster shaped like the keys around WASD: Q, E, R, T on the top row; F, G on the middle row; Z, X, C, V on the bottom row, with rows staggered like a standard keyboard. Buttons 1–10 SHALL sit at Q, E, R, T, F, G, Z, X, C, V in that order, and buttons 11 and 12 in a column just right of the keyboard shape, 11 above 12. Positions, button mapping and size tiers SHALL be defined in one editable data table. The addon SHALL NOT create its own action buttons, and SHALL NOT draw the number row or change action bar 2.
 
 #### Scenario: Default layout
-- **WHEN** the addon loads for the first time on a character
+- **WHEN** a character is on the "WASDBars" layout and the cluster hasn't been moved in it
 - **THEN** the cluster is shown at its default position (see `display-positioning`)
 - **AND** Q, E, R, T, F, G, Z, X, C and V sit in their keyboard positions around W, A, S and D, with buttons 11 and 12 in a column to the right
 
@@ -60,19 +60,42 @@ Moved buttons SHALL keep everything the game's action buttons do: icons, cooldow
 - **THEN** its large bottom-centre hotkey text turns the game's out-of-range colour
 
 ### Requirement: Layout holds
-The layout SHALL stay in place through form changes, combat, reloads, zoning, bar page changes and Edit Mode changes. When Edit Mode layouts change and a button has left the cluster, the addon SHALL re-apply the layout straight away out of combat, or as soon as combat ends. The addon SHALL never move or change the buttons during combat, and SHALL cause no "Interface action blocked" errors.
+While the "WASDBars" layout is active, the layout SHALL stay in place through form changes, combat, reloads, zoning, bar page changes and Edit Mode changes. When Edit Mode layouts change, "WASDBars" is still active and a button has left the cluster, the addon SHALL re-apply the layout straight away out of combat, or as soon as combat ends. The addon SHALL never move or change the buttons during combat, and SHALL cause no "Interface action blocked" errors.
 
 #### Scenario: Reload
-- **WHEN** the player reloads the UI
+- **WHEN** the player reloads the UI on the "WASDBars" layout
 - **THEN** the buttons are back in the cluster
 
 #### Scenario: Edit Mode layout change
-- **WHEN** the player switches or edits an Edit Mode layout and a button has left the cluster
+- **WHEN** the player edits the "WASDBars" layout and a button has left the cluster
 - **THEN** the addon puts it back (after combat if in combat), with no errors
 
 ### Requirement: Other bars left alone
-The cluster SHALL NOT hide, move or change the main bar's art or settings, action bar 2, the micro menu or the bags. (The `edit-mode-setup` layout check lists the Edit Mode settings the player changes by hand.)
+The cluster SHALL NOT hide, move or change action bar 2, the micro menu or the bags. Action bar 1's look on the WASDBars layout is set by `main-bar-replacement`; the cluster itself SHALL NOT change the main bar's art or settings.
 
 #### Scenario: After loading
 - **WHEN** the cluster is shown
 - **THEN** action bar 2, the micro menu and bags are where they were
+
+### Requirement: Buttons follow the WASDBars layout
+Action bar 1's buttons SHALL be in the cluster exactly while the active Edit Mode layout is "WASDBars", and on the game's action bar 1 on any other layout. When the active layout changes, the addon SHALL move them straight away out of combat, or as soon as combat ends. On any other layout the cluster, its movement keys and its Edit Mode element SHALL be hidden, and the buttons SHALL be back in the game's own holders at the game's own size and hotkey style, as if the addon had never moved them.
+
+#### Scenario: Fresh character
+- **WHEN** a character logs in with WASDBars for the first time and isn't on the "WASDBars" layout
+- **THEN** action bar 1 is the game's normal bar, and no cluster, movement keys or WASDBars Edit Mode element are shown
+
+#### Scenario: Switching away
+- **WHEN** a set-up character switches from "WASDBars" to Modern in Edit Mode
+- **THEN** the buttons are back on action bar 1 and the cluster is gone, with no reload
+
+#### Scenario: Switching back
+- **WHEN** the character switches back to "WASDBars"
+- **THEN** the buttons are in the cluster again, where the cluster was last placed in that layout
+
+#### Scenario: Picking the layout by hand
+- **WHEN** a character that never ran setup picks "WASDBars" in Edit Mode
+- **THEN** the buttons move into the cluster
+
+#### Scenario: Layout change in combat
+- **WHEN** the active layout changes during combat
+- **THEN** the buttons move when combat ends, with no errors
