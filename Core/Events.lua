@@ -25,6 +25,8 @@ Events.on("ADDON_LOADED", function(name)
     return
   end
   WASDBarsDB = ns.Settings.merge(WASDBarsDB, ns.Settings.defaults)
+  -- gone since the buttons follow the WASDBars layout instead
+  WASDBarsDB.setUp = nil
   ns.db = WASDBarsDB
   -- Anything that moves the action buttons or changes keybinds goes through
   -- ns.combatQueue:run(key, fn).

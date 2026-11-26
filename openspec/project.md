@@ -78,8 +78,8 @@ WASDBars/                      repo root = addon folder
 - The addon only adds to the game's functions with `hooksecurefunc`; it never replaces them
 - The addon changes keybinds only through setup and restore, only after the player confirms, and only the keys listed in the keybind layout below
 - The addon only ever writes its own account-wide "WASDBars" Edit Mode layout, and only after the player confirms setup (`add-layout-setup`); it never changes another layout. The cluster is its own Edit Mode element through LibEditMode
-- On characters that are set up, action bar 1's empty frame and its Edit Mode selection stop catching the mouse (`EnableMouse(false)` at each login), because action bar 2 sits on top of it
-- `/wasd restore` switches a character back to its layout from before setup and, if the player says yes, the keys
+- Being on the WASDBars layout is the player's consent: action bar 1's buttons are in the cluster only while it is active, and back on action bar 1 on any other layout. The same goes for the mouse fix: on the WASDBars layout, action bar 1's empty frame and its Edit Mode selection stop catching the mouse, because action bar 2 sits on top of it
+- `/wasd restore` switches a character back to its layout from before setup (so the buttons go back to action bar 1) and, if the player says yes, the keys
 - Anything that moves, sizes or reparents the action buttons or the cluster, or changes keybinds, goes through the combat queue: run now if out of combat, otherwise run on `PLAYER_REGEN_ENABLED` with a single "will apply after combat" message. Exception: setup and restore refuse in combat instead
 
 ### Versioning
