@@ -239,6 +239,9 @@ local function apply(p, steps)
   end
   if layoutActions > 0 then
     if creating then
+      -- action bar 2's art starts as action bar 1's was in the source layout,
+      -- read before LayoutPlan.edit turns action bar 1's art off
+      ns.db.bar2HideArt = p.readings.layout.bar1.hideBarArt == 1
       ns.LayoutCopy.add(data, NAME, Enum.EditModeLayoutType.Account, Enum.EditModeLayoutType.Preset)
     elseif has(actions, "switch") then
       data.activeLayout = ns.LayoutCopy.find(data, NAME)

@@ -13,7 +13,8 @@ end
 
 -- Scale first, then the point: the offsets are in the frame's scaled units.
 -- Being on the WASDBars layout is the player's consent to moving action bar
--- 1's buttons, so the buttons and the mouse fix follow it.
+-- 1's buttons and replacing action bar 1 with action bar 2, so the buttons,
+-- the mouse fix and action bar 2's art follow it.
 local function apply(layoutName)
   local frame = ns.Cluster.frame
   local point, x, y, scale = placement(layoutName)
@@ -25,6 +26,7 @@ local function apply(layoutName)
   local onLayout = layoutName == ns.LayoutPlan.NAME
   ns.Cluster.follow(onLayout)
   ns.Setup.mouseFix(onLayout)
+  ns.BarArt.follow(onLayout)
 end
 
 -- Runs after UI/Cluster.lua's PLAYER_LOGIN handler, which builds the cluster.

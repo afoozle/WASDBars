@@ -88,16 +88,20 @@ describe("LayoutPlan", function()
     it("lists everything for a first setup, in window order", function()
       local r = { step = "create", source = "Modern", layout = LayoutPlan.read(layout(), ids), bar2On = false }
       local list = LayoutPlan.actions(r)
-      assert.same({ "create", "buttons", "place", "bar1", "bar2Shape", "bar2Place", "endCaps", "bar2On" }, ids_of(list))
+      assert.same(
+        { "create", "buttons", "replace", "place", "bar1", "bar2Shape", "bar2Place", "endCaps", "bar2On" },
+        ids_of(list)
+      )
       assert.equal("Create a WASDBars layout from 'Modern' and switch to it", list[1].text)
       assert.equal("Move action bar 1's buttons into the WASD shape", list[2].text)
+      assert.equal("Replace action bar 1 with action bar 2", list[3].text)
     end)
 
     it("switches without placing when the layout exists", function()
       local done = layout()
       LayoutPlan.edit(done, ids, true)
       local r = { step = "switch", layout = LayoutPlan.read(done, ids), bar2On = true }
-      assert.same({ "switch", "buttons" }, ids_of(LayoutPlan.actions(r)))
+      assert.same({ "switch", "buttons", "replace" }, ids_of(LayoutPlan.actions(r)))
     end)
 
     it("finds nothing to do on a finished layout", function()

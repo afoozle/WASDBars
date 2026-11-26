@@ -15,16 +15,7 @@
 - [ ] 3.2 At archive: update the `edit-mode-setup` Purpose line in `openspec/specs/`
 
 ## 4. In-game checks (Mac)
-Before starting: on the rogue, clear its `setupOffered` entry in `WASDBars.lua` (logged out), so it gets the first-login path.
-- [ ] 4.1 Rogue, first login on Modern: normal action bar 1; no cluster, movement keys or WASDBars Edit Mode element; the offer mentions moving the buttons; no reminder in chat
-- [ ] 4.2 Not now: nothing changes. `/reload`: no offer; one reminder line
-- [ ] 4.3 `/wasd setup`: the window lists moving the buttons under Layout. Set up: the buttons move into the cluster straight away; Action Bar 2 works (tooltips, clicks, Edit Mode selection)
-- [ ] 4.4 Switch to Modern in Edit Mode: the buttons are back on action bar 1 at normal size with the game's hotkey text; the cluster is gone; action bar 1 catches the mouse; the buttons work and follow form changes (druid)
-- [ ] 4.5 Switch back to WASDBars: the cluster is back where it was, with the buttons; no reminder after `/reload`
-- [ ] 4.6 Switch layouts during combat (if the game allows it): the buttons move when combat ends, no errors
-- [ ] 4.7 `/wasd restore`, No to keys: back on the old layout, buttons on action bar 1 with no reload; the new restore message. `/reload`: reminder shows
-- [ ] 4.8 Druid on WASDBars after the update: nothing changes from before; no reminder, no offer
-- [ ] 4.9 No BugSack errors; no "Interface action blocked"
+- [ ] 4.1 Run together with `hide-main-bar`: every **[buttons]** and **[both]** check in `openspec/changes/hide-main-bar/tasks.md` section 4 passes (the combat layout switch is left out: Edit Mode can't open in combat)
 
 ## 5. Wrap-up
-- [ ] 5.1 Merge and archive
+- [ ] 5.1 Merge and archive, with `hide-main-bar` (same branch)

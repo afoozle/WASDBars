@@ -11,6 +11,8 @@ Settings.defaults = {
   -- character GUID -> { layout = name, bar2 = was action bar 2 on } from before setup, for /wasd restore
   restore = {},
   -- keyCopy: nil, or the 24 setup keys' binds from before setup first changed them ({ [key] = command | false })
+  -- action bar 2's Hide Bar Art on the WASDBars layout (UI/BarArt.lua)
+  bar2HideArt = false,
   -- options page (UI/Options.lua)
   showMovementKeys = true,
   largeHotkeys = true,
