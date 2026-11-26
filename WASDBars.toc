@@ -18,11 +18,13 @@ Logic/LayoutPlan.lua
 Logic/LayoutCopy.lua
 Logic/Restore.lua
 Logic/HotkeyText.lua
+Logic/Dividers.lua
 Logic/PerfLog.lua
 Data/Layout.lua
 Data/BindingGroups.lua
 UI/Cluster.lua
 UI/MovementKeys.lua
+UI/BarArt.lua
 UI/EditMode.lua
 UI/Bindings.lua
 UI/SetupWindow.lua

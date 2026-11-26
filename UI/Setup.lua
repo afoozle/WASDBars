@@ -139,20 +139,22 @@ local function plan()
   return { ids = ids, readings = r, actions = ns.LayoutPlan.actions(r) }
 end
 
--- Action bar 1 is empty once the cluster has its buttons; stop it and its
--- Edit Mode selection catching the mouse so action bar 2 on top of it works.
-local function mouseFix()
+-- On the WASDBars layout action bar 1 is empty (the cluster has its buttons);
+-- stop it and its Edit Mode selection catching the mouse so action bar 2 on
+-- top of it works. On any other layout, give them back the game's mouse state.
+-- Called from UI/EditMode.lua whenever the active layout changes.
+local gameMouse
+function Setup.mouseFix(on)
   ns.combatQueue:run("bar1-mouse", function()
-    MainActionBar:EnableMouse(false)
-    if MainActionBar.Selection then
-      MainActionBar.Selection:EnableMouse(false)
+    local selection = MainActionBar.Selection
+    if not gameMouse then
+      gameMouse = { bar = MainActionBar:IsMouseEnabled(), selection = selection and selection:IsMouseEnabled() }
+    end
+    MainActionBar:EnableMouse(not on and gameMouse.bar)
+    if selection then
+      selection:EnableMouse(not on and gameMouse.selection)
     end
   end)
-end
-
-local function markSetUp()
-  ns.db.setUp[UnitGUID("player")] = true
-  mouseFix()
 end
 
 -- Second pass, once the first save has been laid out: action bar 2 onto
@@ -237,6 +239,9 @@ local function apply(p, steps)
   end
   if layoutActions > 0 then
     if creating then
+      -- action bar 2's art starts as action bar 1's was in the source layout,
+      -- read before LayoutPlan.edit turns action bar 1's art off
+      ns.db.bar2HideArt = p.readings.layout.bar1.hideBarArt == 1
       ns.LayoutCopy.add(data, NAME, Enum.EditModeLayoutType.Account, Enum.EditModeLayoutType.Preset)
     elseif has(actions, "switch") then
       data.activeLayout = ns.LayoutCopy.find(data, NAME)
@@ -251,9 +256,15 @@ local function apply(p, steps)
     ns.Bindings.apply(steps)
   end
 
+  -- Applying a layout from addon code taints the game's bar code (the stance
+  -- bar is blocked in combat) until the UI reloads, so setup asks for a reload
+  -- when it changed the layout or action bar 2's setting. Keybinds alone don't.
   local function finish()
-    markSetUp()
-    ns.print("Set up.")
+    if layoutActions > 0 or has(actions, "bar2On") then
+      ns.SetupWindow.showReload("Set up")
+    else
+      ns.print("Set up.")
+    end
   end
   if creating or has(actions, "bar2Place") then
     -- action bar 2 is measured after the game has laid out the first save
@@ -284,7 +295,6 @@ function Setup.open()
   end
   local steps, lost = ns.Bindings.steps()
   if #p.actions == 0 and #steps == 0 then
-    markSetUp()
     ns.print("Everything is set up.")
     return
   end
@@ -303,7 +313,8 @@ function Setup.layoutStatusSentence()
 end
 
 StaticPopupDialogs[OFFER] = {
-  text = "Set up WASDBars?\n\nIt makes a WASDBars Edit Mode layout and binds your keys. "
+  text = "Set up WASDBars?\n\nIt moves action bar 1's buttons into the WASD shape, "
+    .. "makes a WASDBars Edit Mode layout and binds your keys. "
     .. "You'll see every change before anything happens.",
   button1 = "Set up",
   button2 = "Not now",
@@ -315,14 +326,10 @@ StaticPopupDialogs[OFFER] = {
   hideOnEscape = true,
 }
 
-ns.Events.on("PLAYER_LOGIN", function()
-  if ns.db.setUp[UnitGUID("player")] then
-    mouseFix()
-  end
-end)
-
 -- Offered once per character, when its keys or its layout aren't set up.
--- Layouts arrive after login, so this waits for the first layout update.
+-- Otherwise, a character not on the WASDBars layout gets a one-line reminder
+-- at every login. Layouts arrive after login, so this waits for the first
+-- layout update.
 local offerChecked = false
 ns.Events.on("EDIT_MODE_LAYOUTS_UPDATED", function()
   if offerChecked then
@@ -332,11 +339,11 @@ ns.Events.on("EDIT_MODE_LAYOUTS_UPDATED", function()
   C_Timer.After(0, function()
     -- the realm name isn't ready yet at PLAYER_LOGIN; the GUID is
     local guid = UnitGUID("player")
-    if ns.db.setupOffered[guid] then
-      return
-    end
     local p = plan()
-    if not p or (#p.actions == 0 and ns.Bindings.isSetUp()) then
+    if ns.db.setupOffered[guid] or not p or (#p.actions == 0 and ns.Bindings.isSetUp()) then
+      if p and p.readings.step then
+        ns.print("Not set up on this character. Type /wasd setup to set it up.")
+      end
       return
     end
     ns.combatQueue:run("setup-offer", function()
@@ -346,11 +353,13 @@ ns.Events.on("EDIT_MODE_LAYOUTS_UPDATED", function()
   end)
 end)
 
+-- Restore always switches the layout, so it asks for a reload like setup.
 local function finishRestore()
   ns.print(
     "Restored. You can delete the WASDBars layout in Edit Mode whenever you like. "
-      .. "Turn WASDBars off in the AddOns list, or uninstall it, then reload to finish."
+      .. "Type /wasd setup to set it up again."
   )
+  ns.SetupWindow.showReload("Restored")
 end
 
 StaticPopupDialogs[RESTORE_KEYS] = {
@@ -396,7 +405,7 @@ StaticPopupDialogs[RESTORE] = {
     LEMO:ApplyChanges()
     Settings.SetValue("PROXY_SHOW_ACTIONBAR_2", data.bar2)
     local guid = UnitGUID("player")
-    ns.db.restore[guid], ns.db.setUp[guid] = nil, nil
+    ns.db.restore[guid] = nil
     if ns.db.keyCopy then
       StaticPopup_Show(RESTORE_KEYS)
     else

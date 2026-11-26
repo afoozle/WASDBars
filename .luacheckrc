@@ -8,6 +8,7 @@ globals = { "WASDBarsDB", "WASDBarsPerfDB", "SLASH_WASDBARS1", "StaticPopupDialo
 read_globals = {
   -- grows with each change; only list what is actually used
   "CreateFrame",
+  "CreateFramePool",
   "UIParent",
   "InCombatLockdown",
   "DEFAULT_CHAT_FRAME",

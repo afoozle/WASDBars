@@ -90,11 +90,20 @@ function LayoutPlan.actions(readings)
   local layout = readings.layout
   local bar1, bar2 = layout.bar1, layout.bar2
 
+  -- Switching to the layout is what moves the buttons and replaces action
+  -- bar 1 (UI/EditMode.lua), so these are listed for the player and need no
+  -- applying of their own.
+  local function onSwitch()
+    add("buttons", "Move action bar 1's buttons into the WASD shape")
+    add("replace", "Replace action bar 1 with action bar 2")
+  end
   if readings.step == "create" then
     add("create", "Create a WASDBars layout from '" .. readings.source .. "' and switch to it")
+    onSwitch()
     add("place", "Put the WASD keys bottom left and move the chat window up")
   elseif readings.step == "switch" then
     add("switch", "Switch to your WASDBars layout")
+    onSwitch()
   end
   for name, want in pairs(LayoutPlan.BAR1) do
     if differs(bar1[name], want) then
