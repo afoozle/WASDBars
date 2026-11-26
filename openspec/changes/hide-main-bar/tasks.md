@@ -46,5 +46,15 @@ One session for both changes. **[buttons]** checks `ask-before-moving-buttons`, 
 
 Not covered in game: setup creating the WASDBars layout (and the art's starting value from the source layout), and switching layouts in combat.
 
+## 4b. Trimmed run (2026-11-26, the player's call: critical checks only, on the rogue)
+- [x] 4b.1 Set-up rogue: cluster, action bar 1 invisible, art on action bar 2; Edit Mode: no action bar 1 box, bottom bars still; Hide Bar Art toggles
+- [x] 4b.2 `/wasd restore`, No to keys: Modern, buttons back at normal size, plain action bar 2, Stealth swaps action bar 1
+- [x] 4b.3 Fresh login (`setupOffered` cleared): normal bar, offer mentions the buttons; Not now changes nothing
+- [x] 4b.4 `/wasd setup`, Set up: everything moves; first fight hit a blocked `StanceBar:SetShownBase()` (setup's layout apply, see `ask-before-moving-buttons` design.md section 8). After `/reload`, three fights (two from Stealth): no errors, no taint log
+- [x] 4b.5 After `/reload` the UI holds
+- [ ] 4b.6 Setup reloads the UI by itself: restore, `/wasd setup`, Set up; the UI reloads; fight a mob; no errors
+
+The full list above (4.1–4.19) was replaced by this run.
+
 ## 5. Wrap-up
 - [ ] 5.1 Merge both changes and archive both

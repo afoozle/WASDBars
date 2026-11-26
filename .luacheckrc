@@ -11,6 +11,7 @@ read_globals = {
   "CreateFramePool",
   "UIParent",
   "InCombatLockdown",
+  "ReloadUI",
   "DEFAULT_CHAT_FRAME",
   "C_AddOns",
   "LibStub",

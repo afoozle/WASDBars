@@ -256,8 +256,16 @@ local function apply(p, steps)
     ns.Bindings.apply(steps)
   end
 
+  -- Applying a layout from addon code taints the game's bar code (the stance
+  -- bar is blocked in combat) until the UI reloads, so setup reloads when it
+  -- changed the layout or action bar 2's setting. Keybinds alone don't.
   local function finish()
-    ns.print("Set up.")
+    if layoutActions > 0 or has(actions, "bar2On") then
+      ns.print("Set up. Reloading the UI to finish.")
+      ReloadUI()
+    else
+      ns.print("Set up.")
+    end
   end
   if creating or has(actions, "bar2Place") then
     -- action bar 2 is measured after the game has laid out the first save

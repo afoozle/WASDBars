@@ -30,3 +30,6 @@ The restore popup switches the layout (as today); the layout callback then relea
 
 ## 7. Saved data
 `Logic/Settings.lua`: remove the `setUp` default. On load, set `WASDBarsDB.setUp = nil` so old saves drop it (`Settings.merge` keeps unknown keys).
+
+## 8. Reload after setup (found in game, 2026-11-26)
+The first fight after Set up, in the same session, hit `ADDON_ACTION_BLOCKED` for `StanceBar:SetShownBase()`, from the game's own `ActionBarController` → `StanceBar:Update`. After a `/reload`, three fights (two from Stealth) gave no errors and no taint log, so the taint comes from setup applying the layout from addon code (LibEditModeOverride's `ApplyChanges`, there since `add-layout-setup`), not from the new button or art code. `finish()` in `UI/Setup.lua` now reloads the UI whenever the layout or action bar 2's setting changed, without asking (the player's call).
