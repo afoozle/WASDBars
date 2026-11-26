@@ -126,9 +126,8 @@ local function createReloadFrame()
   if f.CloseButton then
     f.CloseButton:Hide()
   end
-  local text = f:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-  text:SetPoint("TOP", 0, -34)
-  text:SetText("Set up. Reload the UI to finish.")
+  f.text = f:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  f.text:SetPoint("TOP", 0, -34)
 
   local reload = CreateFrame("Button", "WASDBarsReloadButton", f, "SecureActionButtonTemplate, UIPanelButtonTemplate")
   reload:SetSize(160, 24)
@@ -140,11 +139,13 @@ local function createReloadFrame()
   return f
 end
 
--- After setup has changed the layout: applying it from addon code taints the
--- game's bar code (the stance bar is blocked in combat) until a reload.
-function SetupWindow.showReload()
+-- After setup or restore has switched or changed the layout: applying it from
+-- addon code taints the game's bar code (the stance bar is blocked in combat)
+-- until a reload. done: "Set up" or "Restored".
+function SetupWindow.showReload(done)
   ns.combatQueue:run("reload-prompt", function()
     reloadFrame = reloadFrame or createReloadFrame()
+    reloadFrame.text:SetText(done .. ". Reload the UI to finish.")
     reloadFrame:Show()
   end)
 end

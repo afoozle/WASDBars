@@ -261,7 +261,7 @@ local function apply(p, steps)
   -- when it changed the layout or action bar 2's setting. Keybinds alone don't.
   local function finish()
     if layoutActions > 0 or has(actions, "bar2On") then
-      ns.SetupWindow.showReload()
+      ns.SetupWindow.showReload("Set up")
     else
       ns.print("Set up.")
     end
@@ -353,11 +353,13 @@ ns.Events.on("EDIT_MODE_LAYOUTS_UPDATED", function()
   end)
 end)
 
+-- Restore always switches the layout, so it asks for a reload like setup.
 local function finishRestore()
   ns.print(
     "Restored. You can delete the WASDBars layout in Edit Mode whenever you like. "
       .. "Type /wasd setup to set it up again."
   )
+  ns.SetupWindow.showReload("Restored")
 end
 
 StaticPopupDialogs[RESTORE_KEYS] = {
