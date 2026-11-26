@@ -52,7 +52,7 @@ Not covered in game: setup creating the WASDBars layout (and the art's starting 
 - [x] 4b.3 Fresh login (`setupOffered` cleared): normal bar, offer mentions the buttons; Not now changes nothing
 - [x] 4b.4 `/wasd setup`, Set up: everything moves; first fight hit a blocked `StanceBar:SetShownBase()` (setup's layout apply, see `ask-before-moving-buttons` design.md section 8). After `/reload`, three fights (two from Stealth): no errors, no taint log
 - [x] 4b.5 After `/reload` the UI holds
-- [ ] 4b.6 Setup reloads the UI by itself: restore, `/wasd setup`, Set up; the UI reloads; fight a mob; no errors
+- [ ] 4b.6 Reload to finish: restore, `/wasd setup`, Set up; the reload window shows; its button reloads the UI; fight a mob; no errors (a first try with `ReloadUI()` was blocked as a protected call)
 
 The full list above (4.1–4.19) was replaced by this run.
 

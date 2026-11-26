@@ -41,15 +41,15 @@ While the active layout is "WASDBars", the addon SHALL stop Action Bar 1's empty
 - **THEN** Action Bar 1's mouse handling is as the game has it
 
 ### Requirement: Reload after setup
-When Set up has changed the Edit Mode layout or turned on Action Bar 2, setup SHALL say so in chat and reload the UI straight away, without asking. Applying a layout from addon code taints the game's bar code until a reload, which blocks the stance bar in combat. Setup that only changes keybinds SHALL NOT reload.
+When Set up has changed the Edit Mode layout or turned on Action Bar 2, setup SHALL show a small window saying "Set up. Reload the UI to finish." with one "Reload to finish" button and no close button; clicking it reloads the UI. Applying a layout from addon code taints the game's bar code until a reload, which blocks the stance bar in combat, and addons can't reload the UI without a click. Setup that only changes keybinds SHALL NOT ask for a reload.
 
 #### Scenario: Fight after setup
 - **WHEN** the player clicks Set up on a character not on "WASDBars", and fights a mob after the UI has reloaded
-- **THEN** chat said "WASDBars: Set up. Reloading the UI to finish.", and no action is blocked in the fight
+- **THEN** clicking "Reload to finish" reloads the UI, and no action is blocked in the fight
 
 #### Scenario: Keys only
 - **WHEN** only the keys needed setting up
-- **THEN** chat says "WASDBars: Set up." and the UI doesn't reload
+- **THEN** chat says "WASDBars: Set up." and no reload window shows
 
 ## MODIFIED Requirements
 

@@ -104,3 +104,47 @@ function SetupWindow.show(actions, steps, lost, onSetUp)
   window.onSetUp = onSetUp
   window:Show()
 end
+
+-- Addons can't reload the UI themselves on this client (ReloadUI is
+-- protected), but a secure button running the /reload macro can, when the
+-- player clicks it. It holds a protected button, so this frame is its own
+-- (not the setup window, which Escape and dragging would have to move in
+-- combat), is only shown out of combat, and has no close button.
+local reloadFrame
+
+local function createReloadFrame()
+  local f = CreateFrame("Frame", "WASDBarsReloadFrame", UIParent, "BasicFrameTemplateWithInset")
+  f:SetSize(320, 96)
+  f:SetPoint("TOP", 0, -135)
+  f:SetFrameStrata("DIALOG")
+  f:SetToplevel(true)
+  f:EnableMouse(true)
+  f:Hide()
+  if f.TitleText then
+    f.TitleText:SetText("Set up WASDBars")
+  end
+  if f.CloseButton then
+    f.CloseButton:Hide()
+  end
+  local text = f:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  text:SetPoint("TOP", 0, -34)
+  text:SetText("Set up. Reload the UI to finish.")
+
+  local reload = CreateFrame("Button", "WASDBarsReloadButton", f, "SecureActionButtonTemplate, UIPanelButtonTemplate")
+  reload:SetSize(160, 24)
+  reload:SetPoint("BOTTOM", 0, 14)
+  reload:SetText("Reload to finish")
+  reload:SetAttribute("type", "macro")
+  reload:SetAttribute("macrotext", "/reload")
+  reload:RegisterForClicks("AnyUp", "AnyDown")
+  return f
+end
+
+-- After setup has changed the layout: applying it from addon code taints the
+-- game's bar code (the stance bar is blocked in combat) until a reload.
+function SetupWindow.showReload()
+  ns.combatQueue:run("reload-prompt", function()
+    reloadFrame = reloadFrame or createReloadFrame()
+    reloadFrame:Show()
+  end)
+end
