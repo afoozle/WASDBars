@@ -1,7 +1,7 @@
 LUA_BIN := $(if $(wildcard .lua/bin),.lua/bin/,)
 STYLUA := .tools/bin/stylua
 STYLUA_VERSION := $(shell cat .stylua-version)
-SRC := $(wildcard Core Logic Data UI tests)
+SRC := $(wildcard Core ActionBarCluster MainBarReplacement WasdLayoutMode Keybinds EditModeLayouts Setup Options Performance tests)
 
 .PHONY: setup lint stylua-version format format-check test check
 

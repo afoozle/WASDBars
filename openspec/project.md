@@ -53,11 +53,16 @@ Standard WoW addon repository layout: **the repo root is the addon folder**. The
 ```
 WASDBars/                      repo root = addon folder
   WASDBars.toc
-  Core/                        init, events, perf recording, slash command
-  Logic/                       pure Lua, no WoW API calls at load time; unit tested
-  Data/                        editable data tables (layout, binding groups)
-  UI/                          the cluster, movement keys, Edit Mode, setup window, setup and restore, options
-  tests/                       busted unit tests + WoW API stubs
+  Core/                        chat messages, combat queue, saved settings, slash commands, Startup.lua (loaded last)
+  ActionBarCluster/            the WASD key shape, the cluster and its buttons, movement keys, its Edit Mode element
+  MainBarReplacement/          action bar 2 in action bar 1's place, with action bar 1's art
+  WasdLayoutMode/              moving the buttons and replacing action bar 1 while the WASDBars layout is active
+  Keybinds/                    the setup keys, keybind changes and the key copies for restore
+  EditModeLayouts/             reading, editing and saving Edit Mode layouts
+  Setup/                       the setup window and flow, the first-time offer, restore
+  Options/                     the options page
+  Performance/                 /wasd perf recordings
+  tests/                       busted unit tests, one folder per feature folder
   scripts/                     dev setup
   openspec/                    specs and changes
   .github/workflows/           CI and releases
@@ -71,8 +76,8 @@ WASDBars/                      repo root = addon folder
 
 ### Code Style
 - Every addon file starts with `local ADDON, ns = ...`; the only globals are the SavedVariables tables (`WASDBarsDB`, `WASDBarsPerfDB`), the `SLASH_WASDBARS1` slash command, named StaticPopup dialogs, and named frames, which always start with `WASDBars` (for example `WASDBarsCluster`)
-- **Logic/UI split, only where it pays:** genuinely pure logic (layout maths, binding plans, settings merge, combat queue) lives in `Logic/` as functions that receive any WoW API functions as arguments, so it can be unit tested. Don't force the split onto code that is mostly game calls.
-- Load order is set in the TOC: `Core` (Init, Events) → `Logic` → `Data` → `UI` → `Core` (Perf, Slash, which use the rest)
+- **Logic files and game files:** in each feature folder, decisions live in logic files of plain functions (data in, data out, no game calls), unit tested; game files call the game directly, stay thin and are checked in-game. Naming and structure rules are in CLAUDE.md, Code rules
+- Each file is one module on `ns`, with no load-time dependencies on other files; `Core/Startup.lua` loads last and connects game events to them
 - StyLua formatting; luacheck must pass with zero warnings
 - Plain-language user messages, prefixed `WASDBars:`
 - **No per-frame work:** the addon reacts to events only; nothing runs every frame
@@ -90,7 +95,7 @@ WASDBars/                      repo root = addon folder
 Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`.pkgmeta`) and published as GitHub Releases; see CLAUDE.md for the steps. The TOC has `## Version: @project-version@`; the packager replaces it with the tag, and in a git checkout `/wasd version` shows "Dev build."
 
 ### Testing Strategy
-- **Unit tests (busted):** every `Logic/` module, run locally with `make check`, using stubs in `tests/helpers/wow_stubs.lua`. GitHub Actions runs the same checks on every push and pull request.
+- **Unit tests (busted):** every logic file, run locally with `make check`, with plain data (no fakes of the game). GitHub Actions runs the same checks on every push and pull request.
 - **In-game checks:** anything involving frames, the game's buttons or keybinds, using `/reload` and BugGrabber + BugSack. Each change's tasks.md ends with its in-game checklist. Claude Code reads BugGrabber's saved errors from the game's SavedVariables folder rather than having them copied across.
 - **Performance:** on demand only (`/wasd perf`; see CLAUDE.md, Performance)
 - A change is done when `make check` passes and its in-game checks pass
@@ -102,7 +107,7 @@ Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`
 - When a change is finished: merge and archive the OpenSpec change
 
 ### Working with Claude Code
-`CLAUDE.md` at the root tells Claude Code how this project works: the OpenSpec roadmap (grill each change at its start), the make targets, the Logic/UI split, and where to find the game folder, BugGrabber's saved errors and the taint log. Claude Code links the repo into the game's AddOns folder when asked. The player installs third-party addons (BugGrabber, BugSack) through CurseForge.
+`CLAUDE.md` at the root tells Claude Code how this project works: the OpenSpec roadmap (grill each change at its start), the make targets, the code rules, and where to find the game folder, BugGrabber's saved errors and the taint log. Claude Code links the repo into the game's AddOns folder when asked. The player installs third-party addons (BugGrabber, BugSack) through CurseForge.
 
 ## Machines
 - **MacBook:** development and play. All building and in-game checking happens here. Paths (Claude Code reads these directly; the player never copies data across):

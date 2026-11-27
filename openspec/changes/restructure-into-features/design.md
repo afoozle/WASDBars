@@ -145,8 +145,8 @@ Field names inside the tables passed between files:
 - **Keybind** (`KeybindGroups`): `{ key, keyLabel, action }`, in groups `{ name, heading, detail, keybinds }`
 - **Current actions** (read by `Keybinds`): `{ [key] = action }`; **keys of each action**: `{ [action] = { key, … } }`
 - **Keybind change** (`KeybindPlan`): `{ key, keyLabel, wantedAction, currentAction }`; per group `{ group, keybindChanges, correctCount, totalCount, status }`
-- **Action losing its key**: `{ action, keys }`; `Keybinds` adds `actionName` for the window
-- **All layouts** (`LayoutList`): `{ layouts, activeLayoutIndex }`
+- **Action losing its key**: `{ action, keyLabels }`; `Keybinds` adds `actionName` for the window
+- **All layouts** (`LayoutList`): `{ layouts, activeLayout }` (the game's own field names: `C_EditMode.SaveLayouts` takes this table)
 - **Layout settings** (`WasdLayoutSettings`): `{ actionBar1 = { settingName = value }, actionBar2 = { … }, gryphonsHidden = { left, right } }`
 - **Current layout state** (built by `Setup`, replacing today's `readings`): `{ wasdLayout = "active" | "inactive" | "missing", activeLayoutName, layoutSettings, isActionBar2On, isActionBar2OnActionBar1 }`
 - **Restore point** (`RestorePoints`): `{ layout, bar2 }` (saved keys unchanged)
@@ -212,7 +212,8 @@ Functions are public unless marked *(local)*.
 
 **`ClusterEditModeElement`** (game, was the element half of `UI/EditMode.lua`): the "WASDBars" element in Edit Mode.
 - `addClusterToEditMode()`: movable, kept on screen; dragging saves the position, the Scale slider saves and repositions
-- `findActiveClusterPosition(layoutName)`: `ClusterPositions.findClusterPosition` on the saved table and the `ClusterKeys` defaults
+- `findClusterPosition(layoutName)`: `ClusterPositions.findClusterPosition` on the saved table and the `ClusterKeys` defaults
+- `saveClusterPosition(layoutName, point, x, y)`: for setup's first position on a new layout
 
 **`MovementKeys`** (game): the W, A, S, D arrow keys.
 - `drawMovementKeys()`: at login, after the cluster is built
@@ -246,22 +247,23 @@ Functions are public unless marked *(local)*.
 
 **`KeybindPlan`** (logic, was `Logic/BindingPlan.lua` and the key half of `Logic/Restore.lua`). "Action" is used throughout for what a key does (the game calls it a command).
 - `findKeybindChanges(keybindGroups, currentActions)`: per group, the keys not yet bound as setup wants
-- `findActionsLosingTheirKey(keybindChanges, keysOfEachAction)`: actions setup takes the last key from, across both groups
-- `isEveryKeybindSetUp(keybindChanges)`, `describeKeybindStatus(keybindChanges)`
+- `selectGroupsToChange(allGroupChanges)`: the groups with keys left to change
+- `findActionsLosingTheirKey(groupsToChange, keysOfEachAction)`: actions setup takes the last key from, across both groups
+- `isEveryKeybindSetUp(allGroupChanges)`, `describeKeybindStatus(allGroupChanges)`
 - `copyKeybinds(keybindGroups, currentActions)`, `findRestoreChanges(keybindCopy)`
-- `nameActionButton(action)`: "Action bar 1 button 3", or nil for any other action
-- *(local)* `doesActionKeepAKey(action, keysSetupWillChange, actionsSetupWillBind)`, `groupChangesByCurrentAction`
+- `findStanceButtonNumber(action)`, `nameAction(action, formName, gameActionName)`: "Action bar 1 button 3", the form's name, or the game's name
+- *(local)* `listKeybindChanges`, `collectKeysAndActionsSetupWillChange`, `doesActionKeepAKey`, `isActionLosingItsKey`
 
 **`KeybindCopies`** (logic): the keys from before setup, one copy per binding set, in the saved table it's given.
 - `findCopyOwner(bindingSet, characterBindingSet, playerGuid)`: "account", or the character's GUID on character keybinds
 - `saveKeybindCopyOnce(savedCopies, copyOwner, keybindCopy)`, `findKeybindCopy(savedCopies, copyOwner)`, `forgetKeybindCopy(savedCopies, copyOwner)`
 
 **`Keybinds`** (game): the game's keybinds.
-- `findKeybindChanges()`, `findActionsLosingTheirKey(keybindChanges)`: read the game, ask `KeybindPlan`, add each action's name
+- `findGroupsToChange()`, `findActionsLosingTheirKey(groupsToChange)`: read the game, ask `KeybindPlan`, add each action's name
 - `applyKeybindChanges(keybindChanges)`: saves to the binding set the character already uses
 - `copyCurrentKeybinds()`, `restoreKeybinds(keybindCopy)`
 - `findCopyOwner()`: `KeybindCopies.findCopyOwner` with the current binding set and the player's GUID
-- `nameAction(action)`: the action button name, a form name, or the game's name
+- `nameAction(action)`: `KeybindPlan.nameAction` with the form's name and the game's name
 - Apply and restore are out of combat only; their callers refuse in combat (`SetupGuards`)
 - *(local)* `readCurrentActions`, `readKeysOfEachAction`, `findFormName`
 
@@ -288,11 +290,12 @@ Functions are public unless marked *(local)*.
 
 **`EditModeLayouts`** (game): the game's Edit Mode layouts.
 - `isEditModeReady()`, `isEditModeOpen()`, `openEditMode()`
-- `findEditModeIds()`: `EditModeIds.readEditModeIds(Enum)`, read once
+- `findEditModeIds()`: `EditModeIds.readEditModeIds(Enum)`
 - `loadAllLayouts()`: `LayoutList.combinePresetAndSavedLayouts`, with saved layouts brought up to date with the game's systems
 - `saveAllLayouts(allLayouts)`: saves and makes the game apply them
 - `findActiveLayoutName()`
 - `switchToLayout(layoutName)`: straight away
+- `hasRoomForAnotherLayout(allLayouts)`, `copyActiveLayout(allLayouts, newLayoutName)`, `findPresetLayoutType()`: `LayoutList` with the game's layout types and limit
 
 ### Setup
 
@@ -308,6 +311,7 @@ Functions are public unless marked *(local)*.
   ...
   ```
 - `isStepNeeded(neededLayoutSteps, stepName)`
+- `isLayoutChangeNeeded(neededLayoutSteps)`: any step but turning on action bar 2
 - `describeLayoutStep(stepName, currentLayoutState)`: the window text, including the source layout's name for `createWasdLayout`
 - `describeLayoutStatus(currentLayoutState, neededLayoutSteps)`: the layout half of `/wasd setup status`
 - Steps, in order: `createWasdLayout`, `switchToWasdLayout`, `moveActionButtons` and `replaceActionBar1` (listed with create or switch; switching is what does them), `positionClusterAndChatWindow` (with create), `setUpActionBar1`, `matchActionBar2ToActionBar1` (with create), `placeActionBar2OnActionBar1`, `hideGryphons`, `turnOnActionBar2`
@@ -329,18 +333,18 @@ Functions are public unless marked *(local)*.
 - `findLeftEdge()`: where the cluster goes, in screen units
 
 **`SetupWindow`** (game): the window listing every change.
-- `showSetupChanges(neededLayoutStepTexts, keybindChanges, actionsLosingTheirKey, onSetUpClicked)`
+- `showSetupChanges(neededLayoutStepTexts, groupsToChange, actionsLosingTheirKey, runSetup)`
 - `isSetupWindowShown()`
-- *(local)* `createSetupWindow`, `addHeading`, `addLine`, `arrangeLines`
+- *(local)* `createSetupWindow`, `addHeading`, `addLine`, `addLayoutLines`, `addKeybindLines`, `arrangeLines`
 
 **`ReloadPrompt`** (game): the "Reload to finish" window with its own secure button.
 - `askForReloadAfterSetup()`, `askForReloadAfterRestore()`
 
 **`Setup`** (game): the setup flow.
 - `openSetupWindow()`: `/wasd setup` and the Run setup button
-- `isAnythingLeftToSetUp()`, `isOnWasdLayout()`: for the offer
+- `isAnythingLeftToSetUp()`, `isOffWasdLayout()`: for the offer and the reminder
 - `describeSetupStatus()`: `/wasd setup status`
-- *(local, in the order setup runs them)* `readCurrentLayoutState`, `saveRestorePoint`, `saveKeybindCopy`, `createWasdLayout`, `switchToWasdLayout`, `applyWasdLayoutSettings`, `placeActionBar2OnActionBar1`, `positionClusterAndChatWindowOnNewLayout` (saves the cluster's position, then `WasdLayoutMode.followActiveLayout` applies it straight away, as `EditMode.refresh` does today), `turnOnActionBar2IfOff`, `confirmSetupOrAskForReload`
+- *(local, in the order setup runs them)* `findNeededSetup`, `readCurrentLayoutState`, `runSetup`, `refuseWithoutRoomForLayout`, `saveRestorePoint`, `saveKeybindCopy`, `changeLayout` (`createWasdLayout` or `switchToWasdLayout`, then `applyWasdLayoutSettings`), `turnOnActionBar2IfOff`, `applyKeybindChanges`, `finishSetup`, `placeActionBar2OnActionBar1`, `positionClusterAndChatWindowOnNewLayout` (saves the cluster's position, then `WasdLayoutMode.followActiveLayout` applies it straight away, as `EditMode.refresh` did), `confirmSetupOrAskForReload`
 
 **`SetupOffer`** (game): the first-time offer and the login reminder.
 - `offerSetupOrRemindOncePerLogin()`: on every Edit Mode update; only the first one per login does anything
@@ -449,7 +453,7 @@ The one place that connects game events. Every handler is one function call.
 
 ## 10. Order of work
 
-One feature at a time, `make check` passing after each, with old files removed as their code moves:
+Planned as one feature at a time alongside the old files. Built in one pass instead: old and new files would both have registered the same events and hooks, so they couldn't run side by side. The order below is the order the files were written in:
 1. `Core` files and `Startup.lua` alongside the old files
 2. `Keybinds` (tests first: losing a key across both groups, restore from the right copy)
 3. `EditModeLayouts`
