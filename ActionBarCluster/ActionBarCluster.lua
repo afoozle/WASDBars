@@ -29,8 +29,7 @@ local function saveGameHotkeyStyle(hotkey)
     points[i] = { hotkey:GetPoint(i) }
   end
   local width, height = hotkey:GetSize()
-  gameHotkeyStyles[hotkey] =
-    { font = { hotkey:GetFont() }, points = points, width = width, height = height, justify = hotkey:GetJustifyH() }
+  gameHotkeyStyles[hotkey] = { font = { hotkey:GetFont() }, points = points, width = width, height = height, justify = hotkey:GetJustifyH() }
 end
 
 local function applyGameHotkeyStyle(hotkey)
@@ -91,13 +90,7 @@ local function arrangeActionButtonsInCluster()
     button:ClearAllPoints()
     button:SetScale(measuredKey.scale)
     -- a scaled frame's offsets are in its own scaled units
-    button:SetPoint(
-      "CENTER",
-      clusterFrame,
-      "TOPLEFT",
-      measuredKey.centreX / measuredKey.scale,
-      -measuredKey.centreY / measuredKey.scale
-    )
+    button:SetPoint("CENTER", clusterFrame, "TOPLEFT", measuredKey.centreX / measuredKey.scale, -measuredKey.centreY / measuredKey.scale)
     restyleHotkey(button)
   end
 end

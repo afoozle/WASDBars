@@ -62,9 +62,7 @@ describe("SetupSteps", function()
         layoutSettings = readSettings(finishedLayout()),
         isActionBar2On = true,
       }
-      assert.is_false(
-        SetupSteps.isStepNeeded(SetupSteps.findNeededLayoutSteps(currentLayoutState), "matchActionBar2ToActionBar1")
-      )
+      assert.is_false(SetupSteps.isStepNeeded(SetupSteps.findNeededLayoutSteps(currentLayoutState), "matchActionBar2ToActionBar1"))
     end)
 
     it("switches without placing when the layout exists", function()
@@ -74,10 +72,7 @@ describe("SetupSteps", function()
         layoutSettings = readSettings(finishedLayout()),
         isActionBar2On = true,
       }
-      assert.same(
-        { "switchToWasdLayout", "moveActionButtons", "replaceActionBar1" },
-        SetupSteps.findNeededLayoutSteps(currentLayoutState)
-      )
+      assert.same({ "switchToWasdLayout", "moveActionButtons", "replaceActionBar1" }, SetupSteps.findNeededLayoutSteps(currentLayoutState))
     end)
 
     it("finds nothing to do on a finished layout", function()
@@ -117,8 +112,7 @@ describe("SetupSteps", function()
     end)
 
     it("skips what the game couldn't tell", function()
-      local currentLayoutState =
-        { wasdLayout = "active", layoutSettings = readSettings(editModeFixtures.layoutWithoutSettings()) }
+      local currentLayoutState = { wasdLayout = "active", layoutSettings = readSettings(editModeFixtures.layoutWithoutSettings()) }
       assert.same({}, SetupSteps.findNeededLayoutSteps(currentLayoutState))
     end)
   end)
@@ -130,27 +124,15 @@ describe("SetupSteps", function()
 
   it("describes each step for the window", function()
     local currentLayoutState = { activeLayoutName = "Modern" }
-    assert.equal(
-      "Create a WASDBars layout from 'Modern' and switch to it",
-      SetupSteps.describeLayoutStep("createWasdLayout", currentLayoutState)
-    )
-    assert.equal(
-      "Move action bar 1's buttons into the WASD shape",
-      SetupSteps.describeLayoutStep("moveActionButtons", currentLayoutState)
-    )
+    assert.equal("Create a WASDBars layout from 'Modern' and switch to it", SetupSteps.describeLayoutStep("createWasdLayout", currentLayoutState))
+    assert.equal("Move action bar 1's buttons into the WASD shape", SetupSteps.describeLayoutStep("moveActionButtons", currentLayoutState))
     assert.equal("Turn on Action Bar 2", SetupSteps.describeLayoutStep("turnOnActionBar2", currentLayoutState))
   end)
 
   it("says ready, not on the layout, or how many changes", function()
     assert.equal("Edit Mode layout ready.", SetupSteps.describeLayoutStatus({ wasdLayout = "active" }, {}))
-    assert.equal(
-      "Not on the WASDBars layout (/wasd setup).",
-      SetupSteps.describeLayoutStatus({ wasdLayout = "inactive" }, {})
-    )
-    assert.equal(
-      "WASDBars layout needs 1 change (/wasd setup).",
-      SetupSteps.describeLayoutStatus({ wasdLayout = "active" }, { "hideGryphons" })
-    )
+    assert.equal("Not on the WASDBars layout (/wasd setup).", SetupSteps.describeLayoutStatus({ wasdLayout = "inactive" }, {}))
+    assert.equal("WASDBars layout needs 1 change (/wasd setup).", SetupSteps.describeLayoutStatus({ wasdLayout = "active" }, { "hideGryphons" }))
     assert.equal(
       "WASDBars layout needs 2 changes (/wasd setup).",
       SetupSteps.describeLayoutStatus({ wasdLayout = "active" }, { "hideGryphons", "turnOnActionBar2" })

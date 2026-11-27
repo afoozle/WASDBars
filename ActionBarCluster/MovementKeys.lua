@@ -39,13 +39,7 @@ local function createMovementKey(clusterFrame, measuredKey, buttonSize)
   local keyFrame = createEmptyKeyFrame(movementKeysHolder)
   keyFrame:SetSize(buttonSize, buttonSize)
   keyFrame:SetScale(measuredKey.scale)
-  keyFrame:SetPoint(
-    "CENTER",
-    clusterFrame,
-    "TOPLEFT",
-    measuredKey.centreX / measuredKey.scale,
-    -measuredKey.centreY / measuredKey.scale
-  )
+  keyFrame:SetPoint("CENTER", clusterFrame, "TOPLEFT", measuredKey.centreX / measuredKey.scale, -measuredKey.centreY / measuredKey.scale)
   drawArrow(keyFrame, measuredKey.clusterKey.movementDirection, buttonSize)
 end
 

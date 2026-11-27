@@ -24,10 +24,7 @@ describe("LayoutList", function()
   end
 
   local function combineWithSaved(savedLayouts, activeLayout)
-    return LayoutList.combinePresetAndSavedLayouts(
-      presetLayouts(),
-      { layouts = savedLayouts, activeLayout = activeLayout }
-    )
+    return LayoutList.combinePresetAndSavedLayouts(presetLayouts(), { layouts = savedLayouts, activeLayout = activeLayout })
   end
 
   before_each(function()

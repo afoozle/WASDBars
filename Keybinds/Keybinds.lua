@@ -56,8 +56,7 @@ end
 
 -- KeybindPlan.findActionsLosingTheirKey, with each action's name for the window.
 function Keybinds.findActionsLosingTheirKey(groupsToChange)
-  local actionsLosingTheirKey =
-    KeybindPlan.findActionsLosingTheirKey(groupsToChange, readKeysOfEachAction(groupsToChange))
+  local actionsLosingTheirKey = KeybindPlan.findActionsLosingTheirKey(groupsToChange, readKeysOfEachAction(groupsToChange))
   for _, actionLosingItsKey in ipairs(actionsLosingTheirKey) do
     actionLosingItsKey.actionName = Keybinds.nameAction(actionLosingItsKey.action)
   end

@@ -33,14 +33,6 @@ local function openEditModeFromOptions()
   ns.EditModeLayouts.openEditMode()
 end
 
-local function openSetupWindow()
-  ns.Setup.openSetupWindow()
-end
-
-local function askToRestore()
-  ns.Restore.askToRestore()
-end
-
 -- settingName: the WASDBarsDB key, which also names the game's setting.
 local function addCheckbox(settingName, label, tooltip, readValue, saveValue)
   local setting = Settings.RegisterProxySetting(
@@ -94,20 +86,8 @@ function OptionsPage.addOptionsPage()
   )
 
   addHeading(optionsLayout, "Setup")
-  addButton(
-    optionsLayout,
-    "Set up",
-    "Run setup",
-    openSetupWindow,
-    "Set up the WASDBars layout and keybinds. Shows every change first."
-  )
-  addButton(
-    optionsLayout,
-    "Undo setup",
-    "Restore",
-    askToRestore,
-    "Switch back to your previous layout, and optionally your keybinds."
-  )
+  addButton(optionsLayout, "Set up", "Run setup", ns.Setup.openSetupWindow, "Set up the WASDBars layout and keybinds. Shows every change first.")
+  addButton(optionsLayout, "Undo setup", "Restore", ns.Restore.askToRestore, "Switch back to your previous layout, and optionally your keybinds.")
 
   Settings.RegisterAddOnCategory(optionsCategory)
 end

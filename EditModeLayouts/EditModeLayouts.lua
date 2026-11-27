@@ -78,19 +78,10 @@ function EditModeLayouts.switchToLayout(layoutName)
 end
 
 function EditModeLayouts.hasRoomForAnotherLayout(allLayouts)
-  return LayoutList.hasRoomForAnotherLayout(
-    allLayouts,
-    Enum.EditModeLayoutType.Account,
-    Constants.EditModeConsts.EditModeMaxLayoutsPerType
-  )
+  return LayoutList.hasRoomForAnotherLayout(allLayouts, Enum.EditModeLayoutType.Account, Constants.EditModeConsts.EditModeMaxLayoutsPerType)
 end
 
 -- A new account-wide layout, copied from the active one and made active.
 function EditModeLayouts.copyActiveLayout(allLayouts, newLayoutName)
-  LayoutList.copyActiveLayout(
-    allLayouts,
-    newLayoutName,
-    Enum.EditModeLayoutType.Account,
-    Enum.EditModeLayoutType.Preset
-  )
+  LayoutList.copyActiveLayout(allLayouts, newLayoutName, Enum.EditModeLayoutType.Account, Enum.EditModeLayoutType.Preset)
 end

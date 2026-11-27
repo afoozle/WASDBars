@@ -1,7 +1,8 @@
 local ADDON, ns = ...
 local SavedSettings = ns.SavedSettings
 
--- Loaded last: connects game events to the features and runs the login steps.
+-- Loaded last, so it can hand the features' functions straight to the game:
+-- connects game events to them and runs the login steps.
 local LibEditMode = LibStub("LibEditMode")
 
 local eventFrame = CreateFrame("Frame")
@@ -28,11 +29,6 @@ local function loadSavedSettings(addonName)
   WASDBarsPerfDB = SavedSettings.createRecordingsList(WASDBarsPerfDB)
 end
 
--- Fires when the active layout changes, including at login.
-local function followActiveLayout(layoutName)
-  ns.WasdLayoutMode.followActiveLayout(layoutName)
-end
-
 local function buildAddon()
   ns.ActionBarCluster.buildActionBarCluster()
   ns.MovementKeys.drawMovementKeys()
@@ -40,7 +36,8 @@ local function buildAddon()
   ns.MainBarReplacement.keepActionBar2ArtUpToDate()
   ns.MainBarReplacement.addHideBarArtCheckbox()
   ns.OptionsPage.addOptionsPage()
-  LibEditMode:RegisterCallback("layout", followActiveLayout)
+  -- fires when the active layout changes, including at login
+  LibEditMode:RegisterCallback("layout", ns.WasdLayoutMode.followActiveLayout)
   ns.WasdLayoutMode.followActiveLayout(ns.EditModeLayouts.findActiveLayoutName())
 end
 
@@ -49,24 +46,12 @@ local function finishCombat()
   ns.MainBarReplacement.redrawActionBar2ArtIfWaiting()
 end
 
-local function offerSetupOrRemindOncePerLogin()
-  ns.SetupOffer.offerSetupOrRemindOncePerLogin()
-end
-
-local function refreshHotkeys()
-  ns.ActionBarCluster.refreshHotkeys()
-end
-
-local function runSlashCommand(text)
-  ns.SlashCommands.runSlashCommand(text)
-end
-
 eventFrame:SetScript("OnEvent", runEventHandler)
 listenFor("ADDON_LOADED", loadSavedSettings)
 listenFor("PLAYER_LOGIN", buildAddon)
 listenFor("PLAYER_REGEN_ENABLED", finishCombat)
-listenFor("UPDATE_BINDINGS", refreshHotkeys)
-listenFor("EDIT_MODE_LAYOUTS_UPDATED", offerSetupOrRemindOncePerLogin)
+listenFor("UPDATE_BINDINGS", ns.ActionBarCluster.refreshHotkeys)
+listenFor("EDIT_MODE_LAYOUTS_UPDATED", ns.Setup.offerSetupOrRemindOncePerLogin)
 
 SLASH_WASDBARS1 = "/wasd"
-SlashCmdList.WASDBARS = runSlashCommand
+SlashCmdList.WASDBARS = ns.SlashCommands.runSlashCommand

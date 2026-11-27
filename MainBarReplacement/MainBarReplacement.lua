@@ -106,12 +106,8 @@ local function drawActionBar2Dividers()
   for i, button in ipairs(actionBar2.actionButtons) do
     isButtonShown[i] = button:IsShown()
   end
-  local buttonsNeedingDivider = BarDividers.findButtonsNeedingDivider(
-    isButtonShown,
-    actionBar2.numRows or 1,
-    actionBar2.buttonPadding or 0,
-    actionBar2.minButtonPadding or 0
-  )
+  local buttonsNeedingDivider =
+    BarDividers.findButtonsNeedingDivider(isButtonShown, actionBar2.numRows or 1, actionBar2.buttonPadding or 0, actionBar2.minButtonPadding or 0)
   for _, buttonIndex in ipairs(buttonsNeedingDivider) do
     local button = actionBar2.actionButtons[buttonIndex]
     local divider

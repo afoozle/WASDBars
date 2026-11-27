@@ -22,10 +22,7 @@ describe("RestoreSteps", function()
     RestoreSteps.saveRestorePointOnce(savedRestorePoints, "Player-1", "UI", false)
     RestoreSteps.saveRestorePointOnce(savedRestorePoints, "Player-1", "WASDBars", true)
     RestoreSteps.saveRestorePointOnce(savedRestorePoints, "Player-2", "Modern", true)
-    assert.same(
-      { ["Player-1"] = { layout = "UI", bar2 = false }, ["Player-2"] = { layout = "Modern", bar2 = true } },
-      savedRestorePoints
-    )
+    assert.same({ ["Player-1"] = { layout = "UI", bar2 = false }, ["Player-2"] = { layout = "Modern", bar2 = true } }, savedRestorePoints)
   end)
 
   it("goes back to the saved layout", function()

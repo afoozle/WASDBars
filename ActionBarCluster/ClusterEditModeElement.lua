@@ -44,12 +44,7 @@ end
 
 -- { point, x, y, scale } saved for the layout, or the defaults.
 function ClusterEditModeElement.findClusterPosition(layoutName)
-  return ClusterPositions.findClusterPosition(
-    ns.db.layouts,
-    layoutName,
-    ClusterKeys.defaultPosition,
-    ClusterKeys.defaultScale
-  )
+  return ClusterPositions.findClusterPosition(ns.db.layouts, layoutName, ClusterKeys.defaultPosition, ClusterKeys.defaultScale)
 end
 
 function ClusterEditModeElement.saveClusterPosition(layoutName, point, x, y)

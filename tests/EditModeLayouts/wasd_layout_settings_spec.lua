@@ -19,8 +19,7 @@ describe("WasdLayoutSettings", function()
     end)
 
     it("reads missing settings as nil", function()
-      local layoutSettings =
-        WasdLayoutSettings.readLayoutSettings(editModeFixtures.layoutWithoutSettings(), editModeIds)
+      local layoutSettings = WasdLayoutSettings.readLayoutSettings(editModeFixtures.layoutWithoutSettings(), editModeIds)
       assert.is_nil(layoutSettings.actionBar1.numIcons)
       assert.is_nil(layoutSettings.gryphonsHidden.right)
     end)
@@ -35,8 +34,7 @@ describe("WasdLayoutSettings", function()
     end)
 
     it("never counts what the game couldn't tell as wrong", function()
-      local layoutSettings =
-        WasdLayoutSettings.readLayoutSettings(editModeFixtures.layoutWithoutSettings(), editModeIds)
+      local layoutSettings = WasdLayoutSettings.readLayoutSettings(editModeFixtures.layoutWithoutSettings(), editModeIds)
       assert.is_true(WasdLayoutSettings.isActionBar1SetUp(layoutSettings))
       assert.is_true(WasdLayoutSettings.doesActionBar2MatchActionBar1(layoutSettings))
       assert.is_true(WasdLayoutSettings.areGryphonsHidden(layoutSettings))
@@ -51,14 +49,8 @@ describe("WasdLayoutSettings", function()
       WasdLayoutSettings.hideGryphons(layout, editModeIds)
       local layoutSettings = WasdLayoutSettings.readLayoutSettings(layout, editModeIds)
       local actionBar1, actionBar2 = layoutSettings.actionBar1, layoutSettings.actionBar2
-      assert.same(
-        { 12, 1, 1, 1 },
-        { actionBar1.numIcons, actionBar1.alwaysShowButtons, actionBar1.hideBarArt, actionBar1.hideBarScrolling }
-      )
-      assert.same(
-        { 12, 0, 1, 5, 2 },
-        { actionBar2.numIcons, actionBar2.orientation, actionBar2.numRows, actionBar2.iconSize, actionBar2.iconPadding }
-      )
+      assert.same({ 12, 1, 1, 1 }, { actionBar1.numIcons, actionBar1.alwaysShowButtons, actionBar1.hideBarArt, actionBar1.hideBarScrolling })
+      assert.same({ 12, 0, 1, 5, 2 }, { actionBar2.numIcons, actionBar2.orientation, actionBar2.numRows, actionBar2.iconSize, actionBar2.iconPadding })
       assert.same({ left = 1, right = 1 }, layoutSettings.gryphonsHidden)
       assert.is_true(WasdLayoutSettings.isActionBar1SetUp(layoutSettings))
       assert.is_true(WasdLayoutSettings.doesActionBar2MatchActionBar1(layoutSettings))
@@ -80,8 +72,7 @@ describe("WasdLayoutSettings", function()
   end)
 
   describe("moving", function()
-    local anchor =
-      { point = "BOTTOMLEFT", relativeTo = "UIParent", relativePoint = "BOTTOMLEFT", offsetX = 35, offsetY = 300 }
+    local anchor = { point = "BOTTOMLEFT", relativeTo = "UIParent", relativePoint = "BOTTOMLEFT", offsetX = 35, offsetY = 300 }
 
     it("moves the chat window and marks it moved", function()
       local layout = editModeFixtures.modernLayout()

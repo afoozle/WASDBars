@@ -10,11 +10,8 @@ local RESTORE_KEYBINDS_POPUP = "WASDBARS_RESTORE_KEYS"
 
 -- Restore always switches the layout, so it asks for a reload like setup.
 local function finishRestore()
-  ns.ChatMessages.printMessage(
-    "Restored. You can delete the WASDBars layout in Edit Mode whenever you like. "
-      .. "Type /wasd setup to set it up again."
-  )
-  ns.ReloadPrompt.askForReload("Restored")
+  ns.ChatMessages.printMessage("Restored. You can delete the WASDBars layout in Edit Mode whenever you like. " .. "Type /wasd setup to set it up again.")
+  ns.SetupWindow.askForReload("Restored")
 end
 
 local function restoreKeybinds()
@@ -25,10 +22,6 @@ local function restoreKeybinds()
   ns.Keybinds.restoreKeybinds(ns.db.keyCopies[copyOwner])
   ns.db.keyCopies[copyOwner] = nil
   finishRestore()
-end
-
-local function askToRestoreKeybinds()
-  StaticPopup_Show(RESTORE_KEYBINDS_POPUP)
 end
 
 -- restoreChoice: { layout, bar2 }, from askToRestore.
@@ -44,15 +37,14 @@ local function restoreLayout(_, restoreChoice)
   end
   ns.db.restore[UnitGUID("player")] = nil
   if ns.db.keyCopies[ns.Keybinds.findCopyOwner()] then
-    askToRestoreKeybinds()
+    StaticPopup_Show(RESTORE_KEYBINDS_POPUP)
   else
     finishRestore()
   end
 end
 
 StaticPopupDialogs[RESTORE_KEYBINDS_POPUP] = {
-  text = "Restore your keybinds too?\n\nPuts the keys around WASD and the number row back to what they were "
-    .. "before WASDBars set them up.",
+  text = "Restore your keybinds too?\n\nPuts the keys around WASD and the number row back to what they were " .. "before WASDBars set them up.",
   button1 = "Yes",
   button2 = "No",
   OnAccept = restoreKeybinds,
@@ -88,10 +80,5 @@ function Restore.askToRestore()
   local layoutToRestore, isSavedLayoutMissing =
     RestoreSteps.findLayoutToRestore(ns.EditModeLayouts.loadAllLayouts(), restorePoint, Enum.EditModeLayoutType.Preset)
   local restoreLines = RestoreSteps.describeRestore(layoutToRestore, isSavedLayoutMissing, restorePoint)
-  StaticPopup_Show(
-    RESTORE_POPUP,
-    table.concat(restoreLines, "\n"),
-    nil,
-    { layout = layoutToRestore, bar2 = restorePoint.bar2 }
-  )
+  StaticPopup_Show(RESTORE_POPUP, table.concat(restoreLines, "\n"), nil, { layout = layoutToRestore, bar2 = restorePoint.bar2 })
 end

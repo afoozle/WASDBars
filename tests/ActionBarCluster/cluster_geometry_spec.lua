@@ -61,14 +61,8 @@ describe("ClusterGeometry.measureClusterKeys", function()
     for _, measuredKey in ipairs(measuredCluster.measuredKeys) do
       local label = measuredKey.clusterKey.label
       local halfButton = BUTTON_SIZE / 2
-      assert.is_true(
-        measuredKey.centreX - halfButton >= 0 and measuredKey.centreX + halfButton <= measuredCluster.width,
-        label
-      )
-      assert.is_true(
-        measuredKey.centreY - halfButton >= 0 and measuredKey.centreY + halfButton <= measuredCluster.height,
-        label
-      )
+      assert.is_true(measuredKey.centreX - halfButton >= 0 and measuredKey.centreX + halfButton <= measuredCluster.width, label)
+      assert.is_true(measuredKey.centreY - halfButton >= 0 and measuredKey.centreY + halfButton <= measuredCluster.height, label)
     end
   end)
 

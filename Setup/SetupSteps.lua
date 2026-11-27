@@ -42,8 +42,7 @@ end
 
 -- Only on a new layout: later the player may resize action bar 2.
 local function isActionBar2ShapeWrong(currentLayoutState)
-  return isWasdLayoutMissing(currentLayoutState)
-    and not WasdLayoutSettings.doesActionBar2MatchActionBar1(currentLayoutState.layoutSettings)
+  return isWasdLayoutMissing(currentLayoutState) and not WasdLayoutSettings.doesActionBar2MatchActionBar1(currentLayoutState.layoutSettings)
 end
 
 local function isActionBar2AwayFromActionBar1(currentLayoutState)

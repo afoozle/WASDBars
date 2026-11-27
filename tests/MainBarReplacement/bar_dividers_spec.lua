@@ -4,8 +4,7 @@ describe("BarDividers.findButtonsNeedingDivider", function()
   local findButtonsNeedingDivider
 
   before_each(function()
-    findButtonsNeedingDivider =
-      load_addon_file("MainBarReplacement/BarDividers.lua").BarDividers.findButtonsNeedingDivider
+    findButtonsNeedingDivider = load_addon_file("MainBarReplacement/BarDividers.lua").BarDividers.findButtonsNeedingDivider
   end)
 
   it("puts one before every shown button that follows a shown button", function()

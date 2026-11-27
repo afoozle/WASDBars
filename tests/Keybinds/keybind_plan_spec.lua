@@ -33,10 +33,7 @@ describe("KeybindPlan", function()
   end
 
   local function findActionsLosingTheirKey(keybindGroups, currentActions)
-    return KeybindPlan.findActionsLosingTheirKey(
-      findGroupsToChange(keybindGroups, currentActions),
-      readKeysOfEachAction(currentActions)
-    )
+    return KeybindPlan.findActionsLosingTheirKey(findGroupsToChange(keybindGroups, currentActions), readKeysOfEachAction(currentActions))
   end
 
   before_each(function()
@@ -83,10 +80,7 @@ describe("KeybindPlan", function()
   end)
 
   it("selects only the groups with keys left to change", function()
-    local groupsToChange = findGroupsToChange(
-      { wasdGroup, numberGroup },
-      { Q = "ACTIONBUTTON1", E = "ACTIONBUTTON2", BUTTON5 = "ACTIONBUTTON11" }
-    )
+    local groupsToChange = findGroupsToChange({ wasdGroup, numberGroup }, { Q = "ACTIONBUTTON1", E = "ACTIONBUTTON2", BUTTON5 = "ACTIONBUTTON11" })
     assert.equal(1, #groupsToChange)
     assert.equal(numberGroup, groupsToChange[1].group)
   end)
@@ -108,18 +102,12 @@ describe("KeybindPlan", function()
     end)
 
     it("groups keys that did the same action", function()
-      assert.same(
-        { { action = "JUMP", keyLabels = { "Q", "E" } } },
-        findActionsLosingTheirKey({ wasdGroup }, { Q = "JUMP", E = "JUMP" })
-      )
+      assert.same({ { action = "JUMP", keyLabels = { "Q", "E" } } }, findActionsLosingTheirKey({ wasdGroup }, { Q = "JUMP", E = "JUMP" }))
     end)
 
     -- A new player's 1 fires action bar 1's first button, which setup moves to Q.
     it("counts keys across both groups", function()
-      assert.same(
-        {},
-        findActionsLosingTheirKey({ wasdGroup, numberGroup }, { ["1"] = "ACTIONBUTTON1", ["2"] = "ACTIONBUTTON2" })
-      )
+      assert.same({}, findActionsLosingTheirKey({ wasdGroup, numberGroup }, { ["1"] = "ACTIONBUTTON1", ["2"] = "ACTIONBUTTON2" }))
       assert.same(
         { { action = "EXTRAACTIONBUTTON1", keyLabels = { "2" } } },
         findActionsLosingTheirKey({ wasdGroup, numberGroup }, { ["2"] = "EXTRAACTIONBUTTON1" })
@@ -127,10 +115,7 @@ describe("KeybindPlan", function()
     end)
 
     it("keeps an action that a key outside both groups still does", function()
-      assert.same(
-        {},
-        findActionsLosingTheirKey({ wasdGroup, numberGroup }, { ["1"] = "REPLY", Q = "REPLY", F12 = "REPLY" })
-      )
+      assert.same({}, findActionsLosingTheirKey({ wasdGroup, numberGroup }, { ["1"] = "REPLY", Q = "REPLY", F12 = "REPLY" }))
     end)
   end)
 
@@ -153,10 +138,7 @@ describe("KeybindPlan", function()
         { Q = "ACTIONBUTTON1", E = "ACTIONBUTTON2", BUTTON5 = "ACTIONBUTTON11", ["1"] = "MULTIACTIONBAR1BUTTON1" }
       )
       assert.is_false(KeybindPlan.isEveryKeybindSetUp(allGroupChanges))
-      assert.equal(
-        "Keybinds: WASD keys set up, number row 1 of 2 set up.",
-        KeybindPlan.describeKeybindStatus(allGroupChanges)
-      )
+      assert.equal("Keybinds: WASD keys set up, number row 1 of 2 set up.", KeybindPlan.describeKeybindStatus(allGroupChanges))
       assert.equal(
         "Keybinds: WASD keys not set up, number row not set up.",
         KeybindPlan.describeKeybindStatus(KeybindPlan.findKeybindChanges({ wasdGroup, numberGroup }, {}))

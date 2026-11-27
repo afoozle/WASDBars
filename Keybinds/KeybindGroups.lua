@@ -27,19 +27,11 @@ ns.KeybindGroups = {
     name = "number row",
     heading = "Action bar 2 on the number row",
     detail = "1-9, 0, - and = fire action bar 2's buttons 1-12.",
-    keybinds = {
-      { key = "1", action = "MULTIACTIONBAR1BUTTON1" },
-      { key = "2", action = "MULTIACTIONBAR1BUTTON2" },
-      { key = "3", action = "MULTIACTIONBAR1BUTTON3" },
-      { key = "4", action = "MULTIACTIONBAR1BUTTON4" },
-      { key = "5", action = "MULTIACTIONBAR1BUTTON5" },
-      { key = "6", action = "MULTIACTIONBAR1BUTTON6" },
-      { key = "7", action = "MULTIACTIONBAR1BUTTON7" },
-      { key = "8", action = "MULTIACTIONBAR1BUTTON8" },
-      { key = "9", action = "MULTIACTIONBAR1BUTTON9" },
-      { key = "0", action = "MULTIACTIONBAR1BUTTON10" },
-      { key = "-", action = "MULTIACTIONBAR1BUTTON11" },
-      { key = "=", action = "MULTIACTIONBAR1BUTTON12" },
-    },
+    keybinds = {},
   },
 }
+
+-- 1-9, 0, - and = fire action bar 2's buttons 1-12
+for i, key in ipairs({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=" }) do
+  table.insert(ns.KeybindGroups[2].keybinds, { key = key, action = "MULTIACTIONBAR1BUTTON" .. i })
+end

@@ -34,9 +34,7 @@ Keybinds/Keybinds.lua
 EditModeLayouts/EditModeLayouts.lua
 Setup/SetupGuards.lua
 Setup/SetupWindow.lua
-Setup/ReloadPrompt.lua
 Setup/Setup.lua
-Setup/SetupOffer.lua
 Setup/Restore.lua
 Options/OptionsPage.lua
 Performance/PerformanceRecorder.lua
