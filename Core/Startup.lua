@@ -60,6 +60,10 @@ local function checkAfterEditModeUpdate()
   ns.SetupOffer.offerSetupOrRemindOncePerLogin()
 end
 
+local function refreshHotkeys()
+  ns.ActionBarCluster.refreshHotkeys()
+end
+
 local function runSlashCommand(text)
   ns.SlashCommands.runSlashCommand(text)
 end
@@ -68,7 +72,7 @@ eventFrame:SetScript("OnEvent", runEventHandlers)
 listenFor("ADDON_LOADED", loadSavedSettings)
 listenFor("PLAYER_LOGIN", buildAddon)
 listenFor("PLAYER_REGEN_ENABLED", finishCombat)
-listenFor("UPDATE_BINDINGS", ns.ActionBarCluster.restyleHotkeysAfterKeybindChange)
+listenFor("UPDATE_BINDINGS", refreshHotkeys)
 listenFor("EDIT_MODE_LAYOUTS_UPDATED", checkAfterEditModeUpdate)
 
 SLASH_WASDBARS1 = "/wasd"

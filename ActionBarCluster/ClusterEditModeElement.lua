@@ -24,7 +24,7 @@ end
 
 -- At login, after the cluster is built.
 function ClusterEditModeElement.addClusterToEditMode()
-  local clusterFrame = ns.ActionBarCluster.findClusterFrame()
+  local clusterFrame = ns.ActionBarCluster.clusterFrame
   clusterFrame:SetMovable(true)
   clusterFrame:SetClampedToScreen(true)
   LibEditMode:AddFrame(clusterFrame, saveDraggedPosition, ClusterKeys.defaultPosition, "WASDBars")

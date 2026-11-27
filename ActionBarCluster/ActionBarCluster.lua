@@ -6,8 +6,11 @@ local ActionBarCluster = {}
 ns.ActionBarCluster = ActionBarCluster
 
 -- The cluster frame, and action bar 1's buttons in it while the WASDBars
--- layout is active.
-local clusterFrame, measuredCluster, buttonSize
+-- layout is active. clusterFrame, measuredCluster (ClusterGeometry) and
+-- buttonSize are set at login.
+local clusterFrame
+-- { button, measuredKey } for action bar 1's 12 buttons
+local actionButtonKeys = {}
 local areActionButtonsInCluster = false
 
 -- The game's own hotkey text, made larger and moved to bottom centre, with
@@ -16,10 +19,6 @@ local areActionButtonsInCluster = false
 -- "Large hotkey text" option off, the game's own style is put back.
 local LARGE_HOTKEY_SIZE = 18
 local gameHotkeyStyles = {}
-
-local function findActionButton(measuredKey)
-  return _G["ActionButton" .. measuredKey.clusterKey.actionButtonNumber]
-end
 
 local function saveGameHotkeyStyle(hotkey)
   if gameHotkeyStyles[hotkey] then
@@ -77,24 +76,6 @@ local function restyleHotkey(button)
   end
 end
 
-local function restyleAllHotkeys()
-  for _, measuredKey in ipairs(measuredCluster.measuredKeys) do
-    if measuredKey.clusterKey.actionButtonNumber then
-      restyleHotkey(findActionButton(measuredKey))
-    end
-  end
-end
-
--- Has the game write its own hotkey text again.
-local function redrawGameHotkeys()
-  for _, measuredKey in ipairs(measuredCluster.measuredKeys) do
-    if measuredKey.clusterKey.actionButtonNumber then
-      local button = findActionButton(measuredKey)
-      button:UpdateHotkeys(button.buttonType)
-    end
-  end
-end
-
 -- In case the game lays the hotkey out again when it updates it.
 local function restyleHotkeyWhileInCluster(button)
   if areActionButtonsInCluster then
@@ -104,22 +85,20 @@ end
 
 -- Puts the game's action buttons in their cluster keys. Out of combat only.
 local function arrangeActionButtonsInCluster()
-  for _, measuredKey in ipairs(measuredCluster.measuredKeys) do
-    if measuredKey.clusterKey.actionButtonNumber then
-      local button = findActionButton(measuredKey)
-      button:SetParent(clusterFrame)
-      button:ClearAllPoints()
-      button:SetScale(measuredKey.scale)
-      -- a scaled frame's offsets are in its own scaled units
-      button:SetPoint(
-        "CENTER",
-        clusterFrame,
-        "TOPLEFT",
-        measuredKey.centreX / measuredKey.scale,
-        -measuredKey.centreY / measuredKey.scale
-      )
-      restyleHotkey(button)
-    end
+  for _, actionButtonKey in ipairs(actionButtonKeys) do
+    local button, measuredKey = actionButtonKey.button, actionButtonKey.measuredKey
+    button:SetParent(clusterFrame)
+    button:ClearAllPoints()
+    button:SetScale(measuredKey.scale)
+    -- a scaled frame's offsets are in its own scaled units
+    button:SetPoint(
+      "CENTER",
+      clusterFrame,
+      "TOPLEFT",
+      measuredKey.centreX / measuredKey.scale,
+      -measuredKey.centreY / measuredKey.scale
+    )
+    restyleHotkey(button)
   end
   ns.ChatMessages.printDebugMessage("layout applied")
 end
@@ -128,16 +107,14 @@ end
 -- own holder (MainActionBarButtonContainerN), which carries the icon size.
 -- Out of combat only.
 local function returnActionButtonsToActionBar1()
-  for _, measuredKey in ipairs(measuredCluster.measuredKeys) do
-    if measuredKey.clusterKey.actionButtonNumber then
-      local button = findActionButton(measuredKey)
-      button:SetParent(button.container)
-      button:SetScale(1)
-      button:ClearAllPoints()
-      button:SetPoint("CENTER")
-      applyGameHotkeyStyle(button.HotKey)
-      button:UpdateHotkeys(button.buttonType)
-    end
+  for _, actionButtonKey in ipairs(actionButtonKeys) do
+    local button = actionButtonKey.button
+    button:SetParent(button.container)
+    button:SetScale(1)
+    button:ClearAllPoints()
+    button:SetPoint("CENTER")
+    applyGameHotkeyStyle(button.HotKey)
+    button:UpdateHotkeys(button.buttonType)
   end
   ns.ChatMessages.printDebugMessage("buttons returned")
 end
@@ -161,8 +138,8 @@ local function detachActionButtonsFromCluster()
 end
 
 local function isAnyActionButtonOutOfCluster()
-  for _, measuredKey in ipairs(measuredCluster.measuredKeys) do
-    if measuredKey.clusterKey.actionButtonNumber and findActionButton(measuredKey):GetParent() ~= clusterFrame then
+  for _, actionButtonKey in ipairs(actionButtonKeys) do
+    if actionButtonKey.button:GetParent() ~= clusterFrame then
       return true
     end
   end
@@ -186,14 +163,19 @@ end
 -- At login. The frame holds protected buttons once they're in it, so it is
 -- only created and sized here, before any buttons are inside.
 function ActionBarCluster.buildActionBarCluster()
-  buttonSize = _G.ActionButton1:GetWidth()
-  measuredCluster = ClusterGeometry.measureClusterKeys(ClusterKeys, buttonSize)
+  ActionBarCluster.buttonSize = _G.ActionButton1:GetWidth()
+  local measuredCluster = ClusterGeometry.measureClusterKeys(ClusterKeys, ActionBarCluster.buttonSize)
+  ActionBarCluster.measuredCluster = measuredCluster
   clusterFrame = CreateFrame("Frame", "WASDBarsCluster", UIParent)
   clusterFrame:SetSize(measuredCluster.width, measuredCluster.height)
   clusterFrame:Hide()
+  ActionBarCluster.clusterFrame = clusterFrame
   for _, measuredKey in ipairs(measuredCluster.measuredKeys) do
-    if measuredKey.clusterKey.actionButtonNumber then
-      hooksecurefunc(findActionButton(measuredKey), "UpdateHotkeys", restyleHotkeyWhileInCluster)
+    local actionButtonNumber = measuredKey.clusterKey.actionButtonNumber
+    if actionButtonNumber then
+      local button = _G["ActionButton" .. actionButtonNumber]
+      table.insert(actionButtonKeys, { button = button, measuredKey = measuredKey })
+      hooksecurefunc(button, "UpdateHotkeys", restyleHotkeyWhileInCluster)
     end
   end
 end
@@ -205,10 +187,6 @@ end
 
 function ActionBarCluster.moveActionButtonsBackToActionBar1()
   ns.CombatQueue.runOutOfCombat("buttons", detachActionButtonsFromCluster)
-end
-
-function ActionBarCluster.areActionButtonsInCluster()
-  return areActionButtonsInCluster
 end
 
 -- The spike found nothing moves the buttons back; this is a cheap safety check.
@@ -226,42 +204,13 @@ function ActionBarCluster.repositionActionBarCluster(clusterPosition)
   end)
 end
 
--- For the "Large hotkey text" option. Font strings aren't protected, so these
--- are safe in combat.
-function ActionBarCluster.showLargeHotkeys()
+-- After the "Large hotkey text" option or keybinds change: the game writes
+-- its hotkey text again, and the hook above restyles it. Font strings aren't
+-- protected, so this is safe in combat.
+function ActionBarCluster.refreshHotkeys()
   if areActionButtonsInCluster then
-    restyleAllHotkeys()
+    for _, actionButtonKey in ipairs(actionButtonKeys) do
+      actionButtonKey.button:UpdateHotkeys(actionButtonKey.button.buttonType)
+    end
   end
-end
-
--- The game's text comes back on its next update.
-function ActionBarCluster.showGameHotkeys()
-  if areActionButtonsInCluster then
-    restyleAllHotkeys()
-    redrawGameHotkeys()
-  end
-end
-
--- After the game rewrites the hotkey text for new keybinds.
-function ActionBarCluster.restyleHotkeysAfterKeybindChange()
-  if areActionButtonsInCluster then
-    restyleAllHotkeys()
-  end
-end
-
-function ActionBarCluster.findClusterFrame()
-  return clusterFrame
-end
-
-function ActionBarCluster.findMeasuredKeys()
-  return measuredCluster.measuredKeys
-end
-
-function ActionBarCluster.findButtonSize()
-  return buttonSize
-end
-
--- Unscaled.
-function ActionBarCluster.measureClusterHeight()
-  return clusterFrame:GetHeight()
 end

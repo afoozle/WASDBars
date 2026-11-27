@@ -140,7 +140,7 @@ local function positionClusterAndChatWindowOnNewLayout(neededSetup, wasdLayout)
     ns.ChatWindow.findLeftEdge() / clusterScale,
     CLUSTER_Y / clusterScale
   )
-  local clusterTop = CLUSTER_Y + ns.ActionBarCluster.measureClusterHeight() * clusterScale
+  local clusterTop = CLUSTER_Y + ns.ActionBarCluster.measuredCluster.height * clusterScale
   WasdLayoutSettings.moveChatWindow(
     wasdLayout,
     neededSetup.editModeIds,

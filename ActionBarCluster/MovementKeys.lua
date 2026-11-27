@@ -90,9 +90,8 @@ end
 
 -- At login, after the cluster is built.
 function MovementKeys.drawMovementKeys()
-  local clusterFrame = ns.ActionBarCluster.findClusterFrame()
-  local buttonSize = ns.ActionBarCluster.findButtonSize()
-  for _, measuredKey in ipairs(ns.ActionBarCluster.findMeasuredKeys()) do
+  local clusterFrame, buttonSize = ns.ActionBarCluster.clusterFrame, ns.ActionBarCluster.buttonSize
+  for _, measuredKey in ipairs(ns.ActionBarCluster.measuredCluster.measuredKeys) do
     if measuredKey.clusterKey.movementDirection then
       local keyFrame = createMovementKey(clusterFrame, measuredKey, buttonSize)
       keyFrame:SetShown(ns.db.showMovementKeys)

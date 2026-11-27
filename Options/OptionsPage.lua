@@ -26,11 +26,7 @@ end
 
 local function saveLargeHotkeys(isLarge)
   ns.db.largeHotkeys = isLarge
-  if isLarge then
-    ns.ActionBarCluster.showLargeHotkeys()
-  else
-    ns.ActionBarCluster.showGameHotkeys()
-  end
+  ns.ActionBarCluster.refreshHotkeys()
 end
 
 local function openEditModeFromOptions()
