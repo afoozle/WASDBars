@@ -5,21 +5,16 @@ local SavedSettings = ns.SavedSettings
 local LibEditMode = LibStub("LibEditMode")
 
 local eventFrame = CreateFrame("Frame")
--- event name -> handlers, run in the order added
+-- event name -> its handler
 local eventHandlers = {}
 
 local function listenFor(eventName, handler)
-  if not eventHandlers[eventName] then
-    eventHandlers[eventName] = {}
-    eventFrame:RegisterEvent(eventName)
-  end
-  table.insert(eventHandlers[eventName], handler)
+  eventHandlers[eventName] = handler
+  eventFrame:RegisterEvent(eventName)
 end
 
-local function runEventHandlers(_, eventName, ...)
-  for _, handler in ipairs(eventHandlers[eventName]) do
-    handler(...)
-  end
+local function runEventHandler(_, eventName, ...)
+  eventHandlers[eventName](...)
 end
 
 -- Saved settings exist from here.
@@ -68,7 +63,7 @@ local function runSlashCommand(text)
   ns.SlashCommands.runSlashCommand(text)
 end
 
-eventFrame:SetScript("OnEvent", runEventHandlers)
+eventFrame:SetScript("OnEvent", runEventHandler)
 listenFor("ADDON_LOADED", loadSavedSettings)
 listenFor("PLAYER_LOGIN", buildAddon)
 listenFor("PLAYER_REGEN_ENABLED", finishCombat)

@@ -154,7 +154,7 @@ end
 -- when it changed the layout or action bar 2's setting. Keybinds alone don't.
 local function confirmSetupOrAskForReload(neededSetup)
   if #neededSetup.neededLayoutSteps > 0 then
-    ns.ReloadPrompt.askForReloadAfterSetup()
+    ns.ReloadPrompt.askForReload("Set up")
   else
     ns.ChatMessages.printMessage("Set up.")
   end

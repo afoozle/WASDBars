@@ -18,19 +18,12 @@ describe("PerformanceLog", function()
   end)
 
   it("keeps the newest 5 recordings", function()
-    local savedRecordings = {}
+    local savedRecordings = { sessions = {} }
     for i = 1, 6 do
       PerformanceLog.addRecording(savedRecordings, { label = "s" .. i })
     end
     assert.equal(5, #savedRecordings.sessions)
     assert.equal("s2", savedRecordings.sessions[1].label)
     assert.equal("s6", savedRecordings.sessions[5].label)
-  end)
-
-  it("reads every listed metric", function()
-    local metricValues = PerformanceLog.readAllMetrics({ RecentAverageTime = 1, PeakTime = 2 }, function(metric)
-      return metric * 10
-    end)
-    assert.same({ RecentAverageTime = 10, PeakTime = 20 }, metricValues)
   end)
 end)

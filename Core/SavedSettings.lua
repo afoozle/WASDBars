@@ -20,33 +20,16 @@ SavedSettings.DEFAULTS = {
   largeHotkeys = true,
 }
 
-local function copyTable(value)
-  if type(value) ~= "table" then
-    return value
-  end
-  local copy = {}
-  for key, nestedValue in pairs(value) do
-    copy[key] = copyTable(nestedValue)
-  end
-  return copy
-end
-
-local function fillMissingValues(saved, defaults)
-  for key, defaultValue in pairs(defaults) do
-    if saved[key] == nil then
-      saved[key] = copyTable(defaultValue)
-    elseif type(saved[key]) == "table" and type(defaultValue) == "table" then
-      fillMissingValues(saved[key], defaultValue)
-    end
-  end
-end
-
--- Fills keys missing from savedSettings with copies of the defaults (into
--- nested tables too) and never overwrites a saved value. Returns the saved
--- table, or a new one when savedSettings is nil.
+-- Fills keys missing from savedSettings with the defaults (a new empty table
+-- for each table default) and never overwrites a saved value. Returns the
+-- saved table, or a new one when savedSettings is nil.
 function SavedSettings.fillMissingSettings(savedSettings)
   savedSettings = savedSettings or {}
-  fillMissingValues(savedSettings, SavedSettings.DEFAULTS)
+  for key, defaultValue in pairs(SavedSettings.DEFAULTS) do
+    if savedSettings[key] == nil then
+      savedSettings[key] = type(defaultValue) == "table" and {} or defaultValue
+    end
+  end
   return savedSettings
 end
 

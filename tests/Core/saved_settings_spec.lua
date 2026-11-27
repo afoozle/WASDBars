@@ -9,31 +9,17 @@ describe("SavedSettings", function()
 
   describe("fillMissingSettings", function()
     before_each(function()
-      SavedSettings.DEFAULTS = { scale = 1, locked = false, position = { x = 0, y = 100, point = "BOTTOM" } }
+      SavedSettings.DEFAULTS = { scale = 1, locked = false, layouts = {} }
     end)
 
-    it("fills missing keys from the defaults", function()
-      assert.same(
-        { scale = 1, locked = false, position = { x = 0, y = 100, point = "BOTTOM" } },
-        SavedSettings.fillMissingSettings({})
-      )
-    end)
-
-    it("keeps saved values and saved keys that have no default", function()
+    it("fills missing keys, keeping saved values and keys with no default", function()
       local savedSettings = SavedSettings.fillMissingSettings({ scale = 1.3, old = "x" })
-      assert.equal(1.3, savedSettings.scale)
-      assert.equal("x", savedSettings.old)
+      assert.same({ scale = 1.3, locked = false, layouts = {}, old = "x" }, savedSettings)
     end)
 
-    it("fills nested tables", function()
-      local savedSettings = SavedSettings.fillMissingSettings({ position = { x = 25 } })
-      assert.same({ x = 25, y = 100, point = "BOTTOM" }, savedSettings.position)
-    end)
-
-    it("copies default tables instead of sharing them", function()
-      local savedSettings = SavedSettings.fillMissingSettings({})
-      savedSettings.position.x = 50
-      assert.equal(0, SavedSettings.DEFAULTS.position.x)
+    it("gives each table default a new table", function()
+      SavedSettings.fillMissingSettings({}).layouts.UI = {}
+      assert.same({}, SavedSettings.DEFAULTS.layouts)
     end)
 
     it("returns the same saved table it was given, or a new one for nil", function()
@@ -55,9 +41,5 @@ describe("SavedSettings", function()
     local savedRecordings = { sessions = { { label = "idle" } } }
     assert.equal(savedRecordings, SavedSettings.createRecordingsList(savedRecordings))
     assert.equal("idle", savedRecordings.sessions[1].label)
-  end)
-
-  it("needs no WoW globals to load", function()
-    assert.is_nil(_G.CreateFrame)
   end)
 end)

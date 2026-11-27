@@ -9,20 +9,21 @@ ns.PerformanceRecorder = PerformanceRecorder
 -- Nothing runs until a recording starts.
 local ticker, recording, startTime
 
-local function readAddonMetric(metric)
-  return C_AddOnProfiler.GetAddOnMetric(ADDON, metric)
-end
-
-local function readOverallMetric(metric)
-  return C_AddOnProfiler.GetOverallMetric(metric)
-end
-
+-- Every metric the profiler lists, by name.
 local function readAddonMetrics()
-  return PerformanceLog.readAllMetrics(Enum.AddOnProfilerMetric, readAddonMetric)
+  local metricValues = {}
+  for metricName, metric in pairs(Enum.AddOnProfilerMetric) do
+    metricValues[metricName] = C_AddOnProfiler.GetAddOnMetric(ADDON, metric)
+  end
+  return metricValues
 end
 
 local function readOverallMetrics()
-  return PerformanceLog.readAllMetrics(Enum.AddOnProfilerMetric, readOverallMetric)
+  local metricValues = {}
+  for metricName, metric in pairs(Enum.AddOnProfilerMetric) do
+    metricValues[metricName] = C_AddOnProfiler.GetOverallMetric(metric)
+  end
+  return metricValues
 end
 
 local function measureSecondsRecorded()

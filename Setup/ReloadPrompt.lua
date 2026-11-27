@@ -36,23 +36,15 @@ local function createReloadFrame()
   return frame
 end
 
--- whatWasDone: "Set up" or "Restored".
 local function showReloadFrame(whatWasDone)
   reloadFrame = reloadFrame or createReloadFrame()
   reloadFrame.text:SetText(whatWasDone .. ". Reload the UI to finish.")
   reloadFrame:Show()
 end
 
-local function askForReload(whatWasDone)
+-- whatWasDone: "Set up" or "Restored".
+function ReloadPrompt.askForReload(whatWasDone)
   ns.CombatQueue.runOutOfCombat("reload-prompt", function()
     showReloadFrame(whatWasDone)
   end)
-end
-
-function ReloadPrompt.askForReloadAfterSetup()
-  askForReload("Set up")
-end
-
-function ReloadPrompt.askForReloadAfterRestore()
-  askForReload("Restored")
 end

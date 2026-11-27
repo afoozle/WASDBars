@@ -16,7 +16,7 @@ local function finishRestore()
     "Restored. You can delete the WASDBars layout in Edit Mode whenever you like. "
       .. "Type /wasd setup to set it up again."
   )
-  ns.ReloadPrompt.askForReloadAfterRestore()
+  ns.ReloadPrompt.askForReload("Restored")
 end
 
 local function restoreKeybinds()
