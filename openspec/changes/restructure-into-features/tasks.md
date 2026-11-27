@@ -1,8 +1,8 @@
 # Tasks: Restructure into features
 
 ## 1. Design
-- [ ] 1.1 Write `design.md` (proposal, "Design first")
-- [ ] 1.2 Fresh agent checks every name and structure against the rules; fix what it finds
+- [x] 1.1 Write `design.md` (proposal, "Design first")
+- [x] 1.2 Fresh agent checks every name and structure against the rules; fix what it finds
 - [ ] 1.3 Player reviews the design
 
 ## 2. Build
