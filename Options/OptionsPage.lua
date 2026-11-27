@@ -7,24 +7,6 @@ ns.OptionsPage = OptionsPage
 -- standard settings rows. Each setting reads and writes WASDBarsDB directly.
 local optionsCategory
 
-local function readShowMovementKeys()
-  return ns.db.showMovementKeys
-end
-
-local function saveShowMovementKeys(isShown)
-  ns.db.showMovementKeys = isShown
-  ns.MovementKeys.updateMovementKeysShown()
-end
-
-local function readLargeHotkeys()
-  return ns.db.largeHotkeys
-end
-
-local function saveLargeHotkeys(isLarge)
-  ns.db.largeHotkeys = isLarge
-  ns.ActionBarCluster.refreshHotkeys()
-end
-
 local function openEditModeFromOptions()
   if InCombatLockdown() then
     ns.ChatMessages.printMessage("Edit Mode can't be opened in combat.")
@@ -34,15 +16,21 @@ local function openEditModeFromOptions()
 end
 
 -- settingName: the WASDBarsDB key, which also names the game's setting.
-local function addCheckbox(settingName, label, tooltip, readValue, saveValue)
+-- onChange runs after the new value is saved.
+local function addCheckbox(settingName, label, tooltip, onChange)
   local setting = Settings.RegisterProxySetting(
     optionsCategory,
     "WASDBars_" .. settingName,
     Settings.VarType.Boolean,
     label,
     SavedSettings.DEFAULTS[settingName],
-    readValue,
-    saveValue
+    function()
+      return ns.db[settingName]
+    end,
+    function(value)
+      ns.db[settingName] = value
+      onChange()
+    end
   )
   Settings.CreateCheckbox(optionsCategory, setting, tooltip)
 end
@@ -74,15 +62,13 @@ function OptionsPage.addOptionsPage()
     "showMovementKeys",
     "Show movement keys",
     "Show the W, A, S and D arrow keys between the action buttons.",
-    readShowMovementKeys,
-    saveShowMovementKeys
+    ns.MovementKeys.updateMovementKeysShown
   )
   addCheckbox(
     "largeHotkeys",
     "Large hotkey text",
     "Show each key's name large at the bottom of its button. Off uses the game's small corner text.",
-    readLargeHotkeys,
-    saveLargeHotkeys
+    ns.ActionBarCluster.refreshHotkeys
   )
 
   addHeading(optionsLayout, "Setup")

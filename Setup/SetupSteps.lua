@@ -21,56 +21,40 @@ local LAYOUT_STEP_TEXTS = {
   turnOnActionBar2 = "Turn on Action Bar 2",
 }
 
-local function isWasdLayoutMissing(currentLayoutState)
-  return currentLayoutState.wasdLayout == "missing"
-end
-
-local function isWasdLayoutInactive(currentLayoutState)
-  return currentLayoutState.wasdLayout == "inactive"
-end
-
--- Switching to the layout is what moves the buttons and replaces action bar 1
--- (WasdLayoutMode.lua), so these steps are listed for the player and need no
--- applying of their own.
-local function isWasdLayoutChanging(currentLayoutState)
-  return currentLayoutState.wasdLayout ~= "active"
-end
-
 local function isActionBar1Wrong(currentLayoutState)
   return not WasdLayoutSettings.isActionBar1SetUp(currentLayoutState.layoutSettings)
 end
 
 -- Only on a new layout: later the player may resize action bar 2.
 local function isActionBar2ShapeWrong(currentLayoutState)
-  return isWasdLayoutMissing(currentLayoutState) and not WasdLayoutSettings.doesActionBar2MatchActionBar1(currentLayoutState.layoutSettings)
+  return currentLayoutState.wasdLayout == "missing" and not WasdLayoutSettings.doesActionBar2MatchActionBar1(currentLayoutState.layoutSettings)
 end
 
 local function isActionBar2AwayFromActionBar1(currentLayoutState)
-  return isWasdLayoutMissing(currentLayoutState) or currentLayoutState.isActionBar2OnActionBar1 == false
+  return currentLayoutState.wasdLayout == "missing" or currentLayoutState.isActionBar2OnActionBar1 == false
 end
 
 local function areGryphonsShowing(currentLayoutState)
   return not WasdLayoutSettings.areGryphonsHidden(currentLayoutState.layoutSettings)
 end
 
-local function isActionBar2TurnedOff(currentLayoutState)
-  return currentLayoutState.isActionBar2On == false
-end
-
 -- The step names still needed, in the order the setup window lists them.
 function SetupSteps.findNeededLayoutSteps(currentLayoutState)
   local neededLayoutSteps = {}
-  if isWasdLayoutMissing(currentLayoutState) then
+  local wasdLayout = currentLayoutState.wasdLayout
+  if wasdLayout == "missing" then
     table.insert(neededLayoutSteps, "createWasdLayout")
   end
-  if isWasdLayoutInactive(currentLayoutState) then
+  if wasdLayout == "inactive" then
     table.insert(neededLayoutSteps, "switchToWasdLayout")
   end
-  if isWasdLayoutChanging(currentLayoutState) then
+  -- switching to the layout is what moves the buttons and replaces action bar 1
+  -- (WasdLayoutMode.lua), so these are listed for the player and need no applying of their own
+  if wasdLayout ~= "active" then
     table.insert(neededLayoutSteps, "moveActionButtons")
     table.insert(neededLayoutSteps, "replaceActionBar1")
   end
-  if isWasdLayoutMissing(currentLayoutState) then
+  if wasdLayout == "missing" then
     table.insert(neededLayoutSteps, "positionClusterAndChatWindow")
   end
   if isActionBar1Wrong(currentLayoutState) then
@@ -85,7 +69,7 @@ function SetupSteps.findNeededLayoutSteps(currentLayoutState)
   if areGryphonsShowing(currentLayoutState) then
     table.insert(neededLayoutSteps, "hideGryphons")
   end
-  if isActionBar2TurnedOff(currentLayoutState) then
+  if currentLayoutState.isActionBar2On == false then
     table.insert(neededLayoutSteps, "turnOnActionBar2")
   end
   return neededLayoutSteps
