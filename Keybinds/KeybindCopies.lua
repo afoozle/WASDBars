@@ -19,11 +19,3 @@ end
 function KeybindCopies.saveKeybindCopyOnce(savedCopies, copyOwner, keybindCopy)
   savedCopies[copyOwner] = savedCopies[copyOwner] or keybindCopy
 end
-
-function KeybindCopies.findKeybindCopy(savedCopies, copyOwner)
-  return savedCopies[copyOwner]
-end
-
-function KeybindCopies.forgetKeybindCopy(savedCopies, copyOwner)
-  savedCopies[copyOwner] = nil
-end

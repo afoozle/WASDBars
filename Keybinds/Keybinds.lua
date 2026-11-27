@@ -95,10 +95,6 @@ function Keybinds.findCopyOwner()
   return KeybindCopies.findCopyOwner(GetCurrentBindingSet(), CHARACTER_BINDINGS, UnitGUID("player"))
 end
 
-function Keybinds.isEveryKeybindSetUp()
-  return KeybindPlan.isEveryKeybindSetUp(findAllGroupChanges())
-end
-
 function Keybinds.describeKeybindStatus()
   return KeybindPlan.describeKeybindStatus(findAllGroupChanges())
 end

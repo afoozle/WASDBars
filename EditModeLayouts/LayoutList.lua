@@ -65,7 +65,7 @@ end
 
 -- Adds a copy of the active layout called newLayoutName, of layoutType, and
 -- makes it active. It goes after the last layout of that type (or after the
--- presets), where Edit Mode itself puts new layouts. Returns its index.
+-- presets), where Edit Mode itself puts new layouts.
 function LayoutList.copyActiveLayout(allLayouts, newLayoutName, layoutType, presetLayoutType)
   local layoutCopy = copyTable(LayoutList.findActiveLayout(allLayouts))
   layoutCopy.layoutName = newLayoutName
@@ -78,7 +78,6 @@ function LayoutList.copyActiveLayout(allLayouts, newLayoutName, layoutType, pres
   end
   table.insert(allLayouts.layouts, insertAfter + 1, layoutCopy)
   allLayouts.activeLayout = insertAfter + 1
-  return insertAfter + 1
 end
 
 -- In the list only; EditModeLayouts.saveAllLayouts saves it.

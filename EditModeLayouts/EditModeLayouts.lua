@@ -94,7 +94,3 @@ function EditModeLayouts.copyActiveLayout(allLayouts, newLayoutName)
     Enum.EditModeLayoutType.Preset
   )
 end
-
-function EditModeLayouts.findPresetLayoutType()
-  return Enum.EditModeLayoutType.Preset
-end

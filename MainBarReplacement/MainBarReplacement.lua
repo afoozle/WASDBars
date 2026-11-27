@@ -158,7 +158,7 @@ end
 -- After action bar 2 or the setting changes. In combat it waits for combat
 -- to end (anchoring to the secure buttons may not be allowed then).
 local function redrawActionBar2Art()
-  if ns.CombatQueue.isInCombat() then
+  if InCombatLockdown() then
     isRedrawWaitingForCombat = true
     return
   end

@@ -30,7 +30,7 @@ local function saveLargeHotkeys(isLarge)
 end
 
 local function openEditModeFromOptions()
-  if ns.CombatQueue.isInCombat() then
+  if InCombatLockdown() then
     ns.ChatMessages.printMessage("Edit Mode can't be opened in combat.")
     return
   end
@@ -118,7 +118,5 @@ end
 
 -- /wasd options.
 function OptionsPage.openOptionsPage()
-  if optionsCategory then
-    Settings.OpenToCategory(optionsCategory:GetID())
-  end
+  Settings.OpenToCategory(optionsCategory:GetID())
 end

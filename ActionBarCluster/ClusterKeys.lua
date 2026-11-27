@@ -1,11 +1,10 @@
 local ADDON, ns = ...
 
--- The WASD cluster. Columns and rows are in key units (one big key plus a
--- gap), offset like a real keyboard; each key is centred on its grid point.
+-- The WASD cluster. Columns and rows are in key units (one big key), offset
+-- like a real keyboard; each key is centred on its grid point.
 -- `label` is drawn only on movement keys; on action buttons it is documentation.
 ns.ClusterKeys = {
   keySizes = { big = 1.0, small = 0.8 },
-  gap = 0, -- pixels between key cells
   -- default Edit Mode position (relative to the screen) and scale, for layouts where it hasn't been moved
   defaultPosition = { point = "BOTTOMLEFT", x = 200, y = 81 },
   defaultScale = 1.0,

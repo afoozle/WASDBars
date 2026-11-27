@@ -20,7 +20,6 @@ Keybinds/KeybindCopies.lua
 EditModeLayouts/LayoutList.lua
 EditModeLayouts/WasdLayoutSettings.lua
 Setup/SetupSteps.lua
-Setup/RestorePoints.lua
 Setup/RestoreSteps.lua
 Performance/PerformanceLog.lua
 Core/ChatMessages.lua
@@ -34,7 +33,6 @@ WasdLayoutMode/WasdLayoutMode.lua
 Keybinds/Keybinds.lua
 EditModeLayouts/EditModeLayouts.lua
 Setup/SetupGuards.lua
-Setup/ChatWindow.lua
 Setup/SetupWindow.lua
 Setup/ReloadPrompt.lua
 Setup/Setup.lua

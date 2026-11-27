@@ -3,9 +3,17 @@ local LayoutList = ns.LayoutList
 local RestoreSteps = {}
 ns.RestoreSteps = RestoreSteps
 
+-- Restore points: per character, the layout and action bar 2 from before
+-- setup, in the saved table it's given: character GUID -> { layout = layout
+-- name, bar2 = was action bar 2 on }. Only the first is kept: a later setup
+-- must not overwrite where the character started.
+function RestoreSteps.saveRestorePointOnce(savedRestorePoints, playerGuid, layoutName, wasActionBar2On)
+  savedRestorePoints[playerGuid] = savedRestorePoints[playerGuid] or { layout = layoutName, bar2 = wasActionBar2On }
+end
+
 -- The layout a restore switches to: the saved one if it still exists,
 -- otherwise the first preset (Modern). Returns layoutName, isSavedLayoutMissing.
--- restorePoint: RestorePoints.findRestorePoint.
+-- restorePoint: from saveRestorePointOnce.
 function RestoreSteps.findLayoutToRestore(allLayouts, restorePoint, presetLayoutType)
   if LayoutList.findLayoutIndex(allLayouts, restorePoint.layout) then
     return restorePoint.layout, false

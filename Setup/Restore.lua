@@ -1,6 +1,4 @@
 local ADDON, ns = ...
-local KeybindCopies = ns.KeybindCopies
-local RestorePoints = ns.RestorePoints
 local RestoreSteps = ns.RestoreSteps
 local Restore = {}
 ns.Restore = Restore
@@ -24,8 +22,8 @@ local function restoreKeybinds()
     return
   end
   local copyOwner = ns.Keybinds.findCopyOwner()
-  ns.Keybinds.restoreKeybinds(KeybindCopies.findKeybindCopy(ns.db.keyCopies, copyOwner))
-  KeybindCopies.forgetKeybindCopy(ns.db.keyCopies, copyOwner)
+  ns.Keybinds.restoreKeybinds(ns.db.keyCopies[copyOwner])
+  ns.db.keyCopies[copyOwner] = nil
   finishRestore()
 end
 
@@ -44,8 +42,8 @@ local function restoreLayout(_, restoreChoice)
   else
     ns.MainBarReplacement.turnOffActionBar2()
   end
-  RestorePoints.forgetRestorePoint(ns.db.restore, UnitGUID("player"))
-  if KeybindCopies.findKeybindCopy(ns.db.keyCopies, ns.Keybinds.findCopyOwner()) then
+  ns.db.restore[UnitGUID("player")] = nil
+  if ns.db.keyCopies[ns.Keybinds.findCopyOwner()] then
     askToRestoreKeybinds()
   else
     finishRestore()
@@ -79,23 +77,16 @@ function Restore.askToRestore()
   if ns.SetupGuards.refuseInCombat("restore") then
     return
   end
-  local restorePoint = RestorePoints.findRestorePoint(ns.db.restore, UnitGUID("player"))
+  local restorePoint = ns.db.restore[UnitGUID("player")]
   if not restorePoint then
     ns.ChatMessages.printMessage("Nothing to restore on this character.")
     return
   end
-  if ns.SetupGuards.refuseInEditMode("restore") then
+  if ns.SetupGuards.refuseInEditMode("restore") or ns.SetupGuards.refuseBeforeEditModeReady() then
     return
   end
-  if not ns.EditModeLayouts.isEditModeReady() then
-    ns.ChatMessages.printMessage("Edit Mode isn't ready yet. Try again in a moment.")
-    return
-  end
-  local layoutToRestore, isSavedLayoutMissing = RestoreSteps.findLayoutToRestore(
-    ns.EditModeLayouts.loadAllLayouts(),
-    restorePoint,
-    ns.EditModeLayouts.findPresetLayoutType()
-  )
+  local layoutToRestore, isSavedLayoutMissing =
+    RestoreSteps.findLayoutToRestore(ns.EditModeLayouts.loadAllLayouts(), restorePoint, Enum.EditModeLayoutType.Preset)
   local restoreLines = RestoreSteps.describeRestore(layoutToRestore, isSavedLayoutMissing, restorePoint)
   StaticPopup_Show(
     RESTORE_POPUP,

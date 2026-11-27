@@ -4,7 +4,7 @@ local SlashCommands = {}
 ns.SlashCommands = SlashCommands
 
 -- For /wasd help only, in the order shown.
-SlashCommands.HELP_LINES = {
+local HELP_LINES = {
   { command = "debug", help = "turn extra chat output on or off (this session only)" },
   { command = "help", help = "list these commands" },
   { command = "options", help = "open the WASDBars options" },
@@ -16,7 +16,7 @@ SlashCommands.HELP_LINES = {
 
 local function showHelp()
   ns.ChatMessages.printMessage("Commands:")
-  for _, helpLine in ipairs(SlashCommands.HELP_LINES) do
+  for _, helpLine in ipairs(HELP_LINES) do
     DEFAULT_CHAT_FRAME:AddMessage("  /wasd " .. helpLine.command .. " - " .. helpLine.help)
   end
 end

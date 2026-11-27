@@ -5,7 +5,7 @@ ns.WasdLayoutSettings = WasdLayoutSettings
 -- The settings the WASDBars layout needs, on Edit Mode layout tables as
 -- C_EditMode.GetLayouts() returns them: { layoutName, layoutType, systems = {
 -- { system, systemIndex, anchorInfo, settings = { { setting, value } },
--- isInDefaultPosition } } }. editModeIds: EditModeIds.readEditModeIds.
+-- isInDefaultPosition } } }. editModeIds: EditModeLayouts.findEditModeIds.
 
 -- The only Edit Mode layout the addon ever changes.
 WasdLayoutSettings.WASD_LAYOUT_NAME = "WASDBars"

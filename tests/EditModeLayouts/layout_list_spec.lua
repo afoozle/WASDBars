@@ -61,7 +61,7 @@ describe("LayoutList", function()
 
   it("copies a preset after the presets and makes it active", function()
     local allLayouts = combineWithSaved({}, 1)
-    assert.equal(3, LayoutList.copyActiveLayout(allLayouts, "WASDBars", ACCOUNT, PRESET))
+    LayoutList.copyActiveLayout(allLayouts, "WASDBars", ACCOUNT, PRESET)
     assert.equal(3, allLayouts.activeLayout)
     local layoutCopy = allLayouts.layouts[3]
     assert.same({ "WASDBars", ACCOUNT }, { layoutCopy.layoutName, layoutCopy.layoutType })

@@ -3,15 +3,31 @@ local KeybindCopies = ns.KeybindCopies
 local LayoutList = ns.LayoutList
 local WasdLayoutSettings = ns.WasdLayoutSettings
 local SetupSteps = ns.SetupSteps
-local RestorePoints = ns.RestorePoints
+local RestoreSteps = ns.RestoreSteps
 local Setup = {}
 ns.Setup = Setup
 
 -- The setup flow. Setup changes only the account-wide "WASDBars" Edit Mode
 -- layout, the setup keys, and whether action bar 2 is on.
-local NOT_READY_MESSAGE = "Edit Mode isn't ready yet. Try again in a moment."
--- the cluster's bottom edge on a new layout, in screen units
-local CLUSTER_Y = 12
+-- the cluster's bottom edge on a new layout, in screen units, and the space
+-- between its top and the chat window, which leaves room for the chat's edit box
+local CLUSTER_Y, CHAT_GAP = 12, 40
+
+-- The chat window's scale relative to the screen.
+local function findChatScale()
+  return ChatFrame1:GetEffectiveScale() / UIParent:GetEffectiveScale()
+end
+
+-- The chat window's Edit Mode anchor above the cluster. clusterTop: in screen units.
+local function findChatAnchorAboveCluster(clusterTop)
+  return {
+    point = "BOTTOMLEFT",
+    relativeTo = "UIParent",
+    relativePoint = "BOTTOMLEFT",
+    offsetX = ChatFrame1:GetLeft(),
+    offsetY = (clusterTop + CHAT_GAP) / findChatScale(),
+  }
+end
 
 -- What the layout holds now; see SetupSteps.lua for the shape.
 local function readCurrentLayoutState(editModeIds, allLayouts)
@@ -68,7 +84,7 @@ end
 -- The layout and action bar 2 from before setup, for /wasd restore.
 local function saveRestorePoint(neededSetup, allLayouts)
   if isLayoutSwitching(neededSetup) then
-    RestorePoints.saveRestorePointOnce(
+    RestoreSteps.saveRestorePointOnce(
       ns.db.restore,
       UnitGUID("player"),
       LayoutList.findActiveLayout(allLayouts).layoutName,
@@ -129,7 +145,7 @@ local function applyKeybindChanges(groupsToChange)
   end
 end
 
--- The cluster goes bottom left, under the chat window, which moves up. The
+-- The cluster goes under the chat window, at its left edge, and the chat window moves up. The
 -- cluster's position is saved first, then applied straight away.
 local function positionClusterAndChatWindowOnNewLayout(neededSetup, wasdLayout)
   local clusterScale = ns.ClusterEditModeElement.findClusterPosition(WasdLayoutSettings.WASD_LAYOUT_NAME).scale
@@ -137,15 +153,11 @@ local function positionClusterAndChatWindowOnNewLayout(neededSetup, wasdLayout)
   ns.ClusterEditModeElement.saveClusterPosition(
     WasdLayoutSettings.WASD_LAYOUT_NAME,
     "BOTTOMLEFT",
-    ns.ChatWindow.findLeftEdge() / clusterScale,
+    ChatFrame1:GetLeft() * findChatScale() / clusterScale,
     CLUSTER_Y / clusterScale
   )
   local clusterTop = CLUSTER_Y + ns.ActionBarCluster.measuredCluster.height * clusterScale
-  WasdLayoutSettings.moveChatWindow(
-    wasdLayout,
-    neededSetup.editModeIds,
-    ns.ChatWindow.findAnchorAboveCluster(clusterTop)
-  )
+  WasdLayoutSettings.moveChatWindow(wasdLayout, neededSetup.editModeIds, findChatAnchorAboveCluster(clusterTop))
   ns.WasdLayoutMode.followActiveLayout(ns.EditModeLayouts.findActiveLayoutName())
 end
 
@@ -223,14 +235,10 @@ function Setup.openSetupWindow()
   if ns.SetupGuards.refuseInCombat("set up") or ns.SetupWindow.isSetupWindowShown() then
     return
   end
-  if ns.SetupGuards.refuseInEditMode("setup") then
+  if ns.SetupGuards.refuseInEditMode("setup") or ns.SetupGuards.refuseBeforeEditModeReady() then
     return
   end
   local neededSetup = findNeededSetup()
-  if not neededSetup then
-    ns.ChatMessages.printMessage(NOT_READY_MESSAGE)
-    return
-  end
   local groupsToChange = ns.Keybinds.findGroupsToChange()
   if #neededSetup.neededLayoutSteps == 0 and #groupsToChange == 0 then
     ns.ChatMessages.printMessage("Everything is set up.")
@@ -248,7 +256,7 @@ function Setup.isAnythingLeftToSetUp()
   if not neededSetup then
     return false
   end
-  return #neededSetup.neededLayoutSteps > 0 or not ns.Keybinds.isEveryKeybindSetUp()
+  return #neededSetup.neededLayoutSteps > 0 or #ns.Keybinds.findGroupsToChange() > 0
 end
 
 -- For the login reminder. False before Edit Mode is ready.
@@ -260,7 +268,7 @@ end
 -- /wasd setup status.
 function Setup.describeSetupStatus()
   local neededSetup = findNeededSetup()
-  local layoutStatus = NOT_READY_MESSAGE
+  local layoutStatus = ns.SetupGuards.NOT_READY_MESSAGE
   if neededSetup then
     layoutStatus = SetupSteps.describeLayoutStatus(neededSetup.currentLayoutState, neededSetup.neededLayoutSteps)
   end

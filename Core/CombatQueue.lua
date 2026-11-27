@@ -8,14 +8,10 @@ local waitingJobNames = {}
 local waitingJobs = {}
 local hasSaidWillApply = false
 
-function CombatQueue.isInCombat()
-  return InCombatLockdown()
-end
-
 -- jobName: a name for the job, e.g. "scale". A newer job with the same name
 -- replaces the waiting one, so dragging a slider in combat applies once.
 function CombatQueue.runOutOfCombat(jobName, job)
-  if not CombatQueue.isInCombat() then
+  if not InCombatLockdown() then
     job()
     return
   end

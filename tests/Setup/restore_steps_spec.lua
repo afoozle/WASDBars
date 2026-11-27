@@ -17,6 +17,17 @@ describe("RestoreSteps", function()
     RestoreSteps = load_addon_file("Setup/RestoreSteps.lua", ns).RestoreSteps
   end)
 
+  it("saves only the first restore point per character", function()
+    local savedRestorePoints = {}
+    RestoreSteps.saveRestorePointOnce(savedRestorePoints, "Player-1", "UI", false)
+    RestoreSteps.saveRestorePointOnce(savedRestorePoints, "Player-1", "WASDBars", true)
+    RestoreSteps.saveRestorePointOnce(savedRestorePoints, "Player-2", "Modern", true)
+    assert.same(
+      { ["Player-1"] = { layout = "UI", bar2 = false }, ["Player-2"] = { layout = "Modern", bar2 = true } },
+      savedRestorePoints
+    )
+  end)
+
   it("goes back to the saved layout", function()
     assert.same({ "UI", false }, { RestoreSteps.findLayoutToRestore(allLayouts, { layout = "UI" }, PRESET) })
   end)

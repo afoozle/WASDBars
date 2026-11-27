@@ -22,7 +22,6 @@ describe("ClusterGeometry.measureClusterKeys", function()
   it("centres keys on their grid points", function()
     local clusterKeys = {
       keySizes = { big = 1, small = 0.5 },
-      gap = 5,
       keys = {
         { label = "a", column = 0, row = 0, size = "big" },
         { label = "b", column = 2, row = 1, size = "small" },
@@ -30,13 +29,12 @@ describe("ClusterGeometry.measureClusterKeys", function()
     }
     local measured = ns.ClusterGeometry.measureClusterKeys(clusterKeys, 40)
     assert.same({ 20, 20 }, { measured.measuredKeys[1].centreX, measured.measuredKeys[1].centreY })
-    assert.same({ 2 * 45 + 20, 45 + 20 }, { measured.measuredKeys[2].centreX, measured.measuredKeys[2].centreY })
+    assert.same({ 2 * 40 + 20, 40 + 20 }, { measured.measuredKeys[2].centreX, measured.measuredKeys[2].centreY })
   end)
 
   it("gives a small key a full-size cell", function()
     local measured = ns.ClusterGeometry.measureClusterKeys({
       keySizes = { small = 0.5 },
-      gap = 0,
       keys = { { label = "a", column = 0.5, row = 1, size = "small" } },
     }, 40)
     local measuredKey = measured.measuredKeys[1]
@@ -51,13 +49,13 @@ describe("ClusterGeometry.measureClusterKeys", function()
   end)
 
   it("spaces neighbours one step apart whatever their size", function()
-    local step = BUTTON_SIZE + ns.ClusterKeys.gap
+    local step = BUTTON_SIZE
     assert.equal(step, findMeasuredKey("W").centreX - findMeasuredKey("Q").centreX)
     assert.equal(step, findMeasuredKey("T").centreX - findMeasuredKey("R").centreX)
   end)
 
   it("offsets the rows like a keyboard, so E, D and C run on a slant", function()
-    local step = BUTTON_SIZE + ns.ClusterKeys.gap
+    local step = BUTTON_SIZE
     assert.equal(step / 4, findMeasuredKey("A").centreX - findMeasuredKey("Q").centreX)
     assert.equal(step / 2, findMeasuredKey("Z").centreX - findMeasuredKey("A").centreX)
     assert.equal(step / 4, findMeasuredKey("D").centreX - findMeasuredKey("E").centreX)

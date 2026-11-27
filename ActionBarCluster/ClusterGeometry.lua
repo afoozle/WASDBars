@@ -10,7 +10,6 @@ ns.ClusterGeometry = ClusterGeometry
 -- on its grid point, so smaller keys just have more space round them, and the
 -- rows keep the keyboard's stagger. The cluster box tightly covers every cell.
 function ClusterGeometry.measureClusterKeys(clusterKeys, buttonSize)
-  local step = buttonSize + clusterKeys.gap
   local minColumn, minRow, maxColumn, maxRow = math.huge, math.huge, -math.huge, -math.huge
   for _, clusterKey in ipairs(clusterKeys.keys) do
     minColumn, minRow = math.min(minColumn, clusterKey.column), math.min(minRow, clusterKey.row)
@@ -21,15 +20,15 @@ function ClusterGeometry.measureClusterKeys(clusterKeys, buttonSize)
   for i, clusterKey in ipairs(clusterKeys.keys) do
     measuredKeys[i] = {
       clusterKey = clusterKey,
-      centreX = (clusterKey.column - minColumn) * step + buttonSize / 2,
-      centreY = (clusterKey.row - minRow) * step + buttonSize / 2,
+      centreX = (clusterKey.column - minColumn) * buttonSize + buttonSize / 2,
+      centreY = (clusterKey.row - minRow) * buttonSize + buttonSize / 2,
       scale = clusterKeys.keySizes[clusterKey.size],
     }
   end
 
   return {
     measuredKeys = measuredKeys,
-    width = (maxColumn - minColumn) * step + buttonSize,
-    height = (maxRow - minRow) * step + buttonSize,
+    width = (maxColumn - minColumn) * buttonSize + buttonSize,
+    height = (maxRow - minRow) * buttonSize + buttonSize,
   }
 end
