@@ -67,7 +67,7 @@ local function listKeybindChanges(groupsToChange)
   return keybindChanges
 end
 
-local function collectKeysAndActionsSetupWillChange(keybindChanges)
+local function findChangingKeysAndActions(keybindChanges)
   local keysSetupWillChange, actionsSetupWillBind = {}, {}
   for _, keybindChange in ipairs(keybindChanges) do
     keysSetupWillChange[keybindChange.key] = true
@@ -94,7 +94,7 @@ end
 -- change order. keysOfEachAction: { [action] = every key bound to it now }.
 function KeybindPlan.findActionsLosingTheirKey(groupsToChange, keysOfEachAction)
   local keybindChanges = listKeybindChanges(groupsToChange)
-  local keysSetupWillChange, actionsSetupWillBind = collectKeysAndActionsSetupWillChange(keybindChanges)
+  local keysSetupWillChange, actionsSetupWillBind = findChangingKeysAndActions(keybindChanges)
   local actionsLosingTheirKey, entriesByAction = {}, {}
   for _, keybindChange in ipairs(keybindChanges) do
     local action = keybindChange.currentAction

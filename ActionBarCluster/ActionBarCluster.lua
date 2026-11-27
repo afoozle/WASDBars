@@ -83,7 +83,11 @@ local function restyleHotkeyWhileInCluster(button)
 end
 
 -- Puts the game's action buttons in their cluster keys. Out of combat only.
-local function arrangeActionButtonsInCluster()
+local function attachActionButtonsToCluster()
+  if areActionButtonsInCluster then
+    return
+  end
+  areActionButtonsInCluster = true
   for _, actionButtonKey in ipairs(actionButtonKeys) do
     local button, measuredKey = actionButtonKey.button, actionButtonKey.measuredKey
     button:SetParent(clusterFrame)
@@ -93,12 +97,18 @@ local function arrangeActionButtonsInCluster()
     button:SetPoint("CENTER", clusterFrame, "TOPLEFT", measuredKey.centreX / measuredKey.scale, -measuredKey.centreY / measuredKey.scale)
     restyleHotkey(button)
   end
+  clusterFrame:Show()
 end
 
 -- Puts the buttons back the way the game first places them: centred in their
 -- own holder (MainActionBarButtonContainerN), which carries the icon size.
 -- Out of combat only.
-local function returnActionButtonsToActionBar1()
+local function detachActionButtonsFromCluster()
+  if not areActionButtonsInCluster then
+    return
+  end
+  areActionButtonsInCluster = false
+  clusterFrame:Hide()
   for _, actionButtonKey in ipairs(actionButtonKeys) do
     local button = actionButtonKey.button
     button:SetParent(button.container)
@@ -108,24 +118,6 @@ local function returnActionButtonsToActionBar1()
     applyGameHotkeyStyle(button.HotKey)
     button:UpdateHotkeys(button.buttonType)
   end
-end
-
-local function attachActionButtonsToCluster()
-  if areActionButtonsInCluster then
-    return
-  end
-  areActionButtonsInCluster = true
-  arrangeActionButtonsInCluster()
-  clusterFrame:Show()
-end
-
-local function detachActionButtonsFromCluster()
-  if not areActionButtonsInCluster then
-    return
-  end
-  areActionButtonsInCluster = false
-  clusterFrame:Hide()
-  returnActionButtonsToActionBar1()
 end
 
 -- Scale first, then the point: the offsets are in the frame's scaled units.
