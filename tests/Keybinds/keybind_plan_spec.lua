@@ -28,21 +28,17 @@ describe("KeybindPlan", function()
     return keysOfEachAction
   end
 
-  local function findGroupsToChange(keybindGroups, currentActions)
-    return KeybindPlan.selectGroupsToChange(KeybindPlan.findKeybindChanges(keybindGroups, currentActions))
-  end
-
   local function findActionsLosingTheirKey(keybindGroups, currentActions)
-    return KeybindPlan.findActionsLosingTheirKey(findGroupsToChange(keybindGroups, currentActions), readKeysOfEachAction(currentActions))
+    return KeybindPlan.findActionsLosingTheirKey(KeybindPlan.findGroupsToChange(keybindGroups, currentActions), readKeysOfEachAction(currentActions))
   end
 
   before_each(function()
     KeybindPlan = load_addon_file("Keybinds/KeybindPlan.lua").KeybindPlan
   end)
 
-  describe("findKeybindChanges", function()
+  describe("findGroupsToChange", function()
     local function findWasdChanges(currentActions)
-      return KeybindPlan.findKeybindChanges({ wasdGroup }, currentActions)[1]
+      return KeybindPlan.findGroupsToChange({ wasdGroup }, currentActions)[1]
     end
 
     it("lists every key with its current and wanted action on a fresh setup", function()
@@ -57,32 +53,25 @@ describe("KeybindPlan", function()
           currentAction = "SHAPESHIFTBUTTON1",
         },
       }, groupChanges.keybindChanges)
-      assert.equal("not set up", groupChanges.status)
-      assert.same({ 0, 3 }, { groupChanges.correctCount, groupChanges.totalCount })
     end)
 
-    it("has no changes when the group is already set up", function()
-      local groupChanges = findWasdChanges({ Q = "ACTIONBUTTON1", E = "ACTIONBUTTON2", BUTTON5 = "ACTIONBUTTON11" })
-      assert.same({}, groupChanges.keybindChanges)
-      assert.equal("set up", groupChanges.status)
-    end)
-
-    it("counts correct keys and leaves them out when partly set up", function()
+    it("leaves out keys already right", function()
       local groupChanges = findWasdChanges({ Q = "ACTIONBUTTON1", E = "ACTIONBUTTON7" })
-      assert.equal("partly set up", groupChanges.status)
-      assert.equal(1, groupChanges.correctCount)
       assert.same({ "E", "BUTTON5" }, { groupChanges.keybindChanges[1].key, groupChanges.keybindChanges[2].key })
     end)
 
     it("shows no current action for unbound keys", function()
       assert.is_nil(findWasdChanges({}).keybindChanges[1].currentAction)
     end)
-  end)
 
-  it("selects only the groups with keys left to change", function()
-    local groupsToChange = findGroupsToChange({ wasdGroup, numberGroup }, { Q = "ACTIONBUTTON1", E = "ACTIONBUTTON2", BUTTON5 = "ACTIONBUTTON11" })
-    assert.equal(1, #groupsToChange)
-    assert.equal(numberGroup, groupsToChange[1].group)
+    it("leaves out groups already set up", function()
+      local groupsToChange = KeybindPlan.findGroupsToChange(
+        { wasdGroup, numberGroup },
+        { Q = "ACTIONBUTTON1", E = "ACTIONBUTTON2", BUTTON5 = "ACTIONBUTTON11" }
+      )
+      assert.equal(1, #groupsToChange)
+      assert.equal(numberGroup, groupsToChange[1].group)
+    end)
   end)
 
   describe("findActionsLosingTheirKey", function()
@@ -116,33 +105,6 @@ describe("KeybindPlan", function()
 
     it("keeps an action that a key outside both groups still does", function()
       assert.same({}, findActionsLosingTheirKey({ wasdGroup, numberGroup }, { ["1"] = "REPLY", Q = "REPLY", F12 = "REPLY" }))
-    end)
-  end)
-
-  describe("describeKeybindStatus", function()
-    it("sums up when everything is set up", function()
-      local allGroupChanges = KeybindPlan.findKeybindChanges({ wasdGroup, numberGroup }, {
-        Q = "ACTIONBUTTON1",
-        E = "ACTIONBUTTON2",
-        BUTTON5 = "ACTIONBUTTON11",
-        ["1"] = "MULTIACTIONBAR1BUTTON1",
-        ["2"] = "MULTIACTIONBAR1BUTTON2",
-      })
-      assert.is_true(KeybindPlan.isEveryKeybindSetUp(allGroupChanges))
-      assert.equal("Keybinds set up (WASD keys and number row).", KeybindPlan.describeKeybindStatus(allGroupChanges))
-    end)
-
-    it("lists each group otherwise", function()
-      local allGroupChanges = KeybindPlan.findKeybindChanges(
-        { wasdGroup, numberGroup },
-        { Q = "ACTIONBUTTON1", E = "ACTIONBUTTON2", BUTTON5 = "ACTIONBUTTON11", ["1"] = "MULTIACTIONBAR1BUTTON1" }
-      )
-      assert.is_false(KeybindPlan.isEveryKeybindSetUp(allGroupChanges))
-      assert.equal("Keybinds: WASD keys set up, number row 1 of 2 set up.", KeybindPlan.describeKeybindStatus(allGroupChanges))
-      assert.equal(
-        "Keybinds: WASD keys not set up, number row not set up.",
-        KeybindPlan.describeKeybindStatus(KeybindPlan.findKeybindChanges({ wasdGroup, numberGroup }, {}))
-      )
     end)
   end)
 

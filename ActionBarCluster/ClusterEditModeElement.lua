@@ -15,7 +15,7 @@ function ClusterEditModeElement.addClusterToEditMode()
   clusterFrame:SetMovable(true)
   clusterFrame:SetClampedToScreen(true)
   LibEditMode:AddFrame(clusterFrame, function(_, layoutName, point, x, y)
-    ClusterEditModeElement.saveClusterPosition(layoutName, point, x, y)
+    ClusterPositions.saveClusterPosition(ns.db.layouts, layoutName, point, x, y)
   end, ClusterKeys.defaultPosition, "WASDBars")
   LibEditMode:AddFrameSettings(clusterFrame, {
     {
@@ -26,7 +26,7 @@ function ClusterEditModeElement.addClusterToEditMode()
       maxValue = ClusterPositions.MAX_SCALE,
       valueStep = 0.05,
       get = function(layoutName)
-        return ClusterEditModeElement.findClusterPosition(layoutName).scale
+        return ClusterPositions.findClusterPosition(ns.db.layouts, layoutName).scale
       end,
       set = function(layoutName, scale)
         ClusterPositions.saveClusterScale(ns.db.layouts, layoutName, scale)
@@ -34,13 +34,4 @@ function ClusterEditModeElement.addClusterToEditMode()
       end,
     },
   })
-end
-
--- { point, x, y, scale } saved for the layout, or the defaults.
-function ClusterEditModeElement.findClusterPosition(layoutName)
-  return ClusterPositions.findClusterPosition(ns.db.layouts, layoutName, ClusterKeys.defaultPosition, ClusterKeys.defaultScale)
-end
-
-function ClusterEditModeElement.saveClusterPosition(layoutName, point, x, y)
-  ClusterPositions.saveClusterPosition(ns.db.layouts, layoutName, point, x, y)
 end

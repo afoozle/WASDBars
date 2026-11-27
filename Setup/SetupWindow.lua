@@ -52,20 +52,38 @@ local function createSetupWindow()
   return window
 end
 
--- A line: { fontName, text, indent, spaceAfter, color }.
-local function addLine(lines, fontName, text, spaceAfter, color)
-  table.insert(lines, { fontName = fontName, text = text, indent = INDENT, spaceAfter = spaceAfter, color = color })
+-- the next line's number and how far down the window it goes, while the window is filled
+local lineCount, nextLineY
+
+-- Places a line below the last one, reusing the window's font strings.
+local function addText(fontName, text, indent, spaceAfter, color)
+  lineCount = lineCount + 1
+  local fontString = setupWindow.fontStrings[lineCount] or setupWindow:CreateFontString(nil, "OVERLAY")
+  setupWindow.fontStrings[lineCount] = fontString
+  fontString:SetFontObject(fontName)
+  fontString:SetJustifyH("LEFT")
+  fontString:SetWidth(WINDOW_WIDTH - 2 * PADDING - indent)
+  fontString:ClearAllPoints()
+  fontString:SetPoint("TOPLEFT", PADDING + indent, -nextLineY)
+  fontString:SetText(text)
+  fontString:SetTextColor(unpack(color or WHITE))
+  fontString:Show()
+  nextLineY = nextLineY + fontString:GetStringHeight() + spaceAfter
 end
 
-local function addHeading(lines, text)
-  table.insert(lines, { fontName = "GameFontNormalLarge", text = text, indent = 0, spaceAfter = 6, color = GOLD })
+local function addLine(fontName, text, spaceAfter, color)
+  addText(fontName, text, INDENT, spaceAfter, color)
 end
 
-local function addLayoutLines(lines, neededLayoutStepTexts)
-  addHeading(lines, "Layout")
+local function addHeading(text)
+  addText("GameFontNormalLarge", text, 0, 6, GOLD)
+end
+
+local function addLayoutLines(neededLayoutStepTexts)
+  addHeading("Layout")
   for i, stepText in ipairs(neededLayoutStepTexts) do
     local spaceAfter = i == #neededLayoutStepTexts and 14 or 4
-    addLine(lines, "GameFontHighlight", "- " .. stepText, spaceAfter)
+    addLine("GameFontHighlight", "- " .. stepText, spaceAfter)
   end
 end
 
@@ -77,57 +95,35 @@ local function describeActionsLosingTheirKey(actionsLosingTheirKey)
   return table.concat(descriptions, ", ")
 end
 
-local function addKeybindLines(lines, groupsToChange, actionsLosingTheirKey)
-  addHeading(lines, "Keys")
+local function addKeybindLines(groupsToChange, actionsLosingTheirKey)
+  addHeading("Keys")
   for _, groupChanges in ipairs(groupsToChange) do
-    addLine(lines, "GameFontNormal", groupChanges.group.heading, 2, GOLD)
-    addLine(lines, "GameFontHighlight", groupChanges.group.detail, 8)
+    addLine("GameFontNormal", groupChanges.group.heading, 2, GOLD)
+    addLine("GameFontHighlight", groupChanges.group.detail, 8)
   end
   if #actionsLosingTheirKey > 0 then
-    addLine(lines, "GameFontNormal", "These will no longer have a key:", 4, ORANGE)
-    addLine(lines, "GameFontHighlight", describeActionsLosingTheirKey(actionsLosingTheirKey), 4)
-    addLine(lines, "GameFontDisableSmall", "Rebind them in Key Bindings if you use them.", 8)
+    addLine("GameFontNormal", "These will no longer have a key:", 4, ORANGE)
+    addLine("GameFontHighlight", describeActionsLosingTheirKey(actionsLosingTheirKey), 4)
+    addLine("GameFontDisableSmall", "Rebind them in Key Bindings if you use them.", 8)
   end
-end
-
--- Fills the window top to bottom, reusing its font strings.
-local function arrangeLines(lines)
-  local y = 34
-  for i, line in ipairs(lines) do
-    local fontString = setupWindow.fontStrings[i] or setupWindow:CreateFontString(nil, "OVERLAY")
-    setupWindow.fontStrings[i] = fontString
-    fontString:SetFontObject(line.fontName)
-    fontString:SetJustifyH("LEFT")
-    fontString:SetWidth(WINDOW_WIDTH - 2 * PADDING - line.indent)
-    fontString:ClearAllPoints()
-    fontString:SetPoint("TOPLEFT", PADDING + line.indent, -y)
-    fontString:SetText(line.text)
-    fontString:SetTextColor(unpack(line.color or WHITE))
-    fontString:Show()
-    y = y + fontString:GetStringHeight() + line.spaceAfter
-  end
-  for i = #lines + 1, #setupWindow.fontStrings do
-    setupWindow.fontStrings[i]:Hide()
-  end
-  setupWindow:SetHeight(y + 48)
-end
-
-function SetupWindow.isSetupWindowShown()
-  return setupWindow ~= nil and setupWindow:IsShown()
 end
 
 -- neededLayoutStepTexts: SetupSteps.describeLayoutStep for each step;
--- groupsToChange and actionsLosingTheirKey: Keybinds.lua.
+-- groupsToChange and actionsLosingTheirKey: Keybinds.lua. Shown again, it is
+-- filled with the new changes.
 function SetupWindow.showSetupChanges(neededLayoutStepTexts, groupsToChange, actionsLosingTheirKey, runSetup)
   setupWindow = setupWindow or createSetupWindow()
-  local lines = {}
+  lineCount, nextLineY = 0, 34
   if #neededLayoutStepTexts > 0 then
-    addLayoutLines(lines, neededLayoutStepTexts)
+    addLayoutLines(neededLayoutStepTexts)
   end
   if #groupsToChange > 0 then
-    addKeybindLines(lines, groupsToChange, actionsLosingTheirKey)
+    addKeybindLines(groupsToChange, actionsLosingTheirKey)
   end
-  arrangeLines(lines)
+  for i = lineCount + 1, #setupWindow.fontStrings do
+    setupWindow.fontStrings[i]:Hide()
+  end
+  setupWindow:SetHeight(nextLineY + 48)
   onSetUpClicked = runSetup
   setupWindow:Show()
 end

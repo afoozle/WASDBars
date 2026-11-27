@@ -26,7 +26,6 @@ local function loadSavedSettings(addonName)
   WASDBarsDB = SavedSettings.fillMissingSettings(WASDBarsDB)
   SavedSettings.moveV110KeybindCopyToAccount(WASDBarsDB)
   ns.db = WASDBarsDB
-  WASDBarsPerfDB = SavedSettings.createRecordingsList(WASDBarsPerfDB)
 end
 
 local function buildAddon()

@@ -40,10 +40,3 @@ function SavedSettings.moveV110KeybindCopyToAccount(savedSettings)
     savedSettings.keyCopy = nil
   end
 end
-
--- WASDBarsPerfDB, with its list of recordings (Performance/PerformanceLog.lua).
-function SavedSettings.createRecordingsList(savedRecordings)
-  savedRecordings = savedRecordings or {}
-  savedRecordings.sessions = savedRecordings.sessions or {}
-  return savedRecordings
-end

@@ -45,13 +45,9 @@ local function findFormName(stanceButtonNumber)
   return spellId and C_Spell.GetSpellName(spellId)
 end
 
-local function findAllGroupChanges()
-  return KeybindPlan.findKeybindChanges(KeybindGroups, readCurrentActions())
-end
-
--- The groups with keys left to change (KeybindPlan.findKeybindChanges).
+-- The groups with keys left to change (KeybindPlan.findGroupsToChange).
 function Keybinds.findGroupsToChange()
-  return KeybindPlan.selectGroupsToChange(findAllGroupChanges())
+  return KeybindPlan.findGroupsToChange(KeybindGroups, readCurrentActions())
 end
 
 -- KeybindPlan.findActionsLosingTheirKey, with each action's name for the window.
@@ -92,10 +88,6 @@ end
 -- Whose key copy this character uses (KeybindCopies.findCopyOwner).
 function Keybinds.findCopyOwner()
   return KeybindCopies.findCopyOwner(GetCurrentBindingSet(), CHARACTER_BINDINGS, UnitGUID("player"))
-end
-
-function Keybinds.describeKeybindStatus()
-  return KeybindPlan.describeKeybindStatus(findAllGroupChanges())
 end
 
 function Keybinds.nameAction(action)

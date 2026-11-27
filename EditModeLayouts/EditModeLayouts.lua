@@ -39,15 +39,6 @@ function EditModeLayouts.isEditModeReady()
   return LibEditModeOverride:IsReady()
 end
 
-function EditModeLayouts.isEditModeOpen()
-  return EditModeManagerFrame:IsEditModeActive()
-end
-
-function EditModeLayouts.openEditMode()
-  HideUIPanel(SettingsPanel)
-  ShowUIPanel(EditModeManagerFrame)
-end
-
 -- Every layout, presets first (LayoutList.lua). Saved layouts are brought up
 -- to date with the game's current systems first, as LibEditModeOverride does.
 function EditModeLayouts.loadAllLayouts()

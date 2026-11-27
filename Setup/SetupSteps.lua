@@ -101,15 +101,3 @@ function SetupSteps.describeLayoutStep(stepName, currentLayoutState)
   end
   return LAYOUT_STEP_TEXTS[stepName]
 end
-
--- The layout half of /wasd setup status.
-function SetupSteps.describeLayoutStatus(currentLayoutState, neededLayoutSteps)
-  if currentLayoutState.wasdLayout ~= "active" then
-    return "Not on the WASDBars layout (/wasd setup)."
-  end
-  if #neededLayoutSteps == 0 then
-    return "Edit Mode layout ready."
-  end
-  local changeWord = #neededLayoutSteps == 1 and " change" or " changes"
-  return "WASDBars layout needs " .. #neededLayoutSteps .. changeWord .. " (/wasd setup)."
-end

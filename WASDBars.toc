@@ -4,7 +4,7 @@
 ## Author: Matt
 ## X-License: MIT
 ## Version: @project-version@
-## SavedVariables: WASDBarsDB, WASDBarsPerfDB
+## SavedVariables: WASDBarsDB
 ## Dependencies: LibEditMode, LibEditModeOverride
 
 Core/SavedSettings.lua
@@ -21,7 +21,6 @@ EditModeLayouts/LayoutList.lua
 EditModeLayouts/WasdLayoutSettings.lua
 Setup/SetupSteps.lua
 Setup/RestoreSteps.lua
-Performance/PerformanceLog.lua
 Core/ChatMessages.lua
 Core/CombatQueue.lua
 Core/SlashCommands.lua
@@ -37,5 +36,4 @@ Setup/SetupWindow.lua
 Setup/Setup.lua
 Setup/Restore.lua
 Options/OptionsPage.lua
-Performance/PerformanceRecorder.lua
 Core/Startup.lua

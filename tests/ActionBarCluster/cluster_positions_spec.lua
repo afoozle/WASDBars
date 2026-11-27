@@ -2,15 +2,15 @@ local load_addon_file = require("helpers.load_addon_file")
 
 describe("ClusterPositions", function()
   local ClusterPositions
-  local DEFAULT_POSITION = { point = "BOTTOM", x = -250, y = 150 }
 
   local function findClusterPosition(savedPositions, layoutName)
-    local clusterPosition = ClusterPositions.findClusterPosition(savedPositions, layoutName, DEFAULT_POSITION, 1.0)
+    local clusterPosition = ClusterPositions.findClusterPosition(savedPositions, layoutName)
     return { clusterPosition.point, clusterPosition.x, clusterPosition.y, clusterPosition.scale }
   end
 
   before_each(function()
-    ClusterPositions = load_addon_file("ActionBarCluster/ClusterPositions.lua").ClusterPositions
+    local ns = { ClusterKeys = { defaultPosition = { point = "BOTTOM", x = -250, y = 150 }, defaultScale = 1.0 } }
+    ClusterPositions = load_addon_file("ActionBarCluster/ClusterPositions.lua", ns).ClusterPositions
   end)
 
   it("uses the saved values for the layout, or the defaults", function()

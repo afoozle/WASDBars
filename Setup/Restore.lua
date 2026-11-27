@@ -26,7 +26,7 @@ end
 
 -- restoreChoice: { layout, bar2 }, from askToRestore.
 local function restoreLayout(_, restoreChoice)
-  if ns.SetupGuards.refuseInCombat("restore") or ns.SetupGuards.refuseInEditMode("restore") then
+  if ns.SetupGuards.refuseLayoutChange("restore", "restore") then
     return
   end
   ns.EditModeLayouts.switchToLayout(restoreChoice.layout)
@@ -66,15 +66,12 @@ StaticPopupDialogs[RESTORE_POPUP] = {
 
 -- /wasd restore and the Restore button.
 function Restore.askToRestore()
-  if ns.SetupGuards.refuseInCombat("restore") then
+  if ns.SetupGuards.refuseLayoutChange("restore", "restore") then
     return
   end
   local restorePoint = ns.db.restore[UnitGUID("player")]
   if not restorePoint then
     ns.ChatMessages.printMessage("Nothing to restore on this character.")
-    return
-  end
-  if ns.SetupGuards.refuseInEditMode("restore") or ns.SetupGuards.refuseBeforeEditModeReady() then
     return
   end
   local layoutToRestore, isSavedLayoutMissing =

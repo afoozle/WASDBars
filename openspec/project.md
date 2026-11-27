@@ -61,7 +61,6 @@ WASDBars/                      repo root = addon folder
   EditModeLayouts/             reading, editing and saving Edit Mode layouts
   Setup/                       the setup window and flow, the first-time offer, restore
   Options/                     the options page
-  Performance/                 /wasd perf recordings
   tests/                       busted unit tests, one folder per feature folder
   scripts/                     dev setup
   openspec/                    specs and changes
@@ -75,7 +74,7 @@ WASDBars/                      repo root = addon folder
 ## Project Conventions
 
 ### Code Style
-- Every addon file starts with `local ADDON, ns = ...`; the only globals are the SavedVariables tables (`WASDBarsDB`, `WASDBarsPerfDB`), the `SLASH_WASDBARS1` slash command, named StaticPopup dialogs, and named frames, which always start with `WASDBars` (for example `WASDBarsCluster`)
+- Every addon file starts with `local ADDON, ns = ...`; the only globals are the SavedVariables tables (`WASDBarsDB`), the `SLASH_WASDBARS1` slash command, named StaticPopup dialogs, and named frames, which always start with `WASDBars` (for example `WASDBarsCluster`)
 - **Logic files and game files:** in each feature folder, decisions live in logic files of plain functions (data in, data out, no game calls), unit tested; game files call the game directly, stay thin and are checked in-game. Naming and structure rules are in CLAUDE.md, Code rules
 - Each file is one module on `ns`. The TOC lists logic and data files first, so any file may name them at the top; game files reach each other only inside functions. `Core/Startup.lua` loads last and connects game events to them
 - StyLua formatting; luacheck must pass with zero warnings
@@ -97,7 +96,7 @@ Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`
 ### Testing Strategy
 - **Unit tests (busted):** every logic file, run locally with `make check`, with plain data (no fakes of the game). GitHub Actions runs the same checks on every push and pull request.
 - **In-game checks:** anything involving frames, the game's buttons or keybinds, using `/reload` and BugGrabber + BugSack. Each change's tasks.md ends with its in-game checklist. Claude Code reads BugGrabber's saved errors from the game's SavedVariables folder rather than having them copied across.
-- **Performance:** on demand only (`/wasd perf`; see CLAUDE.md, Performance)
+- **Performance:** the game's own addon profiler, on demand; the `/wasd perf` recorder was removed in `simplify-after-restructure`
 - A change is done when `make check` passes and its in-game checks pass
 
 ### Git Workflow

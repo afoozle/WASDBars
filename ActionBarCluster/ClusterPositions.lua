@@ -1,4 +1,5 @@
 local ADDON, ns = ...
+local ClusterKeys = ns.ClusterKeys
 local ClusterPositions = {}
 ns.ClusterPositions = ClusterPositions
 
@@ -9,12 +10,12 @@ ns.ClusterPositions = ClusterPositions
 ClusterPositions.MIN_SCALE = 0.5
 ClusterPositions.MAX_SCALE = 2.0
 
--- { point, x, y, scale } for an Edit Mode layout: the saved values, or the defaults.
--- defaultPosition: { point, x, y }
-function ClusterPositions.findClusterPosition(savedPositions, layoutName, defaultPosition, defaultScale)
+-- { point, x, y, scale } for an Edit Mode layout: the saved values, or the
+-- defaults (ClusterKeys.lua).
+function ClusterPositions.findClusterPosition(savedPositions, layoutName)
   local savedPosition = savedPositions[layoutName] or {}
-  local position = savedPosition.point and savedPosition or defaultPosition
-  return { point = position.point, x = position.x, y = position.y, scale = savedPosition.scale or defaultScale }
+  local position = savedPosition.point and savedPosition or ClusterKeys.defaultPosition
+  return { point = position.point, x = position.x, y = position.y, scale = savedPosition.scale or ClusterKeys.defaultScale }
 end
 
 function ClusterPositions.saveClusterPosition(savedPositions, layoutName, point, x, y)

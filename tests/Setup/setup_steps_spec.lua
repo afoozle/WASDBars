@@ -128,14 +128,4 @@ describe("SetupSteps", function()
     assert.equal("Move action bar 1's buttons into the WASD shape", SetupSteps.describeLayoutStep("moveActionButtons", currentLayoutState))
     assert.equal("Turn on Action Bar 2", SetupSteps.describeLayoutStep("turnOnActionBar2", currentLayoutState))
   end)
-
-  it("says ready, not on the layout, or how many changes", function()
-    assert.equal("Edit Mode layout ready.", SetupSteps.describeLayoutStatus({ wasdLayout = "active" }, {}))
-    assert.equal("Not on the WASDBars layout (/wasd setup).", SetupSteps.describeLayoutStatus({ wasdLayout = "inactive" }, {}))
-    assert.equal("WASDBars layout needs 1 change (/wasd setup).", SetupSteps.describeLayoutStatus({ wasdLayout = "active" }, { "hideGryphons" }))
-    assert.equal(
-      "WASDBars layout needs 2 changes (/wasd setup).",
-      SetupSteps.describeLayoutStatus({ wasdLayout = "active" }, { "hideGryphons", "turnOnActionBar2" })
-    )
-  end)
 end)

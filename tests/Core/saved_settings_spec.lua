@@ -35,11 +35,4 @@ describe("SavedSettings", function()
     assert.same({ account = { Q = "STRAFELEFT" } }, savedSettings.keyCopies)
     assert.is_nil(savedSettings.keyCopy)
   end)
-
-  it("creates the recordings list", function()
-    assert.same({ sessions = {} }, SavedSettings.createRecordingsList(nil))
-    local savedRecordings = { sessions = { { label = "idle" } } }
-    assert.equal(savedRecordings, SavedSettings.createRecordingsList(savedRecordings))
-    assert.equal("idle", savedRecordings.sessions[1].label)
-  end)
 end)

@@ -7,9 +7,8 @@ ns.SlashCommands = SlashCommands
 local HELP_LINES = {
   { command = "help", help = "list these commands" },
   { command = "options", help = "open the WASDBars options" },
-  { command = "perf", help = "'start <label>', 'stop' or 'clear' a performance recording for Claude Code" },
   { command = "restore", help = "switch back to your layout from before setup, and optionally your keybinds" },
-  { command = "setup", help = "set up the WASDBars layout and keybinds; 'status' to check them" },
+  { command = "setup", help = "set up the WASDBars layout and keybinds" },
   { command = "version", help = "show the addon version" },
 }
 
@@ -25,53 +24,21 @@ local function showVersion()
   ns.ChatMessages.printMessage(releaseVersion and ("Version " .. releaseVersion .. ".") or "Dev build.")
 end
 
-local function runPerformanceCommand(arguments)
-  local performanceCommand, label = arguments:match("^(%S*)%s*(.-)$")
-  performanceCommand = performanceCommand:lower()
-  if performanceCommand == "start" then
-    ns.PerformanceRecorder.startRecording(label)
-  elseif performanceCommand == "stop" then
-    ns.PerformanceRecorder.stopRecording()
-  elseif performanceCommand == "clear" then
-    ns.PerformanceRecorder.clearRecordings()
-  else
-    ns.ChatMessages.printMessage("Use /wasd perf start <label>, /wasd perf stop or /wasd perf clear.")
-  end
-end
-
-local function runSetupCommand(arguments)
-  local setupCommand = arguments:lower()
-  if setupCommand == "" then
-    ns.Setup.openSetupWindow()
-  elseif setupCommand == "status" then
-    ns.ChatMessages.printMessage(ns.Setup.describeSetupStatus())
-  else
-    ns.ChatMessages.printMessage("Use /wasd setup, or /wasd setup status.")
-  end
-end
-
-local function reportUnknownCommand(command)
-  ns.ChatMessages.printMessage("'" .. command .. "' isn't a command I recognise.")
-  showHelp()
-end
-
 -- Everything typed after /wasd.
 function SlashCommands.runSlashCommand(text)
-  local command, arguments = (text or ""):match("^%s*(%S*)%s*(.-)%s*$")
-  command = command:lower()
+  local command = (text or ""):match("^%s*(%S*)"):lower()
   if command == "" or command == "help" then
     showHelp()
   elseif command == "version" then
     showVersion()
-  elseif command == "perf" then
-    runPerformanceCommand(arguments)
   elseif command == "options" then
     ns.OptionsPage.openOptionsPage()
   elseif command == "setup" then
-    runSetupCommand(arguments)
+    ns.Setup.openSetupWindow()
   elseif command == "restore" then
     ns.Restore.askToRestore()
   else
-    reportUnknownCommand(command)
+    ns.ChatMessages.printMessage("'" .. command .. "' isn't a command I recognise.")
+    showHelp()
   end
 end

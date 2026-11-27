@@ -4,6 +4,7 @@ local LayoutList = ns.LayoutList
 local WasdLayoutSettings = ns.WasdLayoutSettings
 local SetupSteps = ns.SetupSteps
 local RestoreSteps = ns.RestoreSteps
+local ClusterPositions = ns.ClusterPositions
 local Setup = {}
 ns.Setup = Setup
 
@@ -84,10 +85,10 @@ end
 -- On a new layout the cluster goes under the chat window at its left edge, and
 -- the chat window moves up. The cluster's position is saved, then applied straight away.
 local function placeClusterAndChatWindow(neededSetup, wasdLayout)
-  local clusterScale = ns.ClusterEditModeElement.findClusterPosition(WASD_LAYOUT_NAME).scale
+  local clusterScale = ClusterPositions.findClusterPosition(ns.db.layouts, WASD_LAYOUT_NAME).scale
   local chatScale = ChatFrame1:GetEffectiveScale() / UIParent:GetEffectiveScale()
   -- cluster positions are in the cluster's scaled units
-  ns.ClusterEditModeElement.saveClusterPosition(WASD_LAYOUT_NAME, "BOTTOMLEFT", ChatFrame1:GetLeft() * chatScale / clusterScale, CLUSTER_Y / clusterScale)
+  ClusterPositions.saveClusterPosition(ns.db.layouts, WASD_LAYOUT_NAME, "BOTTOMLEFT", ChatFrame1:GetLeft() * chatScale / clusterScale, CLUSTER_Y / clusterScale)
   local clusterTop = CLUSTER_Y + ns.ActionBarCluster.measuredCluster.height * clusterScale
   WasdLayoutSettings.moveChatWindow(wasdLayout, neededSetup.editModeIds, {
     point = "BOTTOMLEFT",
@@ -128,7 +129,7 @@ end
 
 -- When Set up is clicked in the setup window.
 local function runSetup(neededSetup, groupsToChange)
-  if ns.SetupGuards.refuseInCombat("set up") or ns.SetupGuards.refuseInEditMode("setup") then
+  if ns.SetupGuards.refuseLayoutChange("set up", "setup") then
     return
   end
   local allLayouts = ns.EditModeLayouts.loadAllLayouts()
@@ -160,10 +161,7 @@ end
 
 -- /wasd setup and the Run setup button.
 function Setup.openSetupWindow()
-  if ns.SetupGuards.refuseInCombat("set up") or ns.SetupWindow.isSetupWindowShown() then
-    return
-  end
-  if ns.SetupGuards.refuseInEditMode("setup") or ns.SetupGuards.refuseBeforeEditModeReady() then
+  if ns.SetupGuards.refuseLayoutChange("set up", "setup") then
     return
   end
   local neededSetup = findNeededSetup()
@@ -180,16 +178,6 @@ function Setup.openSetupWindow()
   ns.SetupWindow.showSetupChanges(neededLayoutStepTexts, groupsToChange, actionsLosingTheirKey, function()
     runSetup(neededSetup, groupsToChange)
   end)
-end
-
--- /wasd setup status.
-function Setup.describeSetupStatus()
-  local neededSetup = findNeededSetup()
-  local layoutStatus = ns.SetupGuards.NOT_READY_MESSAGE
-  if neededSetup then
-    layoutStatus = SetupSteps.describeLayoutStatus(neededSetup.currentLayoutState, neededSetup.neededLayoutSteps)
-  end
-  return ns.Keybinds.describeKeybindStatus() .. " " .. layoutStatus
 end
 
 StaticPopupDialogs[OFFER_POPUP] = {

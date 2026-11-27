@@ -12,7 +12,8 @@ local function openEditModeFromOptions()
     ns.ChatMessages.printMessage("Edit Mode can't be opened in combat.")
     return
   end
-  ns.EditModeLayouts.openEditMode()
+  HideUIPanel(SettingsPanel)
+  ShowUIPanel(EditModeManagerFrame)
 end
 
 -- settingName: the WASDBarsDB key, which also names the game's setting.
@@ -35,29 +36,23 @@ local function addCheckbox(settingName, label, tooltip, onChange)
   Settings.CreateCheckbox(optionsCategory, setting, tooltip)
 end
 
-local function addButton(optionsLayout, label, buttonText, onClick, tooltip)
-  optionsLayout:AddInitializer(CreateSettingsButtonInitializer(label, buttonText, onClick, tooltip, true))
-end
-
-local function addHeading(optionsLayout, heading)
-  optionsLayout:AddInitializer(CreateSettingsListSectionHeaderInitializer(heading))
-end
-
 -- At login.
 function OptionsPage.addOptionsPage()
   local optionsLayout
   optionsCategory, optionsLayout = Settings.RegisterVerticalLayoutCategory("WASDBars")
 
-  addHeading(optionsLayout, "Display")
-  addButton(
-    optionsLayout,
-    "Move and resize",
-    "Open Edit Mode",
-    openEditModeFromOptions,
-    "Select WASDBars in Edit Mode to drag it, or click it to change its scale."
+  optionsLayout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Display"))
+  optionsLayout:AddInitializer(
+    CreateSettingsButtonInitializer(
+      "Move and resize",
+      "Open Edit Mode",
+      openEditModeFromOptions,
+      "Select WASDBars in Edit Mode to drag it, or click it to change its scale.",
+      true
+    )
   )
 
-  addHeading(optionsLayout, "Appearance")
+  optionsLayout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Appearance"))
   addCheckbox(
     "showMovementKeys",
     "Show movement keys",
@@ -71,9 +66,19 @@ function OptionsPage.addOptionsPage()
     ns.ActionBarCluster.refreshHotkeys
   )
 
-  addHeading(optionsLayout, "Setup")
-  addButton(optionsLayout, "Set up", "Run setup", ns.Setup.openSetupWindow, "Set up the WASDBars layout and keybinds. Shows every change first.")
-  addButton(optionsLayout, "Undo setup", "Restore", ns.Restore.askToRestore, "Switch back to your previous layout, and optionally your keybinds.")
+  optionsLayout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Setup"))
+  optionsLayout:AddInitializer(
+    CreateSettingsButtonInitializer("Set up", "Run setup", ns.Setup.openSetupWindow, "Set up the WASDBars layout and keybinds. Shows every change first.", true)
+  )
+  optionsLayout:AddInitializer(
+    CreateSettingsButtonInitializer(
+      "Undo setup",
+      "Restore",
+      ns.Restore.askToRestore,
+      "Switch back to your previous layout, and optionally your keybinds.",
+      true
+    )
+  )
 
   Settings.RegisterAddOnCategory(optionsCategory)
 end

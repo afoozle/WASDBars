@@ -37,9 +37,7 @@ local function applyGameHotkeyStyle(hotkey)
   if not gameHotkeyStyle then
     return
   end
-  if gameHotkeyStyle.font[1] then
-    hotkey:SetFont(unpack(gameHotkeyStyle.font))
-  end
+  hotkey:SetFont(unpack(gameHotkeyStyle.font))
   hotkey:ClearAllPoints()
   for _, point in ipairs(gameHotkeyStyle.points) do
     hotkey:SetPoint(unpack(point))
@@ -50,10 +48,7 @@ end
 
 local function applyLargeHotkeyStyle(button)
   local hotkey = button.HotKey
-  local fontPath = hotkey:GetFont()
-  if fontPath then
-    hotkey:SetFont(fontPath, LARGE_HOTKEY_SIZE, "THICKOUTLINE")
-  end
+  hotkey:SetFont(hotkey:GetFont(), LARGE_HOTKEY_SIZE, "THICKOUTLINE")
   hotkey:ClearAllPoints()
   hotkey:SetPoint("BOTTOM", button, "BOTTOM", 0, 3)
   -- the game's box is shorter than this font; make it fit so the text sits where anchored
