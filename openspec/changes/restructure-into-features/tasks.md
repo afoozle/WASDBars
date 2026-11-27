@@ -3,7 +3,7 @@
 ## 1. Design
 - [x] 1.1 Write `design.md` (proposal, "Design first")
 - [x] 1.2 Fresh agent checks every name and structure against the rules; fix what it finds
-- [ ] 1.3 Player reviews the design
+- [x] 1.3 Player reviews the design
 
 ## 2. Build
 - [ ] 2.1 One feature at a time: logic tests first, then the logic and game files, then `Startup.lua`; `make check` passes after each
