@@ -5,7 +5,6 @@ ns.SlashCommands = SlashCommands
 
 -- For /wasd help only, in the order shown.
 local HELP_LINES = {
-  { command = "debug", help = "turn extra chat output on or off (this session only)" },
   { command = "help", help = "list these commands" },
   { command = "options", help = "open the WASDBars options" },
   { command = "perf", help = "'start <label>', 'stop' or 'clear' a performance recording for Claude Code" },
@@ -24,16 +23,6 @@ end
 local function showVersion()
   local releaseVersion = AddonVersion.readReleaseVersion(C_AddOns.GetAddOnMetadata(ADDON, "Version"))
   ns.ChatMessages.printMessage(releaseVersion and ("Version " .. releaseVersion .. ".") or "Dev build.")
-end
-
-local function switchDebugOutput()
-  if ns.ChatMessages.isDebugOutputOn() then
-    ns.ChatMessages.turnDebugOutputOff()
-    ns.ChatMessages.printMessage("Debug output off.")
-  else
-    ns.ChatMessages.turnDebugOutputOn()
-    ns.ChatMessages.printMessage("Debug output on.")
-  end
 end
 
 local function runPerformanceCommand(arguments)
@@ -74,8 +63,6 @@ function SlashCommands.runSlashCommand(text)
     showHelp()
   elseif command == "version" then
     showVersion()
-  elseif command == "debug" then
-    switchDebugOutput()
   elseif command == "perf" then
     runPerformanceCommand(arguments)
   elseif command == "options" then

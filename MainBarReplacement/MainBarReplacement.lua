@@ -22,15 +22,15 @@ local artHolder, border, dividerPools
 -- action bar 1's own mouse state, from before WASDBars changed it
 local gameMouseState
 
--- The two branches of the game's UpdateButtonArt.
-local ACTION_BAR_1_BUTTON_STYLE = {
+-- The two branches of the game's UpdateButtonArt: with the bar's art, and without it.
+local BAR_ART_BUTTON_STYLE = {
   isSlotArtShown = true,
   normalAtlas = "UI-HUD-ActionBar-IconFrame",
   pushedAtlas = "UI-HUD-ActionBar-IconFrame-Down",
   width = 46,
   height = 45,
 }
-local ACTION_BAR_2_BUTTON_STYLE = {
+local NO_BAR_ART_BUTTON_STYLE = {
   isSlotArtShown = false,
   normalAtlas = "UI-HUD-ActionBar-IconFrame-AddRow",
   pushedAtlas = "UI-HUD-ActionBar-IconFrame-AddRow-Down",
@@ -49,16 +49,22 @@ local function applyButtonStyle(button, buttonStyle)
   button.PushedTexture:SetSize(buttonStyle.width, buttonStyle.height)
 end
 
+-- Action bar 1's buttons on the WASDBars layout, which hides its art; for the
+-- movement keys, so they look like the cluster's own buttons.
+function MainBarReplacement.styleButtonWithoutBarArt(button)
+  applyButtonStyle(button, NO_BAR_ART_BUTTON_STYLE)
+end
+
 local function styleButtonsLikeActionBar1()
   for _, button in ipairs(MultiBarBottomLeft.actionButtons) do
-    applyButtonStyle(button, ACTION_BAR_1_BUTTON_STYLE)
+    applyButtonStyle(button, BAR_ART_BUTTON_STYLE)
   end
   areButtonsStyledLikeActionBar1 = true
 end
 
 local function styleButtonsLikeActionBar2()
   for _, button in ipairs(MultiBarBottomLeft.actionButtons) do
-    applyButtonStyle(button, ACTION_BAR_2_BUTTON_STYLE)
+    applyButtonStyle(button, NO_BAR_ART_BUTTON_STYLE)
   end
   areButtonsStyledLikeActionBar1 = false
 end

@@ -26,7 +26,6 @@ local function loadSavedSettings(addonName)
   SavedSettings.moveV110KeybindCopyToAccount(WASDBarsDB)
   ns.db = WASDBarsDB
   WASDBarsPerfDB = SavedSettings.createRecordingsList(WASDBarsPerfDB)
-  ns.ChatMessages.printDebugMessage("loaded")
 end
 
 -- Fires when the active layout changes, including at login.
@@ -50,8 +49,7 @@ local function finishCombat()
   ns.MainBarReplacement.redrawActionBar2ArtIfWaiting()
 end
 
-local function checkAfterEditModeUpdate()
-  ns.ActionBarCluster.moveStrayActionButtonsIntoCluster()
+local function offerSetupOrRemindOncePerLogin()
   ns.SetupOffer.offerSetupOrRemindOncePerLogin()
 end
 
@@ -68,7 +66,7 @@ listenFor("ADDON_LOADED", loadSavedSettings)
 listenFor("PLAYER_LOGIN", buildAddon)
 listenFor("PLAYER_REGEN_ENABLED", finishCombat)
 listenFor("UPDATE_BINDINGS", refreshHotkeys)
-listenFor("EDIT_MODE_LAYOUTS_UPDATED", checkAfterEditModeUpdate)
+listenFor("EDIT_MODE_LAYOUTS_UPDATED", offerSetupOrRemindOncePerLogin)
 
 SLASH_WASDBARS1 = "/wasd"
 SlashCmdList.WASDBARS = runSlashCommand

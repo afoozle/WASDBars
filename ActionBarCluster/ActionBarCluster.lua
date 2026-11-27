@@ -100,7 +100,6 @@ local function arrangeActionButtonsInCluster()
     )
     restyleHotkey(button)
   end
-  ns.ChatMessages.printDebugMessage("layout applied")
 end
 
 -- Puts the buttons back the way the game first places them: centred in their
@@ -116,7 +115,6 @@ local function returnActionButtonsToActionBar1()
     applyGameHotkeyStyle(button.HotKey)
     button:UpdateHotkeys(button.buttonType)
   end
-  ns.ChatMessages.printDebugMessage("buttons returned")
 end
 
 local function attachActionButtonsToCluster()
@@ -135,22 +133,6 @@ local function detachActionButtonsFromCluster()
   areActionButtonsInCluster = false
   clusterFrame:Hide()
   returnActionButtonsToActionBar1()
-end
-
-local function isAnyActionButtonOutOfCluster()
-  for _, actionButtonKey in ipairs(actionButtonKeys) do
-    if actionButtonKey.button:GetParent() ~= clusterFrame then
-      return true
-    end
-  end
-  return false
-end
-
--- The layout may have been left while this waited for combat to end.
-local function rearrangeActionButtonsIfStillInCluster()
-  if areActionButtonsInCluster then
-    arrangeActionButtonsInCluster()
-  end
 end
 
 -- Scale first, then the point: the offsets are in the frame's scaled units.
@@ -187,14 +169,6 @@ end
 
 function ActionBarCluster.moveActionButtonsBackToActionBar1()
   ns.CombatQueue.runOutOfCombat("buttons", detachActionButtonsFromCluster)
-end
-
--- The spike found nothing moves the buttons back; this is a cheap safety check.
-function ActionBarCluster.moveStrayActionButtonsIntoCluster()
-  if areActionButtonsInCluster and isAnyActionButtonOutOfCluster() then
-    ns.ChatMessages.printDebugMessage("buttons left the cluster; re-applying")
-    ns.CombatQueue.runOutOfCombat("layout", rearrangeActionButtonsIfStillInCluster)
-  end
 end
 
 -- clusterPosition: { point, x, y, scale } (ClusterPositions.lua)

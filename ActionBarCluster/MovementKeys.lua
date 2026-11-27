@@ -10,53 +10,14 @@ local ARROW_ATLASES = { up = "NPE_ArrowUp", down = "NPE_ArrowDown", left = "NPE_
 -- holds the four keys, so they show and hide together
 local movementKeysHolder
 
--- Places target exactly where source sits on its button (the game draws some
--- button art larger than the button), relative to our key frame instead.
-local function copyArtPlacement(target, source, keyFrame)
-  local pointCount = source:GetNumPoints()
-  if pointCount == 0 then
-    target:SetAllPoints()
-    return
-  end
-  target:SetSize(source:GetSize())
-  for i = 1, pointCount do
-    local point, _, relativePoint, x, y = source:GetPoint(i)
-    target:SetPoint(point, keyFrame, relativePoint, x, y)
-  end
-end
-
--- Copies a game texture's art (atlas or file) and placement onto target.
-local function copyArt(target, source, keyFrame)
-  copyArtPlacement(target, source, keyFrame)
-  local atlas = source:GetAtlas()
-  if atlas then
-    target:SetAtlas(atlas)
-  else
-    target:SetTexture(source:GetTexture())
-    target:SetTexCoord(source:GetTexCoord())
-  end
-end
-
 -- Built from the game's own (non-secure) action button template so it is drawn
--- exactly like an empty slot, with the same art visible as on the cluster's
--- own buttons. Never clickable.
+-- like an empty slot on the cluster. Never clickable.
 local function createEmptyKeyFrame(parent)
   local keyFrame = CreateFrame("CheckButton", nil, parent, "ActionButtonTemplate")
   keyFrame:EnableMouse(false)
-  local templateButton = _G.ActionButton1
-  for _, artName in ipairs({ "SlotArt", "SlotBackground" }) do
-    if keyFrame[artName] and templateButton[artName] then
-      keyFrame[artName]:SetShown(templateButton[artName]:IsShown())
-    end
-  end
-  local normalTexture, templateNormalTexture = keyFrame:GetNormalTexture(), templateButton:GetNormalTexture()
-  if normalTexture and templateNormalTexture then
-    copyArt(normalTexture, templateNormalTexture, keyFrame)
-  end
-  for _, partName in ipairs({ "icon", "Icon", "HotKey", "Count", "Name", "cooldown", "Cooldown", "Border" }) do
-    if keyFrame[partName] then
-      keyFrame[partName]:Hide()
-    end
+  ns.MainBarReplacement.styleButtonWithoutBarArt(keyFrame)
+  for _, partName in ipairs({ "icon", "HotKey", "Count", "Name", "cooldown", "Border" }) do
+    keyFrame[partName]:Hide()
   end
   return keyFrame
 end

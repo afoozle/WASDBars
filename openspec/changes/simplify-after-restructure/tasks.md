@@ -11,7 +11,7 @@
 - [ ] 1.3 `max_cyclomatic_complexity = 10` in `.luacheckrc`; `make check` passes
 
 ## 2. In game (all three changes at once)
-- [ ] 2.1 Full test list shown up front, covering the three changes
+- [ ] 2.1 Full test list shown up front, covering the three changes. Include: the W, A, S and D keys look like the cluster's empty slots (now drawn with the no-bar-art button style), and buttons stay in the cluster through Edit Mode edits (the stray-button check is gone)
 - [ ] 2.2 Re-run only checks that failed
 
 ## 3. Finish
