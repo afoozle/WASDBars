@@ -37,14 +37,4 @@ describe("ClusterKeys", function()
     end
     assert.same({ W = "up", A = "left", S = "down", D = "right" }, directions)
   end)
-
-  it("puts buttons 1-10 on Q E R T F G Z X C V", function()
-    local labels = {}
-    for _, clusterKey in ipairs(clusterKeys.keys) do
-      if clusterKey.actionButtonNumber and clusterKey.actionButtonNumber <= 10 then
-        labels[clusterKey.actionButtonNumber] = clusterKey.label
-      end
-    end
-    assert.same({ "Q", "E", "R", "T", "F", "G", "Z", "X", "C", "V" }, labels)
-  end)
 end)

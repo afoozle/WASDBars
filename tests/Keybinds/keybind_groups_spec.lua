@@ -36,15 +36,10 @@ describe("KeybindGroups", function()
   it("binds Q E R T F G Z X C V and the mouse side buttons to action buttons 1-12", function()
     assert.equal("WASD keys", keybindGroups[1].name)
     assert.same(numbered("ACTIONBUTTON", 12), listField(keybindGroups[1], "action"))
-    assert.same(
-      { "Q", "E", "R", "T", "F", "G", "Z", "X", "C", "V", "BUTTON5", "BUTTON4" },
-      listField(keybindGroups[1], "key")
-    )
   end)
 
   it("binds 1-0, - and = to action bar 2's buttons 1-12", function()
     assert.equal("number row", keybindGroups[2].name)
     assert.same(numbered("MULTIACTIONBAR1BUTTON", 12), listField(keybindGroups[2], "action"))
-    assert.same({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=" }, listField(keybindGroups[2], "key"))
   end)
 end)

@@ -13,11 +13,7 @@ end
 
 local function saveShowMovementKeys(isShown)
   ns.db.showMovementKeys = isShown
-  if isShown then
-    ns.MovementKeys.showMovementKeys()
-  else
-    ns.MovementKeys.hideMovementKeys()
-  end
+  ns.MovementKeys.updateMovementKeysShown()
 end
 
 local function readLargeHotkeys()

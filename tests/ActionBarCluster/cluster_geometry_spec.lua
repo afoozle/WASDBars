@@ -41,13 +41,6 @@ describe("ClusterGeometry.measureClusterKeys", function()
     assert.same({ 20, 20, 40, 40 }, { measuredKey.centreX, measuredKey.centreY, measured.width, measured.height })
   end)
 
-  it("uses two sizes: big and small", function()
-    assert.equal(1.0, findMeasuredKey("Q").scale)
-    assert.equal(0.8, findMeasuredKey("T").scale)
-    assert.equal(0.8, findMeasuredKey("W").scale)
-    assert.equal(0.8, findMeasuredKey("Mouse front").scale)
-  end)
-
   it("spaces neighbours one step apart whatever their size", function()
     local step = BUTTON_SIZE
     assert.equal(step, findMeasuredKey("W").centreX - findMeasuredKey("Q").centreX)

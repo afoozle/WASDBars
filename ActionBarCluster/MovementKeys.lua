@@ -7,7 +7,8 @@ ns.MovementKeys = MovementKeys
 local ARROW_SIZE = 0.6 -- of the key
 local ARROW_ATLASES = { up = "NPE_ArrowUp", down = "NPE_ArrowDown", left = "NPE_ArrowLeft", right = "NPE_ArrowRight" }
 
-local movementKeyFrames = {}
+-- holds the four keys, so they show and hide together
+local movementKeysHolder
 
 -- Places target exactly where source sits on its button (the game draws some
 -- button art larger than the button), relative to our key frame instead.
@@ -74,7 +75,7 @@ end
 -- Full button size, shrunk with SetScale like the action buttons, so the art
 -- and arrow shrink together.
 local function createMovementKey(clusterFrame, measuredKey, buttonSize)
-  local keyFrame = createEmptyKeyFrame(clusterFrame)
+  local keyFrame = createEmptyKeyFrame(movementKeysHolder)
   keyFrame:SetSize(buttonSize, buttonSize)
   keyFrame:SetScale(measuredKey.scale)
   keyFrame:SetPoint(
@@ -85,29 +86,22 @@ local function createMovementKey(clusterFrame, measuredKey, buttonSize)
     -measuredKey.centreY / measuredKey.scale
   )
   drawArrow(keyFrame, measuredKey.clusterKey.movementDirection, buttonSize)
-  return keyFrame
 end
 
 -- At login, after the cluster is built.
 function MovementKeys.drawMovementKeys()
   local clusterFrame, buttonSize = ns.ActionBarCluster.clusterFrame, ns.ActionBarCluster.buttonSize
+  movementKeysHolder = CreateFrame("Frame", nil, clusterFrame)
+  movementKeysHolder:SetAllPoints()
   for _, measuredKey in ipairs(ns.ActionBarCluster.measuredCluster.measuredKeys) do
     if measuredKey.clusterKey.movementDirection then
-      local keyFrame = createMovementKey(clusterFrame, measuredKey, buttonSize)
-      keyFrame:SetShown(ns.db.showMovementKeys)
-      table.insert(movementKeyFrames, keyFrame)
+      createMovementKey(clusterFrame, measuredKey, buttonSize)
     end
   end
+  MovementKeys.updateMovementKeysShown()
 end
 
-function MovementKeys.showMovementKeys()
-  for _, keyFrame in ipairs(movementKeyFrames) do
-    keyFrame:Show()
-  end
-end
-
-function MovementKeys.hideMovementKeys()
-  for _, keyFrame in ipairs(movementKeyFrames) do
-    keyFrame:Hide()
-  end
+-- After the "Show movement keys" option changes.
+function MovementKeys.updateMovementKeysShown()
+  movementKeysHolder:SetShown(ns.db.showMovementKeys)
 end
