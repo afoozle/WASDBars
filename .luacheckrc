@@ -19,6 +19,7 @@ read_globals = {
   "SetBinding",
   "SaveBindings",
   "GetCurrentBindingSet",
+  "CHARACTER_BINDINGS",
   "MultiBarBottomLeft",
   "StaticPopup_Show",
   "GetBindingKey",

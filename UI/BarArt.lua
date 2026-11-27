@@ -6,8 +6,8 @@ ns.BarArt = BarArt
 -- goes see-through: hiding it would make Edit Mode drop the bottom bar stack
 -- into its spot. Action bar 2 gets action bar 1's border, dividers and button
 -- frames, drawn the way the game draws them on action bar 1 (see
--- openspec/changes/hide-main-bar/research.md). LibEditMode (a TOC dependency)
--- adds action bar 2's Hide Bar Art checkbox.
+-- openspec/changes/archive/2026-11-26-hide-main-bar/research.md).
+-- LibEditMode (a TOC dependency) adds action bar 2's Hide Bar Art checkbox.
 local LibEditMode = LibStub("LibEditMode")
 
 local onLayout = false

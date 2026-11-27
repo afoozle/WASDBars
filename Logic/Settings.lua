@@ -2,7 +2,7 @@ local ADDON, ns = ...
 local Settings = {}
 ns.Settings = Settings
 
--- Account-wide defaults. Later changes add their own keys here.
+-- Account-wide defaults.
 Settings.defaults = {
   -- Edit Mode layout name -> { point, x, y, scale } (see Logic/Placement.lua)
   layouts = {},
@@ -10,7 +10,9 @@ Settings.defaults = {
   setupOffered = {},
   -- character GUID -> { layout = name, bar2 = was action bar 2 on } from before setup, for /wasd restore
   restore = {},
-  -- keyCopy: nil, or the 24 setup keys' binds from before setup first changed them ({ [key] = command | false })
+  -- "account" or a character GUID (Restore.keyCopyOwner) -> the 24 setup keys' binds from
+  -- before setup first changed them ({ [key] = command | false })
+  keyCopies = {},
   -- action bar 2's Hide Bar Art on the WASDBars layout (UI/BarArt.lua)
   bar2HideArt = false,
   -- options page (UI/Options.lua)

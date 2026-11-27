@@ -184,10 +184,10 @@ end
 -- The layout half of /wasd setup status.
 function LayoutPlan.statusSentence(readings, actions)
   if readings.step then
-    return "Not on the WASDBars layout (/wasd setup layout)."
+    return "Not on the WASDBars layout (/wasd setup)."
   end
   if #actions == 0 then
     return "Edit Mode layout ready."
   end
-  return "WASDBars layout needs " .. #actions .. (#actions == 1 and " change" or " changes") .. " (/wasd setup layout)."
+  return "WASDBars layout needs " .. #actions .. (#actions == 1 and " change" or " changes") .. " (/wasd setup)."
 end

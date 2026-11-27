@@ -56,6 +56,11 @@ local function ready()
   return LEMO:IsReady() and C_EditMode and EditModePresetLayoutManager and editModeIds() ~= nil
 end
 
+-- Where this character's key copy is kept (Logic/Restore.lua).
+local function keyCopyOwner()
+  return ns.Restore.keyCopyOwner(GetCurrentBindingSet(), CHARACTER_BINDINGS, UnitGUID("player"))
+end
+
 -- Every layout, presets first (Logic/LayoutCopy.lua). Saved layouts are
 -- brought up to date with the game's current systems first, as
 -- LibEditModeOverride does.
@@ -208,7 +213,7 @@ local function apply(p, steps)
     return
   end
   if EditModeManagerFrame:IsEditModeActive() then
-    ns.print("Close Edit Mode, then run /wasd setup layout.")
+    ns.print("Close Edit Mode, then run /wasd setup.")
     return
   end
   local ids, actions, has = p.ids, p.actions, ns.LayoutPlan.has
@@ -219,7 +224,7 @@ local function apply(p, steps)
   if creating then
     local max = Constants.EditModeConsts.EditModeMaxLayoutsPerType
     if ns.LayoutCopy.count(data, Enum.EditModeLayoutType.Account) >= max then
-      ns.print("You have the most Edit Mode layouts the game allows. Delete one, then run /wasd setup layout.")
+      ns.print("You have the most Edit Mode layouts the game allows. Delete one, then run /wasd setup.")
       return
     end
   end
@@ -227,8 +232,9 @@ local function apply(p, steps)
     ns.db.restore[guid] = ns.db.restore[guid]
       or { layout = data.layouts[data.activeLayout].layoutName, bar2 = bar2On() }
   end
-  if #steps > 0 and not ns.db.keyCopy then
-    ns.db.keyCopy = ns.Restore.keyCopy(ns.BindingGroups, GetBindingAction)
+  local owner = keyCopyOwner()
+  if #steps > 0 and not ns.db.keyCopies[owner] then
+    ns.db.keyCopies[owner] = ns.Restore.keyCopy(ns.BindingGroups, GetBindingAction)
   end
 
   local layoutActions = 0
@@ -279,13 +285,13 @@ local function apply(p, steps)
   end
 end
 
--- /wasd setup, /wasd setup layout and the Run setup button.
+-- /wasd setup and the Run setup button.
 function Setup.open()
   if refuseInCombat("set up") or ns.SetupWindow.isShown() then
     return
   end
   if EditModeManagerFrame:IsEditModeActive() then
-    ns.print("Close Edit Mode, then run /wasd setup layout.")
+    ns.print("Close Edit Mode, then run /wasd setup.")
     return
   end
   local p, why = plan()
@@ -371,7 +377,8 @@ StaticPopupDialogs[RESTORE_KEYS] = {
     if refuseInCombat("restore keybinds") then
       return
     end
-    for _, change in ipairs(ns.Restore.keyChanges(ns.db.keyCopy)) do
+    local owner = keyCopyOwner()
+    for _, change in ipairs(ns.Restore.keyChanges(ns.db.keyCopies[owner])) do
       if change.command then
         SetBinding(change.key, change.command)
       else
@@ -379,7 +386,7 @@ StaticPopupDialogs[RESTORE_KEYS] = {
       end
     end
     SaveBindings(GetCurrentBindingSet())
-    ns.db.keyCopy = nil
+    ns.db.keyCopies[owner] = nil
     finishRestore()
   end,
   OnCancel = finishRestore,
@@ -406,7 +413,7 @@ StaticPopupDialogs[RESTORE] = {
     Settings.SetValue("PROXY_SHOW_ACTIONBAR_2", data.bar2)
     local guid = UnitGUID("player")
     ns.db.restore[guid] = nil
-    if ns.db.keyCopy then
+    if ns.db.keyCopies[keyCopyOwner()] then
       StaticPopup_Show(RESTORE_KEYS)
     else
       finishRestore()

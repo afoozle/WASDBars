@@ -121,7 +121,7 @@ local function createReloadFrame()
   f:EnableMouse(true)
   f:Hide()
   if f.TitleText then
-    f.TitleText:SetText("Set up WASDBars")
+    f.TitleText:SetText("WASDBars")
   end
   if f.CloseButton then
     f.CloseButton:Hide()

@@ -62,9 +62,6 @@ local setupParts = {
   [""] = function()
     ns.Setup.open()
   end,
-  layout = function()
-    ns.Setup.open()
-  end,
   status = function()
     ns.print(ns.Bindings.statusSentence() .. " " .. ns.Setup.layoutStatusSentence())
   end,

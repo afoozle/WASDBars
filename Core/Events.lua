@@ -27,6 +27,11 @@ Events.on("ADDON_LOADED", function(name)
   WASDBarsDB = ns.Settings.merge(WASDBarsDB, ns.Settings.defaults)
   -- gone since the buttons follow the WASDBars layout instead
   WASDBarsDB.setUp = nil
+  -- the single account-wide copy from v1.1.0
+  if WASDBarsDB.keyCopy then
+    WASDBarsDB.keyCopies.account = WASDBarsDB.keyCopy
+    WASDBarsDB.keyCopy = nil
+  end
   ns.db = WASDBarsDB
   -- Anything that moves the action buttons or changes keybinds goes through
   -- ns.combatQueue:run(key, fn).

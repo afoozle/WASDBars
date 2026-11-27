@@ -25,6 +25,19 @@ describe("Restore", function()
     )
   end)
 
+  describe("keyCopyOwner", function()
+    local ACCOUNT_BINDINGS, CHARACTER_BINDINGS = 1, 2
+
+    it("keeps one copy for every character on the account's keybinds", function()
+      assert.equal("account", Restore.keyCopyOwner(ACCOUNT_BINDINGS, CHARACTER_BINDINGS, "Player-1"))
+      assert.equal("account", Restore.keyCopyOwner(ACCOUNT_BINDINGS, CHARACTER_BINDINGS, "Player-2"))
+    end)
+
+    it("keeps a character's own copy when it uses its own keybinds", function()
+      assert.equal("Player-2", Restore.keyCopyOwner(CHARACTER_BINDINGS, CHARACTER_BINDINGS, "Player-2"))
+    end)
+  end)
+
   describe("target", function()
     local data = {
       layouts = {

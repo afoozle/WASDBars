@@ -179,11 +179,8 @@ describe("LayoutPlan", function()
   describe("statusSentence", function()
     it("says ready, not on the layout, or how many changes", function()
       assert.equal("Edit Mode layout ready.", LayoutPlan.statusSentence({}, {}))
-      assert.equal(
-        "Not on the WASDBars layout (/wasd setup layout).",
-        LayoutPlan.statusSentence({ step = "switch" }, {})
-      )
-      assert.equal("WASDBars layout needs 2 changes (/wasd setup layout).", LayoutPlan.statusSentence({}, { {}, {} }))
+      assert.equal("Not on the WASDBars layout (/wasd setup).", LayoutPlan.statusSentence({ step = "switch" }, {}))
+      assert.equal("WASDBars layout needs 2 changes (/wasd setup).", LayoutPlan.statusSentence({}, { {}, {} }))
     end)
   end)
 end)

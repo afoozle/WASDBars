@@ -15,6 +15,16 @@ function Restore.keyCopy(groups, getBindingAction)
   return copy
 end
 
+-- Whose key copy a character uses: "account" while it's on the account's
+-- keybinds (shared by every such character), otherwise its own GUID.
+-- bindingSet: the game's GetCurrentBindingSet(); characterBindingSet: CHARACTER_BINDINGS.
+function Restore.keyCopyOwner(bindingSet, characterBindingSet, guid)
+  if bindingSet == characterBindingSet then
+    return guid
+  end
+  return "account"
+end
+
 -- The keys to put back, sorted: { { key, command } }, command nil to unbind.
 function Restore.keyChanges(copy)
   local list = {}
