@@ -55,18 +55,11 @@ function MainBarReplacement.styleButtonWithoutBarArt(button)
   applyButtonStyle(button, NO_BAR_ART_BUTTON_STYLE)
 end
 
-local function styleButtonsLikeActionBar1()
+local function styleActionBar2Buttons(buttonStyle)
   for _, button in ipairs(MultiBarBottomLeft.actionButtons) do
-    applyButtonStyle(button, BAR_ART_BUTTON_STYLE)
+    applyButtonStyle(button, buttonStyle)
   end
-  areButtonsStyledLikeActionBar1 = true
-end
-
-local function styleButtonsLikeActionBar2()
-  for _, button in ipairs(MultiBarBottomLeft.actionButtons) do
-    applyButtonStyle(button, NO_BAR_ART_BUTTON_STYLE)
-  end
-  areButtonsStyledLikeActionBar1 = false
+  areButtonsStyledLikeActionBar1 = buttonStyle == BAR_ART_BUTTON_STYLE
 end
 
 -- Inside action bar 2, so it follows the bar's position, scale and visibility.
@@ -88,18 +81,6 @@ local function createArtHolder()
   }
 end
 
-local function placeHorizontalDivider(divider, button)
-  divider:SetPoint("TOP", button, "TOP", 0, 0)
-  divider:SetPoint("BOTTOM", button, "BOTTOM", 0, 0)
-  divider:SetPoint("RIGHT", button, "LEFT", 5, 0)
-end
-
-local function placeVerticalDivider(divider, button)
-  divider:SetPoint("LEFT", button, "LEFT", 0, 0)
-  divider:SetPoint("RIGHT", button, "RIGHT", 0, 0)
-  divider:SetPoint("BOTTOM", button, "TOP", 0, -5)
-end
-
 local function drawActionBar2Dividers()
   local actionBar2 = MultiBarBottomLeft
   local isButtonShown = {}
@@ -108,25 +89,22 @@ local function drawActionBar2Dividers()
   end
   local buttonsNeedingDivider =
     BarDividers.findButtonsNeedingDivider(isButtonShown, actionBar2.numRows or 1, actionBar2.buttonPadding or 0, actionBar2.minButtonPadding or 0)
+  local dividerPool = actionBar2.isHorizontal and dividerPools.horizontal or dividerPools.vertical
   for _, buttonIndex in ipairs(buttonsNeedingDivider) do
     local button = actionBar2.actionButtons[buttonIndex]
-    local divider
+    local divider = dividerPool:Acquire()
+    divider:ClearAllPoints()
     if actionBar2.isHorizontal then
-      divider = dividerPools.horizontal:Acquire()
-      divider:ClearAllPoints()
-      placeHorizontalDivider(divider, button)
+      divider:SetPoint("TOP", button, "TOP", 0, 0)
+      divider:SetPoint("BOTTOM", button, "BOTTOM", 0, 0)
+      divider:SetPoint("RIGHT", button, "LEFT", 5, 0)
     else
-      divider = dividerPools.vertical:Acquire()
-      divider:ClearAllPoints()
-      placeVerticalDivider(divider, button)
+      divider:SetPoint("LEFT", button, "LEFT", 0, 0)
+      divider:SetPoint("RIGHT", button, "RIGHT", 0, 0)
+      divider:SetPoint("BOTTOM", button, "TOP", 0, -5)
     end
     divider:Show()
   end
-end
-
--- Edit Mode's icon size scales each button's holder.
-local function drawActionBar2Border()
-  border:SetScale(MultiBarBottomLeft.actionButtons[1].container:GetScale())
 end
 
 local function releaseActionBar2Dividers()
@@ -140,10 +118,11 @@ local function drawActionBar2Art()
   end
   artHolder:Show()
   releaseActionBar2Dividers()
-  drawActionBar2Border()
+  -- Edit Mode's icon size scales each button's holder
+  border:SetScale(MultiBarBottomLeft.actionButtons[1].container:GetScale())
   drawActionBar2Dividers()
   if not areButtonsStyledLikeActionBar1 then
-    styleButtonsLikeActionBar1()
+    styleActionBar2Buttons(BAR_ART_BUTTON_STYLE)
   end
 end
 
@@ -153,7 +132,7 @@ local function removeActionBar2Art()
     releaseActionBar2Dividers()
   end
   if areButtonsStyledLikeActionBar1 then
-    styleButtonsLikeActionBar2()
+    styleActionBar2Buttons(NO_BAR_ART_BUTTON_STYLE)
   end
 end
 
@@ -177,14 +156,6 @@ local function redrawAfterSettingChange(_, _, isEntireSystemUpdate)
   if not isEntireSystemUpdate then
     redrawActionBar2Art()
   end
-end
-
-local function makeActionBar1SeeThrough()
-  MainActionBar:SetAlpha(0)
-end
-
-local function makeActionBar1Visible()
-  MainActionBar:SetAlpha(1)
 end
 
 local function saveGameMouseState()
@@ -231,24 +202,13 @@ local function measureOffsetToActionBar1()
   return holderX - buttonX, holderY - buttonY
 end
 
-local function readHideBarArt()
-  return ns.db.bar2HideArt
-end
-
-local function saveHideBarArt(_, isArtHidden)
-  ns.db.bar2HideArt = isArtHidden
-  redrawActionBar2Art()
-end
-
-local function isAwayFromWasdLayout(layoutName)
-  return layoutName ~= WasdLayoutSettings.WASD_LAYOUT_NAME
-end
-
 function MainBarReplacement.replaceActionBar1()
   isOnWasdLayout = true
   isActionBar1SeeThrough = true
   ns.CombatQueue.runOutOfCombat("bar1-mouse", disableMouseOnActionBar1)
-  ns.CombatQueue.runOutOfCombat("bar1-alpha", makeActionBar1SeeThrough)
+  ns.CombatQueue.runOutOfCombat("bar1-alpha", function()
+    MainActionBar:SetAlpha(0)
+  end)
   redrawActionBar2Art()
 end
 
@@ -257,7 +217,9 @@ function MainBarReplacement.restoreActionBar1()
   ns.CombatQueue.runOutOfCombat("bar1-mouse", restoreMouseOnActionBar1)
   if isActionBar1SeeThrough then
     isActionBar1SeeThrough = false
-    ns.CombatQueue.runOutOfCombat("bar1-alpha", makeActionBar1Visible)
+    ns.CombatQueue.runOutOfCombat("bar1-alpha", function()
+      MainActionBar:SetAlpha(1)
+    end)
   end
   redrawActionBar2Art()
 end
@@ -284,9 +246,16 @@ function MainBarReplacement.addHideBarArtCheckbox()
       kind = LibEditMode.SettingType.Checkbox,
       name = "Hide Bar Art",
       default = false,
-      get = readHideBarArt,
-      set = saveHideBarArt,
-      hidden = isAwayFromWasdLayout,
+      get = function()
+        return ns.db.bar2HideArt
+      end,
+      set = function(_, isArtHidden)
+        ns.db.bar2HideArt = isArtHidden
+        redrawActionBar2Art()
+      end,
+      hidden = function(layoutName)
+        return layoutName ~= WasdLayoutSettings.WASD_LAYOUT_NAME
+      end,
     },
   }, Enum.EditModeActionBarSystemIndices.Bar2)
 end
