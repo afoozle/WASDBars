@@ -17,7 +17,6 @@ MainBarReplacement/BarDividers.lua
 Keybinds/KeybindGroups.lua
 Keybinds/KeybindPlan.lua
 Keybinds/KeybindCopies.lua
-EditModeLayouts/EditModeIds.lua
 EditModeLayouts/LayoutList.lua
 EditModeLayouts/WasdLayoutSettings.lua
 Setup/SetupSteps.lua

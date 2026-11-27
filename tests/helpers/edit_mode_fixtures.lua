@@ -56,4 +56,13 @@ function editModeFixtures.modernLayout()
   }
 end
 
+-- Every system, with none of its settings saved yet.
+function editModeFixtures.layoutWithoutSettings()
+  local layout = editModeFixtures.modernLayout()
+  for _, systemEntry in ipairs(layout.systems) do
+    systemEntry.settings = {}
+  end
+  return layout
+end
+
 return editModeFixtures

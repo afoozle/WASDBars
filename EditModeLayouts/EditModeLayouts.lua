@@ -1,5 +1,4 @@
 local ADDON, ns = ...
-local EditModeIds = ns.EditModeIds
 local LayoutList = ns.LayoutList
 local EditModeLayouts = {}
 ns.EditModeLayouts = EditModeLayouts
@@ -10,8 +9,30 @@ ns.EditModeLayouts = EditModeLayouts
 local LibEditModeOverride = LibStub("LibEditModeOverride-1.0")
 local LibEditMode = LibStub("LibEditMode")
 
+-- The game's Edit Mode enum values setup uses, so the layout logic files make no game calls.
 function EditModeLayouts.findEditModeIds()
-  return EditModeIds.readEditModeIds(Enum)
+  local actionBarSetting = Enum.EditModeActionBarSetting
+  local endCapIndices = Enum.EditModeMainActionBarEndCapSystemIndices
+  return {
+    actionBarSystem = Enum.EditModeSystem.ActionBar,
+    actionBar1Index = Enum.EditModeActionBarSystemIndices.MainBar,
+    actionBar2Index = Enum.EditModeActionBarSystemIndices.Bar2,
+    endCapSystem = Enum.EditModeSystem.MainActionBarEndCap,
+    leftEndCapIndex = endCapIndices.EndCapLeft,
+    rightEndCapIndex = endCapIndices.EndCapRight,
+    endCapHiddenSetting = Enum.EditModeMainActionBarEndCapSetting.Hidden,
+    chatSystem = Enum.EditModeSystem.ChatFrame,
+    actionBarSettings = {
+      numIcons = actionBarSetting.NumIcons,
+      alwaysShowButtons = actionBarSetting.AlwaysShowButtons,
+      hideBarArt = actionBarSetting.HideBarArt,
+      hideBarScrolling = actionBarSetting.HideBarScrolling,
+      orientation = actionBarSetting.Orientation,
+      numRows = actionBarSetting.NumRows,
+      iconSize = actionBarSetting.IconSize,
+      iconPadding = actionBarSetting.IconPadding,
+    },
+  }
 end
 
 function EditModeLayouts.isEditModeReady()

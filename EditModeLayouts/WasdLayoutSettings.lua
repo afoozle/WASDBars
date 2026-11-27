@@ -29,9 +29,6 @@ local function findSystem(layout, system, systemIndex)
 end
 
 local function readSetting(systemEntry, setting)
-  if not systemEntry then
-    return nil
-  end
   for _, settingEntry in ipairs(systemEntry.settings) do
     if settingEntry.setting == setting then
       return settingEntry.value
@@ -41,9 +38,6 @@ local function readSetting(systemEntry, setting)
 end
 
 local function writeSetting(systemEntry, setting, value)
-  if not systemEntry then
-    return
-  end
   for _, settingEntry in ipairs(systemEntry.settings) do
     if settingEntry.setting == setting then
       settingEntry.value = value
@@ -53,18 +47,9 @@ local function writeSetting(systemEntry, setting, value)
   table.insert(systemEntry.settings, { setting = setting, value = value })
 end
 
--- Anchor: { point, relativeTo (a frame name), relativePoint, offsetX, offsetY }.
+-- Anchor: a new { point, relativeTo (a frame name), relativePoint, offsetX, offsetY }.
 local function moveSystem(systemEntry, anchor)
-  if not systemEntry then
-    return
-  end
-  systemEntry.anchorInfo = {
-    point = anchor.point,
-    relativeTo = anchor.relativeTo,
-    relativePoint = anchor.relativePoint,
-    offsetX = anchor.offsetX,
-    offsetY = anchor.offsetY,
-  }
+  systemEntry.anchorInfo = anchor
   systemEntry.isInDefaultPosition = false
 end
 
@@ -91,8 +76,7 @@ local function differs(value, wantedValue)
 end
 
 -- What the layout holds for setup's checks: { actionBar1 = { settingName = value },
--- actionBar2 = { … }, gryphonsHidden = { left, right } }. A missing system or
--- setting reads as nil.
+-- actionBar2 = { … }, gryphonsHidden = { left, right } }. A missing setting reads as nil.
 function WasdLayoutSettings.readLayoutSettings(layout, editModeIds)
   return {
     actionBar1 = readActionBarSettings(layout, editModeIds, editModeIds.actionBar1Index),

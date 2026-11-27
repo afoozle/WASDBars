@@ -117,7 +117,8 @@ describe("SetupSteps", function()
     end)
 
     it("skips what the game couldn't tell", function()
-      local currentLayoutState = { wasdLayout = "active", layoutSettings = readSettings({ systems = {} }) }
+      local currentLayoutState =
+        { wasdLayout = "active", layoutSettings = readSettings(editModeFixtures.layoutWithoutSettings()) }
       assert.same({}, SetupSteps.findNeededLayoutSteps(currentLayoutState))
     end)
   end)
