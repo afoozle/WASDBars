@@ -1,4 +1,5 @@
 local ADDON, ns = ...
+local SavedSettings = ns.SavedSettings
 local OptionsPage = {}
 ns.OptionsPage = OptionsPage
 
@@ -55,7 +56,7 @@ local function addCheckbox(settingName, label, tooltip, readValue, saveValue)
     "WASDBars_" .. settingName,
     Settings.VarType.Boolean,
     label,
-    ns.SavedSettings.DEFAULTS[settingName],
+    SavedSettings.DEFAULTS[settingName],
     readValue,
     saveValue
   )

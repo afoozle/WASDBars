@@ -20,9 +20,6 @@ local ACTION_BAR_2_ICON_COUNT = 12
 
 -- The system entry for system/systemIndex; systemIndex nil matches any.
 local function findSystem(layout, system, systemIndex)
-  if system == nil then
-    return nil
-  end
   for _, systemEntry in ipairs(layout.systems) do
     if systemEntry.system == system and (systemIndex == nil or systemEntry.systemIndex == systemIndex) then
       return systemEntry
@@ -32,7 +29,7 @@ local function findSystem(layout, system, systemIndex)
 end
 
 local function readSetting(systemEntry, setting)
-  if not systemEntry or setting == nil then
+  if not systemEntry then
     return nil
   end
   for _, settingEntry in ipairs(systemEntry.settings) do
@@ -44,7 +41,7 @@ local function readSetting(systemEntry, setting)
 end
 
 local function writeSetting(systemEntry, setting, value)
-  if not systemEntry or setting == nil then
+  if not systemEntry then
     return
   end
   for _, settingEntry in ipairs(systemEntry.settings) do

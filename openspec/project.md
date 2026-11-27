@@ -77,7 +77,7 @@ WASDBars/                      repo root = addon folder
 ### Code Style
 - Every addon file starts with `local ADDON, ns = ...`; the only globals are the SavedVariables tables (`WASDBarsDB`, `WASDBarsPerfDB`), the `SLASH_WASDBARS1` slash command, named StaticPopup dialogs, and named frames, which always start with `WASDBars` (for example `WASDBarsCluster`)
 - **Logic files and game files:** in each feature folder, decisions live in logic files of plain functions (data in, data out, no game calls), unit tested; game files call the game directly, stay thin and are checked in-game. Naming and structure rules are in CLAUDE.md, Code rules
-- Each file is one module on `ns`, with no load-time dependencies on other files; `Core/Startup.lua` loads last and connects game events to them
+- Each file is one module on `ns`. The TOC lists logic and data files first, so any file may name them at the top; game files reach each other only inside functions. `Core/Startup.lua` loads last and connects game events to them
 - StyLua formatting; luacheck must pass with zero warnings
 - Plain-language user messages, prefixed `WASDBars:`
 - **No per-frame work:** the addon reacts to events only; nothing runs every frame

@@ -50,12 +50,6 @@ describe("SavedSettings", function()
     assert.is_nil(savedSettings.keyCopy)
   end)
 
-  it("forgets v1.0.0's setUp flag", function()
-    local savedSettings = { setUp = true }
-    SavedSettings.forgetV100SetUpFlag(savedSettings)
-    assert.is_nil(savedSettings.setUp)
-  end)
-
   it("creates the recordings list", function()
     assert.same({ sessions = {} }, SavedSettings.createRecordingsList(nil))
     local savedRecordings = { sessions = { { label = "idle" } } }

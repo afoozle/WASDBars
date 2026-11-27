@@ -1,4 +1,5 @@
 local ADDON, ns = ...
+local SavedSettings = ns.SavedSettings
 
 -- Loaded last: connects game events to the features and runs the login steps.
 local LibEditMode = LibStub("LibEditMode")
@@ -26,11 +27,10 @@ local function loadSavedSettings(addonName)
   if addonName ~= ADDON then
     return
   end
-  WASDBarsDB = ns.SavedSettings.fillMissingSettings(WASDBarsDB)
-  ns.SavedSettings.forgetV100SetUpFlag(WASDBarsDB)
-  ns.SavedSettings.moveV110KeybindCopyToAccount(WASDBarsDB)
+  WASDBarsDB = SavedSettings.fillMissingSettings(WASDBarsDB)
+  SavedSettings.moveV110KeybindCopyToAccount(WASDBarsDB)
   ns.db = WASDBarsDB
-  WASDBarsPerfDB = ns.SavedSettings.createRecordingsList(WASDBarsPerfDB)
+  WASDBarsPerfDB = SavedSettings.createRecordingsList(WASDBarsPerfDB)
   ns.ChatMessages.printDebugMessage("loaded")
 end
 

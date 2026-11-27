@@ -1,4 +1,5 @@
 local ADDON, ns = ...
+local LayoutList = ns.LayoutList
 local RestoreSteps = {}
 ns.RestoreSteps = RestoreSteps
 
@@ -6,10 +7,10 @@ ns.RestoreSteps = RestoreSteps
 -- otherwise the first preset (Modern). Returns layoutName, isSavedLayoutMissing.
 -- restorePoint: RestorePoints.findRestorePoint.
 function RestoreSteps.findLayoutToRestore(allLayouts, restorePoint, presetLayoutType)
-  if ns.LayoutList.findLayoutIndex(allLayouts, restorePoint.layout) then
+  if LayoutList.findLayoutIndex(allLayouts, restorePoint.layout) then
     return restorePoint.layout, false
   end
-  return ns.LayoutList.findFirstPresetLayoutName(allLayouts, presetLayoutType), true
+  return LayoutList.findFirstPresetLayoutName(allLayouts, presetLayoutType), true
 end
 
 -- The restore popup's lines.

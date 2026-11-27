@@ -1,4 +1,6 @@
 local ADDON, ns = ...
+local EditModeIds = ns.EditModeIds
+local LayoutList = ns.LayoutList
 local EditModeLayouts = {}
 ns.EditModeLayouts = EditModeLayouts
 
@@ -8,16 +10,12 @@ ns.EditModeLayouts = EditModeLayouts
 local LibEditModeOverride = LibStub("LibEditModeOverride-1.0")
 local LibEditMode = LibStub("LibEditMode")
 
--- nil if this client is missing an Edit Mode value setup needs.
 function EditModeLayouts.findEditModeIds()
-  return ns.EditModeIds.readEditModeIds(Enum)
+  return EditModeIds.readEditModeIds(Enum)
 end
 
 function EditModeLayouts.isEditModeReady()
   return LibEditModeOverride:IsReady()
-    and C_EditMode ~= nil
-    and EditModePresetLayoutManager ~= nil
-    and EditModeLayouts.findEditModeIds() ~= nil
 end
 
 function EditModeLayouts.isEditModeOpen()
@@ -36,7 +34,7 @@ function EditModeLayouts.loadAllLayouts()
   for _, layout in ipairs(savedLayouts.layouts) do
     EditModeManagerFrame:ReconcileWithModern(layout)
   end
-  return ns.LayoutList.combinePresetAndSavedLayouts(EditModePresetLayoutManager:GetCopyOfPresetLayouts(), savedLayouts)
+  return LayoutList.combinePresetAndSavedLayouts(EditModePresetLayoutManager:GetCopyOfPresetLayouts(), savedLayouts)
 end
 
 -- Saves and makes the game apply them.
@@ -59,7 +57,7 @@ function EditModeLayouts.switchToLayout(layoutName)
 end
 
 function EditModeLayouts.hasRoomForAnotherLayout(allLayouts)
-  return ns.LayoutList.hasRoomForAnotherLayout(
+  return LayoutList.hasRoomForAnotherLayout(
     allLayouts,
     Enum.EditModeLayoutType.Account,
     Constants.EditModeConsts.EditModeMaxLayoutsPerType
@@ -68,7 +66,7 @@ end
 
 -- A new account-wide layout, copied from the active one and made active.
 function EditModeLayouts.copyActiveLayout(allLayouts, newLayoutName)
-  ns.LayoutList.copyActiveLayout(
+  LayoutList.copyActiveLayout(
     allLayouts,
     newLayoutName,
     Enum.EditModeLayoutType.Account,

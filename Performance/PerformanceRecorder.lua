@@ -1,4 +1,6 @@
 local ADDON, ns = ...
+local AddonVersion = ns.AddonVersion
+local PerformanceLog = ns.PerformanceLog
 local PerformanceRecorder = {}
 ns.PerformanceRecorder = PerformanceRecorder
 
@@ -16,11 +18,11 @@ local function readOverallMetric(metric)
 end
 
 local function readAddonMetrics()
-  return ns.PerformanceLog.readAllMetrics(Enum.AddOnProfilerMetric, readAddonMetric)
+  return PerformanceLog.readAllMetrics(Enum.AddOnProfilerMetric, readAddonMetric)
 end
 
 local function readOverallMetrics()
-  return ns.PerformanceLog.readAllMetrics(Enum.AddOnProfilerMetric, readOverallMetric)
+  return PerformanceLog.readAllMetrics(Enum.AddOnProfilerMetric, readOverallMetric)
 end
 
 local function measureSecondsRecorded()
@@ -28,7 +30,7 @@ local function measureSecondsRecorded()
 end
 
 local function recordOneSecond()
-  ns.PerformanceLog.addRow(recording, {
+  PerformanceLog.addRow(recording, {
     t = measureSecondsRecorded(),
     wasdbars = readAddonMetrics(),
     allRecentAverage = C_AddOnProfiler.GetOverallMetric(Enum.AddOnProfilerMetric.RecentAverageTime),
@@ -49,7 +51,7 @@ function PerformanceRecorder.startRecording(label)
   recording = {
     label = label,
     started = date("%Y-%m-%d %H:%M"),
-    addonVersion = ns.AddonVersion.readReleaseVersion(C_AddOns.GetAddOnMetadata(ADDON, "Version")),
+    addonVersion = AddonVersion.readReleaseVersion(C_AddOns.GetAddOnMetadata(ADDON, "Version")),
     interface = select(4, GetBuildInfo()),
     samples = {},
   }
@@ -66,7 +68,7 @@ function PerformanceRecorder.stopRecording()
   ticker = nil
   recording.seconds = measureSecondsRecorded()
   recording.summary = { wasdbars = readAddonMetrics(), allAddons = readOverallMetrics() }
-  ns.PerformanceLog.addRecording(WASDBarsPerfDB, recording)
+  PerformanceLog.addRecording(WASDBarsPerfDB, recording)
   ns.ChatMessages.printMessage("Recording '" .. recording.label .. "' saved. Type /reload to write it to disk.")
   recording = nil
 end

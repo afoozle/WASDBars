@@ -7,32 +7,33 @@
 ## SavedVariables: WASDBarsDB, WASDBarsPerfDB
 ## Dependencies: LibEditMode, LibEditModeOverride
 
-Core/ChatMessages.lua
-Core/CombatQueue.lua
 Core/SavedSettings.lua
 Core/AddonVersion.lua
-Core/SlashCommands.lua
 ActionBarCluster/ClusterKeys.lua
 ActionBarCluster/ClusterGeometry.lua
 ActionBarCluster/HotkeyText.lua
 ActionBarCluster/ClusterPositions.lua
-ActionBarCluster/ActionBarCluster.lua
-ActionBarCluster/ClusterEditModeElement.lua
-ActionBarCluster/MovementKeys.lua
 MainBarReplacement/BarDividers.lua
-MainBarReplacement/MainBarReplacement.lua
-WasdLayoutMode/WasdLayoutMode.lua
 Keybinds/KeybindGroups.lua
 Keybinds/KeybindPlan.lua
 Keybinds/KeybindCopies.lua
-Keybinds/Keybinds.lua
 EditModeLayouts/EditModeIds.lua
 EditModeLayouts/LayoutList.lua
 EditModeLayouts/WasdLayoutSettings.lua
-EditModeLayouts/EditModeLayouts.lua
 Setup/SetupSteps.lua
 Setup/RestorePoints.lua
 Setup/RestoreSteps.lua
+Performance/PerformanceLog.lua
+Core/ChatMessages.lua
+Core/CombatQueue.lua
+Core/SlashCommands.lua
+ActionBarCluster/ActionBarCluster.lua
+ActionBarCluster/ClusterEditModeElement.lua
+ActionBarCluster/MovementKeys.lua
+MainBarReplacement/MainBarReplacement.lua
+WasdLayoutMode/WasdLayoutMode.lua
+Keybinds/Keybinds.lua
+EditModeLayouts/EditModeLayouts.lua
 Setup/SetupGuards.lua
 Setup/ChatWindow.lua
 Setup/SetupWindow.lua
@@ -41,6 +42,5 @@ Setup/Setup.lua
 Setup/SetupOffer.lua
 Setup/Restore.lua
 Options/OptionsPage.lua
-Performance/PerformanceLog.lua
 Performance/PerformanceRecorder.lua
 Core/Startup.lua

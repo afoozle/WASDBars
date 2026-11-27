@@ -1,4 +1,5 @@
 local ADDON, ns = ...
+local WasdLayoutSettings = ns.WasdLayoutSettings
 local WasdLayoutMode = {}
 ns.WasdLayoutMode = WasdLayoutMode
 
@@ -19,7 +20,7 @@ end
 -- cluster's position or scale is saved.
 function WasdLayoutMode.followActiveLayout(layoutName)
   ns.ActionBarCluster.repositionActionBarCluster(ns.ClusterEditModeElement.findClusterPosition(layoutName))
-  if layoutName == ns.WasdLayoutSettings.WASD_LAYOUT_NAME then
+  if layoutName == WasdLayoutSettings.WASD_LAYOUT_NAME then
     enterWasdLayoutMode()
   else
     leaveWasdLayoutMode()

@@ -1,4 +1,7 @@
 local ADDON, ns = ...
+local KeybindGroups = ns.KeybindGroups
+local KeybindPlan = ns.KeybindPlan
+local KeybindCopies = ns.KeybindCopies
 local Keybinds = {}
 ns.Keybinds = Keybinds
 
@@ -8,7 +11,7 @@ ns.Keybinds = Keybinds
 -- { [key] = action } for every setup key that has one.
 local function readCurrentActions()
   local currentActions = {}
-  for _, group in ipairs(ns.KeybindGroups) do
+  for _, group in ipairs(KeybindGroups) do
     for _, keybind in ipairs(group.keybinds) do
       local action = GetBindingAction(keybind.key)
       if action ~= "" then
@@ -43,18 +46,18 @@ local function findFormName(stanceButtonNumber)
 end
 
 local function findAllGroupChanges()
-  return ns.KeybindPlan.findKeybindChanges(ns.KeybindGroups, readCurrentActions())
+  return KeybindPlan.findKeybindChanges(KeybindGroups, readCurrentActions())
 end
 
 -- The groups with keys left to change (KeybindPlan.findKeybindChanges).
 function Keybinds.findGroupsToChange()
-  return ns.KeybindPlan.selectGroupsToChange(findAllGroupChanges())
+  return KeybindPlan.selectGroupsToChange(findAllGroupChanges())
 end
 
 -- KeybindPlan.findActionsLosingTheirKey, with each action's name for the window.
 function Keybinds.findActionsLosingTheirKey(groupsToChange)
   local actionsLosingTheirKey =
-    ns.KeybindPlan.findActionsLosingTheirKey(groupsToChange, readKeysOfEachAction(groupsToChange))
+    KeybindPlan.findActionsLosingTheirKey(groupsToChange, readKeysOfEachAction(groupsToChange))
   for _, actionLosingItsKey in ipairs(actionsLosingTheirKey) do
     actionLosingItsKey.actionName = Keybinds.nameAction(actionLosingItsKey.action)
   end
@@ -72,12 +75,12 @@ function Keybinds.applyKeybindChanges(groupsToChange)
 end
 
 function Keybinds.copyCurrentKeybinds()
-  return ns.KeybindPlan.copyKeybinds(ns.KeybindGroups, readCurrentActions())
+  return KeybindPlan.copyKeybinds(KeybindGroups, readCurrentActions())
 end
 
 -- keybindCopy: from copyCurrentKeybinds.
 function Keybinds.restoreKeybinds(keybindCopy)
-  for _, restoreChange in ipairs(ns.KeybindPlan.findRestoreChanges(keybindCopy)) do
+  for _, restoreChange in ipairs(KeybindPlan.findRestoreChanges(keybindCopy)) do
     if restoreChange.action then
       SetBinding(restoreChange.key, restoreChange.action)
     else
@@ -89,18 +92,18 @@ end
 
 -- Whose key copy this character uses (KeybindCopies.findCopyOwner).
 function Keybinds.findCopyOwner()
-  return ns.KeybindCopies.findCopyOwner(GetCurrentBindingSet(), CHARACTER_BINDINGS, UnitGUID("player"))
+  return KeybindCopies.findCopyOwner(GetCurrentBindingSet(), CHARACTER_BINDINGS, UnitGUID("player"))
 end
 
 function Keybinds.isEveryKeybindSetUp()
-  return ns.KeybindPlan.isEveryKeybindSetUp(findAllGroupChanges())
+  return KeybindPlan.isEveryKeybindSetUp(findAllGroupChanges())
 end
 
 function Keybinds.describeKeybindStatus()
-  return ns.KeybindPlan.describeKeybindStatus(findAllGroupChanges())
+  return KeybindPlan.describeKeybindStatus(findAllGroupChanges())
 end
 
 function Keybinds.nameAction(action)
-  local formName = findFormName(ns.KeybindPlan.findStanceButtonNumber(action))
-  return ns.KeybindPlan.nameAction(action, formName, GetBindingName(action))
+  local formName = findFormName(KeybindPlan.findStanceButtonNumber(action))
+  return KeybindPlan.nameAction(action, formName, GetBindingName(action))
 end

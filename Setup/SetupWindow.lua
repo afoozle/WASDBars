@@ -44,9 +44,7 @@ local function createSetupWindow()
   window:Hide()
   -- Escape closes it, like the game's own windows
   table.insert(UISpecialFrames, window:GetName())
-  if window.TitleText then
-    window.TitleText:SetText("Set up WASDBars")
-  end
+  window.TitleText:SetText("Set up WASDBars")
   window.fontStrings = {}
   createButton(window, "Set up", runSetUp):SetPoint("BOTTOMRIGHT", window, "BOTTOM", -6, 14)
   createButton(window, "Not now", hideSetupWindow):SetPoint("BOTTOMLEFT", window, "BOTTOM", 6, 14)

@@ -1,4 +1,5 @@
 local ADDON, ns = ...
+local WasdLayoutSettings = ns.WasdLayoutSettings
 local SetupSteps = {}
 ns.SetupSteps = SetupSteps
 
@@ -36,13 +37,13 @@ local function isWasdLayoutChanging(currentLayoutState)
 end
 
 local function isActionBar1Wrong(currentLayoutState)
-  return not ns.WasdLayoutSettings.isActionBar1SetUp(currentLayoutState.layoutSettings)
+  return not WasdLayoutSettings.isActionBar1SetUp(currentLayoutState.layoutSettings)
 end
 
 -- Only on a new layout: later the player may resize action bar 2.
 local function isActionBar2ShapeWrong(currentLayoutState)
   return isWasdLayoutMissing(currentLayoutState)
-    and not ns.WasdLayoutSettings.doesActionBar2MatchActionBar1(currentLayoutState.layoutSettings)
+    and not WasdLayoutSettings.doesActionBar2MatchActionBar1(currentLayoutState.layoutSettings)
 end
 
 local function isActionBar2AwayFromActionBar1(currentLayoutState)
@@ -50,7 +51,7 @@ local function isActionBar2AwayFromActionBar1(currentLayoutState)
 end
 
 local function areGryphonsShowing(currentLayoutState)
-  return not ns.WasdLayoutSettings.areGryphonsHidden(currentLayoutState.layoutSettings)
+  return not WasdLayoutSettings.areGryphonsHidden(currentLayoutState.layoutSettings)
 end
 
 local function isActionBar2TurnedOff(currentLayoutState)

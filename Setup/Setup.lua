@@ -1,4 +1,9 @@
 local ADDON, ns = ...
+local KeybindCopies = ns.KeybindCopies
+local LayoutList = ns.LayoutList
+local WasdLayoutSettings = ns.WasdLayoutSettings
+local SetupSteps = ns.SetupSteps
+local RestorePoints = ns.RestorePoints
 local Setup = {}
 ns.Setup = Setup
 
@@ -10,11 +15,11 @@ local CLUSTER_Y = 12
 
 -- What the layout holds now; see SetupSteps.lua for the shape.
 local function readCurrentLayoutState(editModeIds, allLayouts)
-  local activeLayout = ns.LayoutList.findActiveLayout(allLayouts)
-  local wasdLayoutIndex = ns.LayoutList.findLayoutIndex(allLayouts, ns.WasdLayoutSettings.WASD_LAYOUT_NAME)
+  local activeLayout = LayoutList.findActiveLayout(allLayouts)
+  local wasdLayoutIndex = LayoutList.findLayoutIndex(allLayouts, WasdLayoutSettings.WASD_LAYOUT_NAME)
   local currentLayoutState = { activeLayoutName = activeLayout.layoutName }
   local layoutToChange = activeLayout
-  if activeLayout.layoutName == ns.WasdLayoutSettings.WASD_LAYOUT_NAME then
+  if activeLayout.layoutName == WasdLayoutSettings.WASD_LAYOUT_NAME then
     currentLayoutState.wasdLayout = "active"
     currentLayoutState.isActionBar2OnActionBar1 = ns.MainBarReplacement.isActionBar2OnActionBar1()
   elseif wasdLayoutIndex then
@@ -23,7 +28,7 @@ local function readCurrentLayoutState(editModeIds, allLayouts)
   else
     currentLayoutState.wasdLayout = "missing"
   end
-  currentLayoutState.layoutSettings = ns.WasdLayoutSettings.readLayoutSettings(layoutToChange, editModeIds)
+  currentLayoutState.layoutSettings = WasdLayoutSettings.readLayoutSettings(layoutToChange, editModeIds)
   currentLayoutState.isActionBar2On = ns.MainBarReplacement.isActionBar2On()
   return currentLayoutState
 end
@@ -38,12 +43,12 @@ local function findNeededSetup()
   return {
     editModeIds = editModeIds,
     currentLayoutState = currentLayoutState,
-    neededLayoutSteps = ns.SetupSteps.findNeededLayoutSteps(currentLayoutState),
+    neededLayoutSteps = SetupSteps.findNeededLayoutSteps(currentLayoutState),
   }
 end
 
 local function isStepNeeded(neededSetup, stepName)
-  return ns.SetupSteps.isStepNeeded(neededSetup.neededLayoutSteps, stepName)
+  return SetupSteps.isStepNeeded(neededSetup.neededLayoutSteps, stepName)
 end
 
 local function isLayoutSwitching(neededSetup)
@@ -63,10 +68,10 @@ end
 -- The layout and action bar 2 from before setup, for /wasd restore.
 local function saveRestorePoint(neededSetup, allLayouts)
   if isLayoutSwitching(neededSetup) then
-    ns.RestorePoints.saveRestorePointOnce(
+    RestorePoints.saveRestorePointOnce(
       ns.db.restore,
       UnitGUID("player"),
-      ns.LayoutList.findActiveLayout(allLayouts).layoutName,
+      LayoutList.findActiveLayout(allLayouts).layoutName,
       ns.MainBarReplacement.isActionBar2On()
     )
   end
@@ -75,11 +80,7 @@ end
 -- The keys from before setup, for /wasd restore.
 local function saveKeybindCopy(groupsToChange)
   if #groupsToChange > 0 then
-    ns.KeybindCopies.saveKeybindCopyOnce(
-      ns.db.keyCopies,
-      ns.Keybinds.findCopyOwner(),
-      ns.Keybinds.copyCurrentKeybinds()
-    )
+    KeybindCopies.saveKeybindCopyOnce(ns.db.keyCopies, ns.Keybinds.findCopyOwner(), ns.Keybinds.copyCurrentKeybinds())
   end
 end
 
@@ -87,24 +88,24 @@ end
 -- before action bar 1's art is turned off.
 local function createWasdLayout(neededSetup, allLayouts)
   ns.MainBarReplacement.matchActionBar2ArtToActionBar1(neededSetup.currentLayoutState.layoutSettings)
-  ns.EditModeLayouts.copyActiveLayout(allLayouts, ns.WasdLayoutSettings.WASD_LAYOUT_NAME)
+  ns.EditModeLayouts.copyActiveLayout(allLayouts, WasdLayoutSettings.WASD_LAYOUT_NAME)
 end
 
 local function switchToWasdLayout(allLayouts)
-  ns.LayoutList.makeLayoutActive(allLayouts, ns.WasdLayoutSettings.WASD_LAYOUT_NAME)
+  LayoutList.makeLayoutActive(allLayouts, WasdLayoutSettings.WASD_LAYOUT_NAME)
 end
 
 local function applyWasdLayoutSettings(neededSetup, allLayouts)
-  local wasdLayout = ns.LayoutList.findActiveLayout(allLayouts)
-  ns.WasdLayoutSettings.applyActionBar1Settings(wasdLayout, neededSetup.editModeIds)
+  local wasdLayout = LayoutList.findActiveLayout(allLayouts)
+  WasdLayoutSettings.applyActionBar1Settings(wasdLayout, neededSetup.editModeIds)
   if isStepNeeded(neededSetup, "createWasdLayout") then
-    ns.WasdLayoutSettings.copyActionBar1ShapeToActionBar2(wasdLayout, neededSetup.editModeIds)
+    WasdLayoutSettings.copyActionBar1ShapeToActionBar2(wasdLayout, neededSetup.editModeIds)
   end
-  ns.WasdLayoutSettings.hideGryphons(wasdLayout, neededSetup.editModeIds)
+  WasdLayoutSettings.hideGryphons(wasdLayout, neededSetup.editModeIds)
 end
 
 local function changeLayout(neededSetup, allLayouts)
-  if not ns.SetupSteps.isLayoutChangeNeeded(neededSetup.neededLayoutSteps) then
+  if not SetupSteps.isLayoutChangeNeeded(neededSetup.neededLayoutSteps) then
     return
   end
   if isStepNeeded(neededSetup, "createWasdLayout") then
@@ -131,16 +132,16 @@ end
 -- The cluster goes bottom left, under the chat window, which moves up. The
 -- cluster's position is saved first, then applied straight away.
 local function positionClusterAndChatWindowOnNewLayout(neededSetup, wasdLayout)
-  local clusterScale = ns.ClusterEditModeElement.findClusterPosition(ns.WasdLayoutSettings.WASD_LAYOUT_NAME).scale
+  local clusterScale = ns.ClusterEditModeElement.findClusterPosition(WasdLayoutSettings.WASD_LAYOUT_NAME).scale
   -- cluster positions are in the cluster's scaled units
   ns.ClusterEditModeElement.saveClusterPosition(
-    ns.WasdLayoutSettings.WASD_LAYOUT_NAME,
+    WasdLayoutSettings.WASD_LAYOUT_NAME,
     "BOTTOMLEFT",
     ns.ChatWindow.findLeftEdge() / clusterScale,
     CLUSTER_Y / clusterScale
   )
   local clusterTop = CLUSTER_Y + ns.ActionBarCluster.measureClusterHeight() * clusterScale
-  ns.WasdLayoutSettings.moveChatWindow(
+  WasdLayoutSettings.moveChatWindow(
     wasdLayout,
     neededSetup.editModeIds,
     ns.ChatWindow.findAnchorAboveCluster(clusterTop)
@@ -163,10 +164,10 @@ end
 -- action bar 1 and, for a new layout, the cluster and the chat window.
 local function placeActionBar2OnActionBar1(neededSetup)
   local allLayouts = ns.EditModeLayouts.loadAllLayouts()
-  local wasdLayout = ns.LayoutList.findActiveLayout(allLayouts)
+  local wasdLayout = LayoutList.findActiveLayout(allLayouts)
   local actionBar2Anchor = ns.MainBarReplacement.findActionBar2AnchorOnActionBar1()
   if actionBar2Anchor then
-    ns.WasdLayoutSettings.moveActionBar2(wasdLayout, neededSetup.editModeIds, actionBar2Anchor)
+    WasdLayoutSettings.moveActionBar2(wasdLayout, neededSetup.editModeIds, actionBar2Anchor)
   end
   if isStepNeeded(neededSetup, "createWasdLayout") then
     positionClusterAndChatWindowOnNewLayout(neededSetup, wasdLayout)
@@ -212,7 +213,7 @@ end
 local function describeLayoutSteps(neededSetup)
   local neededLayoutStepTexts = {}
   for i, stepName in ipairs(neededSetup.neededLayoutSteps) do
-    neededLayoutStepTexts[i] = ns.SetupSteps.describeLayoutStep(stepName, neededSetup.currentLayoutState)
+    neededLayoutStepTexts[i] = SetupSteps.describeLayoutStep(stepName, neededSetup.currentLayoutState)
   end
   return neededLayoutStepTexts
 end
@@ -261,7 +262,7 @@ function Setup.describeSetupStatus()
   local neededSetup = findNeededSetup()
   local layoutStatus = NOT_READY_MESSAGE
   if neededSetup then
-    layoutStatus = ns.SetupSteps.describeLayoutStatus(neededSetup.currentLayoutState, neededSetup.neededLayoutSteps)
+    layoutStatus = SetupSteps.describeLayoutStatus(neededSetup.currentLayoutState, neededSetup.neededLayoutSteps)
   end
   return ns.Keybinds.describeKeybindStatus() .. " " .. layoutStatus
 end

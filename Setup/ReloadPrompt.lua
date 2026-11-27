@@ -20,12 +20,8 @@ local function createReloadFrame()
   frame:SetToplevel(true)
   frame:EnableMouse(true)
   frame:Hide()
-  if frame.TitleText then
-    frame.TitleText:SetText("WASDBars")
-  end
-  if frame.CloseButton then
-    frame.CloseButton:Hide()
-  end
+  frame.TitleText:SetText("WASDBars")
+  frame.CloseButton:Hide()
   frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   frame.text:SetPoint("TOP", 0, -34)
 

@@ -50,11 +50,6 @@ function SavedSettings.fillMissingSettings(savedSettings)
   return savedSettings
 end
 
--- Gone since the buttons follow the WASDBars layout instead.
-function SavedSettings.forgetV100SetUpFlag(savedSettings)
-  savedSettings.setUp = nil
-end
-
 -- v1.1.0 kept a single account-wide key copy.
 function SavedSettings.moveV110KeybindCopyToAccount(savedSettings)
   if savedSettings.keyCopy then

@@ -1,4 +1,5 @@
 local ADDON, ns = ...
+local AddonVersion = ns.AddonVersion
 local SlashCommands = {}
 ns.SlashCommands = SlashCommands
 
@@ -21,7 +22,7 @@ local function showHelp()
 end
 
 local function showVersion()
-  local releaseVersion = ns.AddonVersion.readReleaseVersion(C_AddOns.GetAddOnMetadata(ADDON, "Version"))
+  local releaseVersion = AddonVersion.readReleaseVersion(C_AddOns.GetAddOnMetadata(ADDON, "Version"))
   ns.ChatMessages.printMessage(releaseVersion and ("Version " .. releaseVersion .. ".") or "Dev build.")
 end
 

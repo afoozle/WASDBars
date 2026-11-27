@@ -1,4 +1,6 @@
 local ADDON, ns = ...
+local ClusterKeys = ns.ClusterKeys
+local ClusterPositions = ns.ClusterPositions
 local ClusterEditModeElement = {}
 ns.ClusterEditModeElement = ClusterEditModeElement
 
@@ -16,7 +18,7 @@ local function readScale(layoutName)
 end
 
 local function saveScaleAndReposition(layoutName, scale)
-  ns.ClusterPositions.saveClusterScale(ns.db.layouts, layoutName, scale)
+  ClusterPositions.saveClusterScale(ns.db.layouts, layoutName, scale)
   ns.WasdLayoutMode.followActiveLayout(layoutName)
 end
 
@@ -25,14 +27,14 @@ function ClusterEditModeElement.addClusterToEditMode()
   local clusterFrame = ns.ActionBarCluster.findClusterFrame()
   clusterFrame:SetMovable(true)
   clusterFrame:SetClampedToScreen(true)
-  LibEditMode:AddFrame(clusterFrame, saveDraggedPosition, ns.ClusterKeys.defaultPosition, "WASDBars")
+  LibEditMode:AddFrame(clusterFrame, saveDraggedPosition, ClusterKeys.defaultPosition, "WASDBars")
   LibEditMode:AddFrameSettings(clusterFrame, {
     {
       kind = LibEditMode.SettingType.Slider,
       name = "Scale",
-      default = ns.ClusterKeys.defaultScale,
-      minValue = ns.ClusterPositions.MIN_SCALE,
-      maxValue = ns.ClusterPositions.MAX_SCALE,
+      default = ClusterKeys.defaultScale,
+      minValue = ClusterPositions.MIN_SCALE,
+      maxValue = ClusterPositions.MAX_SCALE,
       valueStep = 0.05,
       get = readScale,
       set = saveScaleAndReposition,
@@ -42,14 +44,14 @@ end
 
 -- { point, x, y, scale } saved for the layout, or the defaults.
 function ClusterEditModeElement.findClusterPosition(layoutName)
-  return ns.ClusterPositions.findClusterPosition(
+  return ClusterPositions.findClusterPosition(
     ns.db.layouts,
     layoutName,
-    ns.ClusterKeys.defaultPosition,
-    ns.ClusterKeys.defaultScale
+    ClusterKeys.defaultPosition,
+    ClusterKeys.defaultScale
   )
 end
 
 function ClusterEditModeElement.saveClusterPosition(layoutName, point, x, y)
-  ns.ClusterPositions.saveClusterPosition(ns.db.layouts, layoutName, point, x, y)
+  ClusterPositions.saveClusterPosition(ns.db.layouts, layoutName, point, x, y)
 end

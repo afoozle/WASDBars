@@ -1,4 +1,7 @@
 local ADDON, ns = ...
+local KeybindCopies = ns.KeybindCopies
+local RestorePoints = ns.RestorePoints
+local RestoreSteps = ns.RestoreSteps
 local Restore = {}
 ns.Restore = Restore
 
@@ -21,8 +24,8 @@ local function restoreKeybinds()
     return
   end
   local copyOwner = ns.Keybinds.findCopyOwner()
-  ns.Keybinds.restoreKeybinds(ns.KeybindCopies.findKeybindCopy(ns.db.keyCopies, copyOwner))
-  ns.KeybindCopies.forgetKeybindCopy(ns.db.keyCopies, copyOwner)
+  ns.Keybinds.restoreKeybinds(KeybindCopies.findKeybindCopy(ns.db.keyCopies, copyOwner))
+  KeybindCopies.forgetKeybindCopy(ns.db.keyCopies, copyOwner)
   finishRestore()
 end
 
@@ -41,8 +44,8 @@ local function restoreLayout(_, restoreChoice)
   else
     ns.MainBarReplacement.turnOffActionBar2()
   end
-  ns.RestorePoints.forgetRestorePoint(ns.db.restore, UnitGUID("player"))
-  if ns.KeybindCopies.findKeybindCopy(ns.db.keyCopies, ns.Keybinds.findCopyOwner()) then
+  RestorePoints.forgetRestorePoint(ns.db.restore, UnitGUID("player"))
+  if KeybindCopies.findKeybindCopy(ns.db.keyCopies, ns.Keybinds.findCopyOwner()) then
     askToRestoreKeybinds()
   else
     finishRestore()
@@ -76,7 +79,7 @@ function Restore.askToRestore()
   if ns.SetupGuards.refuseInCombat("restore") then
     return
   end
-  local restorePoint = ns.RestorePoints.findRestorePoint(ns.db.restore, UnitGUID("player"))
+  local restorePoint = RestorePoints.findRestorePoint(ns.db.restore, UnitGUID("player"))
   if not restorePoint then
     ns.ChatMessages.printMessage("Nothing to restore on this character.")
     return
@@ -88,12 +91,12 @@ function Restore.askToRestore()
     ns.ChatMessages.printMessage("Edit Mode isn't ready yet. Try again in a moment.")
     return
   end
-  local layoutToRestore, isSavedLayoutMissing = ns.RestoreSteps.findLayoutToRestore(
+  local layoutToRestore, isSavedLayoutMissing = RestoreSteps.findLayoutToRestore(
     ns.EditModeLayouts.loadAllLayouts(),
     restorePoint,
     ns.EditModeLayouts.findPresetLayoutType()
   )
-  local restoreLines = ns.RestoreSteps.describeRestore(layoutToRestore, isSavedLayoutMissing, restorePoint)
+  local restoreLines = RestoreSteps.describeRestore(layoutToRestore, isSavedLayoutMissing, restorePoint)
   StaticPopup_Show(
     RESTORE_POPUP,
     table.concat(restoreLines, "\n"),

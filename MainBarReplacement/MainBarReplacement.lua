@@ -1,4 +1,6 @@
 local ADDON, ns = ...
+local BarDividers = ns.BarDividers
+local WasdLayoutSettings = ns.WasdLayoutSettings
 local MainBarReplacement = {}
 ns.MainBarReplacement = MainBarReplacement
 
@@ -37,9 +39,6 @@ local ACTION_BAR_2_BUTTON_STYLE = {
 }
 
 local function applyButtonStyle(button, buttonStyle)
-  if not (button.SlotArt and button.SlotBackground) then
-    return
-  end
   button.SlotArt:SetShown(buttonStyle.isSlotArtShown)
   button.SlotBackground:SetShown(not buttonStyle.isSlotArtShown)
   button:SetNormalAtlas(buttonStyle.normalAtlas)
@@ -101,7 +100,7 @@ local function drawActionBar2Dividers()
   for i, button in ipairs(actionBar2.actionButtons) do
     isButtonShown[i] = button:IsShown()
   end
-  local buttonsNeedingDivider = ns.BarDividers.findButtonsNeedingDivider(
+  local buttonsNeedingDivider = BarDividers.findButtonsNeedingDivider(
     isButtonShown,
     actionBar2.numRows or 1,
     actionBar2.buttonPadding or 0,
@@ -188,10 +187,9 @@ end
 
 local function saveGameMouseState()
   if not gameMouseState then
-    local selection = MainActionBar.Selection
     gameMouseState = {
       isActionBarMouseEnabled = MainActionBar:IsMouseEnabled(),
-      isSelectionMouseEnabled = selection and selection:IsMouseEnabled(),
+      isSelectionMouseEnabled = MainActionBar.Selection:IsMouseEnabled(),
     }
   end
 end
@@ -202,17 +200,13 @@ end
 local function disableMouseOnActionBar1()
   saveGameMouseState()
   MainActionBar:EnableMouse(false)
-  if MainActionBar.Selection then
-    MainActionBar.Selection:EnableMouse(false)
-  end
+  MainActionBar.Selection:EnableMouse(false)
 end
 
 local function restoreMouseOnActionBar1()
   saveGameMouseState()
   MainActionBar:EnableMouse(gameMouseState.isActionBarMouseEnabled)
-  if MainActionBar.Selection then
-    MainActionBar.Selection:EnableMouse(gameMouseState.isSelectionMouseEnabled)
-  end
+  MainActionBar.Selection:EnableMouse(gameMouseState.isSelectionMouseEnabled)
 end
 
 local function findBottomLeftOnScreen(frame)
@@ -227,12 +221,8 @@ end
 -- Screen pixels from action bar 2's first button to action bar 1's first
 -- button holder, or nil if either isn't laid out.
 local function measureOffsetToActionBar1()
-  local actionBar1Holder, actionBar2Button = _G.MainActionBarButtonContainer1, _G.MultiBarBottomLeftButton1
-  if not (actionBar1Holder and actionBar2Button) then
-    return nil
-  end
-  local holderX, holderY = findBottomLeftOnScreen(actionBar1Holder)
-  local buttonX, buttonY = findBottomLeftOnScreen(actionBar2Button)
+  local holderX, holderY = findBottomLeftOnScreen(_G.MainActionBarButtonContainer1)
+  local buttonX, buttonY = findBottomLeftOnScreen(_G.MultiBarBottomLeftButton1)
   if not (holderX and buttonX) then
     return nil
   end
@@ -249,7 +239,7 @@ local function saveHideBarArt(_, isArtHidden)
 end
 
 local function isAwayFromWasdLayout(layoutName)
-  return layoutName ~= ns.WasdLayoutSettings.WASD_LAYOUT_NAME
+  return layoutName ~= WasdLayoutSettings.WASD_LAYOUT_NAME
 end
 
 function MainBarReplacement.replaceActionBar1()

@@ -1,7 +1,12 @@
 # Tasks: Simplify after restructure
 
 ## 1. Review
-- [ ] 1.1 Grill: how the review is run and decided
+- [x] 1.1 Grill: how the review is run and decided
+  - A fresh agent reviews; Claude checks each finding, fixes the clear ones in small commits, and asks the player only about findings that change behaviour or remove a safety check
+  - Weighted towards cutting code: about 3,160 lines after the restructure is too many for this addon
+  - Remove guards for game parts that always exist on WoW Forever 16001 (a visible error beats a quiet failure); keep LibEditModeOverride's ready check (timing)
+  - Remove the v1.0.0 `setUp` cleanup; keep the v1.1.0 key copy migration until at least the next minor release
+  - Files may name the logic and data modules they use once at the top (`local KeybindPlan = ns.KeybindPlan`); the TOC lists every logic and data file before any game file; game files still reach other game files through `ns` inside functions
 - [ ] 1.2 Review and fixes
 - [ ] 1.3 `max_cyclomatic_complexity = 10` in `.luacheckrc`; `make check` passes
 

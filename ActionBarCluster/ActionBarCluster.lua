@@ -1,4 +1,7 @@
 local ADDON, ns = ...
+local ClusterKeys = ns.ClusterKeys
+local ClusterGeometry = ns.ClusterGeometry
+local HotkeyText = ns.HotkeyText
 local ActionBarCluster = {}
 ns.ActionBarCluster = ActionBarCluster
 
@@ -59,16 +62,13 @@ local function applyLargeHotkeyStyle(button)
   hotkey:SetSize(button:GetWidth(), LARGE_HOTKEY_SIZE + 2)
   hotkey:SetJustifyH("CENTER")
   local hotkeyText = hotkey:GetText()
-  local shortHotkeyText = ns.HotkeyText.shortenMouseButtonNames(hotkeyText)
+  local shortHotkeyText = HotkeyText.shortenMouseButtonNames(hotkeyText)
   if shortHotkeyText ~= hotkeyText then
     hotkey:SetText(shortHotkeyText)
   end
 end
 
 local function restyleHotkey(button)
-  if not button.HotKey then
-    return
-  end
   saveGameHotkeyStyle(button.HotKey)
   if ns.db.largeHotkeys then
     applyLargeHotkeyStyle(button)
@@ -88,8 +88,8 @@ end
 -- Has the game write its own hotkey text again.
 local function redrawGameHotkeys()
   for _, measuredKey in ipairs(measuredCluster.measuredKeys) do
-    local button = measuredKey.clusterKey.actionButtonNumber and findActionButton(measuredKey)
-    if button and button.UpdateHotkeys then
+    if measuredKey.clusterKey.actionButtonNumber then
+      local button = findActionButton(measuredKey)
       button:UpdateHotkeys(button.buttonType)
     end
   end
@@ -135,12 +135,8 @@ local function returnActionButtonsToActionBar1()
       button:SetScale(1)
       button:ClearAllPoints()
       button:SetPoint("CENTER")
-      if button.HotKey then
-        applyGameHotkeyStyle(button.HotKey)
-      end
-      if button.UpdateHotkeys then
-        button:UpdateHotkeys(button.buttonType)
-      end
+      applyGameHotkeyStyle(button.HotKey)
+      button:UpdateHotkeys(button.buttonType)
     end
   end
   ns.ChatMessages.printDebugMessage("buttons returned")
@@ -191,14 +187,13 @@ end
 -- only created and sized here, before any buttons are inside.
 function ActionBarCluster.buildActionBarCluster()
   buttonSize = _G.ActionButton1:GetWidth()
-  measuredCluster = ns.ClusterGeometry.measureClusterKeys(ns.ClusterKeys, buttonSize)
+  measuredCluster = ClusterGeometry.measureClusterKeys(ClusterKeys, buttonSize)
   clusterFrame = CreateFrame("Frame", "WASDBarsCluster", UIParent)
   clusterFrame:SetSize(measuredCluster.width, measuredCluster.height)
   clusterFrame:Hide()
   for _, measuredKey in ipairs(measuredCluster.measuredKeys) do
-    local button = measuredKey.clusterKey.actionButtonNumber and findActionButton(measuredKey)
-    if button and button.UpdateHotkeys then
-      hooksecurefunc(button, "UpdateHotkeys", restyleHotkeyWhileInCluster)
+    if measuredKey.clusterKey.actionButtonNumber then
+      hooksecurefunc(findActionButton(measuredKey), "UpdateHotkeys", restyleHotkeyWhileInCluster)
     end
   end
 end
