@@ -8,7 +8,7 @@ WASDBars is a small World of Warcraft: Forever addon that rearranges the game's 
 **Lean by default:** build only what's needed now, and remove code that only exists for other clients or for needs that never came.
 
 ## Roadmap (build in this order)
-Each change builds on the ones before it. Grill the change's spec at the start of work on it, using what earlier changes learned. Implement, check in game, merge and archive one change before starting the next.
+Each change builds on the ones before it. Grill the change's spec at the start of work on it, using what earlier changes learned. Implement, check in game, merge and archive one change before starting the next. Rows say what each change added at the time, and later rows can replace it; the specs in `openspec/specs/` describe current behaviour.
 
 **Personal version**
 
@@ -29,6 +29,7 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 | 7 | `add-options-panel` ✅ done 2026-11-22, archived | `options-panel` | Options in the game's own settings window: Open Edit Mode, show movement keys, large hotkey text, setup buttons |
 | 8 | `add-performance-recording` ✅ done 2026-11-22, archived | `performance-recording` | Save WoW Forever's built-in profiler numbers for WASDBars so Claude Code can read them; used on demand |
 | 9 | `add-github-releases` ✅ done 2026-11-23, archived | `github-releases` | Packager, CI, and versioned GitHub Releases built from tags |
+| 9a | `cleanup-after-v1` ✅ done 2026-11-23, archived | changes to `addon-foundation`, `edit-mode-setup`, `key-binding-setup`, `performance-recording`, `wasd-layout` | v1.0.1: combat-queue keybind fix, fallbacks for other clients removed, one pinned StyLua version |
 | 10 | `add-layout-setup` ✅ done 2026-11-24, archived | changes to `edit-mode-setup`, `key-binding-setup`, `options-panel` | Setup makes the Edit Mode changes itself in its own "WASDBars" layout (LibEditModeOverride), keys and layout in one window, action bar 1 stops catching the mouse, and `/wasd restore` |
 | 11 | `ask-before-moving-buttons` ✅ done 2026-11-26, archived | changes to `wasd-layout`, `edit-mode-setup` | Action bar 1's buttons move into the cluster only after the player confirms setup, never before; "Not now" leaves the game's bar as it was, and `/wasd restore` puts the buttons back |
 | 12 | `hide-main-bar` ✅ done 2026-11-26, archived | `main-bar-replacement`; changes to `edit-mode-setup`, `wasd-layout` | On the WASDBars layout action bar 1 goes see-through (not hidden, so the bottom bar stack stays put) and action bar 2 gets action bar 1's border, dividers and button frames, with its own Hide Bar Art checkbox (LibEditMode). Built on the `ask-before-moving-buttons` branch and merged with it |
@@ -91,7 +92,7 @@ Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`
 ### Testing Strategy
 - **Unit tests (busted):** every `Logic/` module, run locally with `make check`, using stubs in `tests/helpers/wow_stubs.lua`. GitHub Actions runs the same checks on every push and pull request.
 - **In-game checks:** anything involving frames, the game's buttons or keybinds, using `/reload` and BugGrabber + BugSack. Each change's tasks.md ends with its in-game checklist. Claude Code reads BugGrabber's saved errors from the game's SavedVariables folder rather than having them copied across.
-- **Performance:** on demand only, once `add-performance-recording` exists
+- **Performance:** on demand only (`/wasd perf`; see CLAUDE.md, Performance)
 - A change is done when `make check` passes and its in-game checks pass
 
 ### Git Workflow

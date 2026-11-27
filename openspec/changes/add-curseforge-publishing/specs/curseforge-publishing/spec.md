@@ -6,8 +6,8 @@
 Pushing a version tag SHALL, after all checks pass, upload the same zip as the GitHub Release to the WASDBars CurseForge project, tagged with the WoW Forever game version and with the CHANGELOG attached.
 
 #### Scenario: Release tag
-- **WHEN** tag `v1.1.0` is pushed
-- **THEN** CurseForge has a new `1.1.0` file for WoW Forever, with the CHANGELOG showing the `1.1.0` section first
+- **WHEN** tag `v1.2.0` is pushed
+- **THEN** CurseForge has a new `1.2.0` file for WoW Forever, with the CHANGELOG showing the `1.2.0` section first
 
 #### Scenario: Checks fail
 - **WHEN** a tag is pushed and lint or unit tests fail
@@ -17,15 +17,15 @@ Pushing a version tag SHALL, after all checks pass, upload the same zip as the G
 The CurseForge release type SHALL follow the tag name: tags containing "alpha" are alpha, tags containing "beta" are beta, and all other version tags are releases.
 
 #### Scenario: Beta
-- **WHEN** tag `v1.1.0-beta.1` is pushed
+- **WHEN** tag `v1.2.0-beta.1` is pushed
 - **THEN** the CurseForge file is marked beta
 
-### Requirement: LibEditMode installed with it
-Each CurseForge file SHALL declare LibEditMode as a required dependency.
+### Requirement: Libraries installed with it
+Each CurseForge file SHALL declare LibEditMode and LibEditModeOverride as required dependencies.
 
 #### Scenario: Installing through the app
-- **WHEN** the player installs WASDBars through the CurseForge app without LibEditMode
-- **THEN** the app installs LibEditMode too
+- **WHEN** the player installs WASDBars through the CurseForge app without the libraries
+- **THEN** the app installs LibEditMode and LibEditModeOverride too
 
 ### Requirement: Credentials kept out of the repo
 The CurseForge API token SHALL only be stored as a GitHub repository secret and SHALL never appear in the repo, workflow logs or the package.

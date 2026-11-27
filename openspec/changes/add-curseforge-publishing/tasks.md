@@ -15,12 +15,12 @@
 ## 4. Listing content
 - [ ] 4.1 `docs/curseforge/description.md` (design.md section 5)
 - [ ] 4.2 Icon
-- [ ] 4.3 Screenshots: Bear form, Cat form, options panel, keybind confirmation (taken on the Mac)
+- [ ] 4.3 Screenshots: Bear form, Cat form, action bar 2 with its art, options panel, setup window (taken on the Mac)
 - [ ] 4.4 Paste description, icon and screenshots into the CurseForge project page
 
 ## 5. First beta
 - [ ] 5.1 Add a beta CHANGELOG section, merge, tag the beta
-- [ ] 5.2 CurseForge shows the file as **beta**, tagged with the WoW Forever game version, with the CHANGELOG and LibEditMode as a required dependency
+- [ ] 5.2 CurseForge shows the file as **beta**, tagged with the WoW Forever game version, with the CHANGELOG and LibEditMode and LibEditModeOverride as required dependencies
 - [ ] 5.3 Install through the CurseForge app on the Mac (remove the dev symlink first, put it back after) and on the Windows PC; the addon loads with no errors and the app doesn't warn about the wrong game flavour
 - [ ] 5.4 On the installed beta, record `bear-pull` and ask Claude Code to check performance
 

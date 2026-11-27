@@ -1,6 +1,6 @@
 ## Interface: 16001
 ## Title: WASDBars
-## Notes: Shows your form action bar in the shape of the keys around WASD.
+## Notes: Arranges action bar 1's buttons in the shape of the keys around WASD.
 ## Author: Matt
 ## X-License: MIT
 ## Version: @project-version@

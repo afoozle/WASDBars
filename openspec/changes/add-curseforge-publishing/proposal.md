@@ -1,7 +1,7 @@
 # Proposal: CurseForge publishing
 
 ## Why
-Optional, for going public. `add-github-releases` already builds versioned zips and GitHub Releases from tags. This change uploads the same zips to CurseForge so other players can find WASDBars, get LibEditMode installed automatically and be told about updates.
+Optional, for going public. `add-github-releases` already builds versioned zips and GitHub Releases from tags. This change uploads the same zips to CurseForge so other players can find WASDBars, get the libraries installed automatically and be told about updates.
 
 ## What Changes
 - **CurseForge project:** created and filled in once by hand
