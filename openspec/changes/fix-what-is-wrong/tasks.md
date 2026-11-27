@@ -22,6 +22,6 @@
 
 ## 4. In game
 Covered by the one session at the end of `simplify-after-restructure`. Checks this change adds:
-- [ ] 4.1 `/wasd setup layout` says to use `/wasd setup`; `/wasd setup` works
+- [ ] 4.1 `/wasd setup layout` opens setup like `/wasd setup` (`simplify-after-restructure` dropped the subcommand message along with `status`)
 - [ ] 4.2 `/wasd restore` ends with a window titled "WASDBars"
 - [ ] 4.3 Restore keybinds: keys back as before setup
