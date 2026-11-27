@@ -32,9 +32,11 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 | 10 | `add-layout-setup` ✅ done 2026-11-24, archived | changes to `edit-mode-setup`, `key-binding-setup`, `options-panel` | Setup makes the Edit Mode changes itself in its own "WASDBars" layout (LibEditModeOverride), keys and layout in one window, action bar 1 stops catching the mouse, and `/wasd restore` |
 | 11 | `ask-before-moving-buttons` ✅ done 2026-11-26, archived | changes to `wasd-layout`, `edit-mode-setup` | Action bar 1's buttons move into the cluster only after the player confirms setup, never before; "Not now" leaves the game's bar as it was, and `/wasd restore` puts the buttons back |
 | 12 | `hide-main-bar` ✅ done 2026-11-26, archived | `main-bar-replacement`; changes to `edit-mode-setup`, `wasd-layout` | On the WASDBars layout action bar 1 goes see-through (not hidden, so the bottom bar stack stays put) and action bar 2 gets action bar 1's border, dividers and button frames, with its own Hide Bar Art checkbox (LibEditMode). Built on the `ask-before-moving-buttons` branch and merged with it |
-| 13 | `deep-clean` | changes to any capability that's out of date | Review the whole repo and clean up code, docs and specs that are out of date, overengineered or dead, before going public |
-| 14 | `add-curseforge-publishing` | `curseforge-publishing` | Uploads to CurseForge (dependencies already declared in `.pkgmeta` by `add-layout-setup`) |
-| 15 | `upstream-layout-copy` | none | Pull request to LibEditModeOverride: `AddLayout` copying a chosen layout, then swap WASDBars' own copy step for it |
+| 13 | `fix-what-is-wrong` | changes to `edit-mode-setup`, `key-binding-setup`, `display-positioning` | Surgical fixes from the whole-repo review: per-character keybind restore, `/wasd setup layout` removed, wrong docs corrected |
+| 14 | `restructure-into-features` | none (behaviour unchanged) | Feature folders, objects built with injected game parts so everything tests without the game, plain verb-first names |
+| 15 | `simplify-after-restructure` | none | Remove dead and overengineered code from the new structure, complexity limit of 10; 13-15 are built on one branch and released together as v1.1.1 |
+| 16 | `add-curseforge-publishing` | `curseforge-publishing` | Uploads to CurseForge (dependencies already declared in `.pkgmeta` by `add-layout-setup`) |
+| 17 | `upstream-layout-copy` | none | Pull request to LibEditModeOverride: `AddLayout` copying a chosen layout, then swap WASDBars' own copy step for it |
 
 If the spike fails there is no fallback build: stop and rethink (for example, configure an existing bar addon into this shape and keep only the keybind and decoration parts).
 

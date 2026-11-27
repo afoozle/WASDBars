@@ -12,7 +12,7 @@ Optional, for going public. `add-github-releases` already builds versioned zips 
 - First CurseForge upload is a beta, installed through the CurseForge app on both machines before the first public release
 
 ## Depends on
-`add-github-releases`, `deep-clean`
+`add-github-releases`, `simplify-after-restructure`
 
 ## Impact
 - New capability spec: `curseforge-publishing`
