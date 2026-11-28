@@ -22,5 +22,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: ${{ steps.stylua.outputs.version }}
-          args: --check Core Logic Data UI tests
+          args: --check .
       - run: make lint test LUA_BIN=
