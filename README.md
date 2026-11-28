@@ -1,4 +1,10 @@
-# WASDBars
+<p align="center">
+  <img src="docs/images/icon.png" alt="WASDBars icon: Q W E R, A S D F and Z X C V keys with W, A, S and D lit in gold" width="160">
+</p>
+
+<h1 align="center">WASDBars</h1>
+
+<p align="center"><em>Your action bar, shaped like your keyboard.</em></p>
 
 Have you ever wanted your action bar to be shaped around your actual hotkeys?
 
