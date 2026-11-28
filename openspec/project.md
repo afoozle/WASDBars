@@ -8,7 +8,7 @@ WASDBars is a small World of Warcraft: Forever addon that rearranges the game's 
 **Lean by default:** build only what's needed now, and remove code that only exists for other clients or for needs that never came.
 
 ## Roadmap (build in this order)
-Each change builds on the ones before it. Grill the change's spec at the start of work on it, using what earlier changes learned. Implement, check in game, merge and archive one change before starting the next.
+Each change builds on the ones before it. Grill the change's spec at the start of work on it, using what earlier changes learned. Implement, check in game, merge and archive one change before starting the next. Rows say what each change added at the time, and later rows can replace it; the specs in `openspec/specs/` describe current behaviour.
 
 **Personal version**
 
@@ -29,11 +29,15 @@ Each change builds on the ones before it. Grill the change's spec at the start o
 | 7 | `add-options-panel` ✅ done 2026-11-22, archived | `options-panel` | Options in the game's own settings window: Open Edit Mode, show movement keys, large hotkey text, setup buttons |
 | 8 | `add-performance-recording` ✅ done 2026-11-22, archived | `performance-recording` | Save WoW Forever's built-in profiler numbers for WASDBars so Claude Code can read them; used on demand |
 | 9 | `add-github-releases` ✅ done 2026-11-23, archived | `github-releases` | Packager, CI, and versioned GitHub Releases built from tags |
+| 9a | `cleanup-after-v1` ✅ done 2026-11-23, archived | changes to `addon-foundation`, `edit-mode-setup`, `key-binding-setup`, `performance-recording`, `wasd-layout` | v1.0.1: combat-queue keybind fix, fallbacks for other clients removed, one pinned StyLua version |
 | 10 | `add-layout-setup` ✅ done 2026-11-24, archived | changes to `edit-mode-setup`, `key-binding-setup`, `options-panel` | Setup makes the Edit Mode changes itself in its own "WASDBars" layout (LibEditModeOverride), keys and layout in one window, action bar 1 stops catching the mouse, and `/wasd restore` |
-| 11 | `ask-before-moving-buttons` | changes to `wasd-layout`, `edit-mode-setup` | Action bar 1's buttons move into the cluster only after the player confirms setup, never before; "Not now" leaves the game's bar as it was, and `/wasd restore` puts the buttons back |
-| 12 | `hide-main-bar` | `main-bar-replacement`; changes to `edit-mode-setup`, `wasd-layout` | On the WASDBars layout action bar 1 goes see-through (not hidden, so the bottom bar stack stays put) and action bar 2 gets action bar 1's border, dividers and button frames, with its own Hide Bar Art checkbox (LibEditMode). Built on the `ask-before-moving-buttons` branch and merged with it |
-| 13 | `add-curseforge-publishing` | `curseforge-publishing` | Uploads to CurseForge (dependencies already declared in `.pkgmeta` by `add-layout-setup`) |
-| 14 | `upstream-layout-copy` | none | Pull request to LibEditModeOverride: `AddLayout` copying a chosen layout, then swap WASDBars' own copy step for it |
+| 11 | `ask-before-moving-buttons` ✅ done 2026-11-26, archived | changes to `wasd-layout`, `edit-mode-setup` | Action bar 1's buttons move into the cluster only after the player confirms setup, never before; "Not now" leaves the game's bar as it was, and `/wasd restore` puts the buttons back |
+| 12 | `hide-main-bar` ✅ done 2026-11-26, archived | `main-bar-replacement`; changes to `edit-mode-setup`, `wasd-layout` | On the WASDBars layout action bar 1 goes see-through (not hidden, so the bottom bar stack stays put) and action bar 2 gets action bar 1's border, dividers and button frames, with its own Hide Bar Art checkbox (LibEditMode). Built on the `ask-before-moving-buttons` branch and merged with it |
+| 13 | `fix-what-is-wrong` | changes to `edit-mode-setup`, `key-binding-setup`, `display-positioning` | Surgical fixes from the whole-repo review: per-character keybind restore, `/wasd setup layout` removed, wrong docs corrected |
+| 14 | `restructure-into-features` | none (behaviour unchanged) | Feature folders; decisions in pure logic files tested without the game, thin game files; plain verb-first names |
+| 15 | `simplify-after-restructure` | none | Remove dead and overengineered code from the new structure, complexity limit of 10; 13-15 are built on one branch and released together as v1.1.1 |
+| 16 | `add-curseforge-publishing` | `curseforge-publishing` | Uploads to CurseForge (dependencies already declared in `.pkgmeta` by `add-layout-setup`) |
+| 17 | `upstream-layout-copy` | none | Pull request to LibEditModeOverride: `AddLayout` copying a chosen layout, then swap WASDBars' own copy step for it |
 
 If the spike fails there is no fallback build: stop and rethink (for example, configure an existing bar addon into this shape and keep only the keybind and decoration parts).
 
@@ -49,11 +53,15 @@ Standard WoW addon repository layout: **the repo root is the addon folder**. The
 ```
 WASDBars/                      repo root = addon folder
   WASDBars.toc
-  Core/                        init, events, perf recording, slash command
-  Logic/                       pure Lua, no WoW API calls at load time; unit tested
-  Data/                        editable data tables (layout, binding groups)
-  UI/                          the cluster, movement keys, Edit Mode, setup window, setup and restore, options
-  tests/                       busted unit tests + WoW API stubs
+  Core/                        chat messages, combat queue, saved settings, slash commands, Startup.lua (loaded last)
+  ActionBarCluster/            the WASD key shape, the cluster and its buttons, movement keys, its Edit Mode element
+  MainBarReplacement/          action bar 2 in action bar 1's place, with action bar 1's art
+  WasdLayoutMode/              moving the buttons and replacing action bar 1 while the WASDBars layout is active
+  Keybinds/                    the setup keys, keybind changes and the key copies for restore
+  EditModeLayouts/             reading, editing and saving Edit Mode layouts
+  Setup/                       the setup window and flow, the first-time offer, restore
+  Options/                     the options page
+  tests/                       busted unit tests, one folder per feature folder
   scripts/                     dev setup
   openspec/                    specs and changes
   .github/workflows/           CI and releases
@@ -66,9 +74,9 @@ WASDBars/                      repo root = addon folder
 ## Project Conventions
 
 ### Code Style
-- Every addon file starts with `local ADDON, ns = ...`; the only globals are the SavedVariables tables (`WASDBarsDB`, `WASDBarsPerfDB`), the `SLASH_WASDBARS1` slash command, named StaticPopup dialogs, and named frames, which always start with `WASDBars` (for example `WASDBarsCluster`)
-- **Logic/UI split, only where it pays:** genuinely pure logic (layout maths, binding plans, settings merge, combat queue) lives in `Logic/` as functions that receive any WoW API functions as arguments, so it can be unit tested. Don't force the split onto code that is mostly game calls.
-- Load order is set in the TOC: `Core` (Init, Events) → `Logic` → `Data` → `UI` → `Core` (Perf, Slash, which use the rest)
+- Every addon file starts with `local ADDON, ns = ...`; the only globals are the SavedVariables tables (`WASDBarsDB`), the `SLASH_WASDBARS1` slash command, named StaticPopup dialogs, and named frames, which always start with `WASDBars` (for example `WASDBarsCluster`)
+- **Logic files and game files:** in each feature folder, decisions live in logic files of plain functions (data in, data out, no game calls), unit tested; game files call the game directly, stay thin and are checked in-game. Naming and structure rules are in CLAUDE.md, Code rules
+- Each file is one module on `ns`. The TOC lists logic and data files first, so any file may name them at the top; game files reach each other only inside functions. `Core/Startup.lua` loads last and connects game events to them
 - StyLua formatting; luacheck must pass with zero warnings
 - Plain-language user messages, prefixed `WASDBars:`
 - **No per-frame work:** the addon reacts to events only; nothing runs every frame
@@ -86,9 +94,9 @@ WASDBars/                      repo root = addon folder
 Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`.pkgmeta`) and published as GitHub Releases; see CLAUDE.md for the steps. The TOC has `## Version: @project-version@`; the packager replaces it with the tag, and in a git checkout `/wasd version` shows "Dev build."
 
 ### Testing Strategy
-- **Unit tests (busted):** every `Logic/` module, run locally with `make check`, using stubs in `tests/helpers/wow_stubs.lua`. GitHub Actions runs the same checks on every push and pull request.
+- **Unit tests (busted):** every logic file, run locally with `make check`, with plain data (no fakes of the game). GitHub Actions runs the same checks on every push and pull request.
 - **In-game checks:** anything involving frames, the game's buttons or keybinds, using `/reload` and BugGrabber + BugSack. Each change's tasks.md ends with its in-game checklist. Claude Code reads BugGrabber's saved errors from the game's SavedVariables folder rather than having them copied across.
-- **Performance:** on demand only, once `add-performance-recording` exists
+- **Performance:** the game's own addon profiler, on demand; the `/wasd perf` recorder was removed in `simplify-after-restructure`
 - A change is done when `make check` passes and its in-game checks pass
 
 ### Git Workflow
@@ -98,7 +106,7 @@ Releases are built from `v*` tags by GitHub Actions with the BigWigs packager (`
 - When a change is finished: merge and archive the OpenSpec change
 
 ### Working with Claude Code
-`CLAUDE.md` at the root tells Claude Code how this project works: the OpenSpec roadmap (grill each change at its start), the make targets, the Logic/UI split, and where to find the game folder, BugGrabber's saved errors and the taint log. Claude Code links the repo into the game's AddOns folder when asked. The player installs third-party addons (BugGrabber, BugSack) through CurseForge.
+`CLAUDE.md` at the root tells Claude Code how this project works: the OpenSpec roadmap (grill each change at its start), the make targets, the code rules, and where to find the game folder, BugGrabber's saved errors and the taint log. Claude Code links the repo into the game's AddOns folder when asked. The player installs third-party addons (BugGrabber, BugSack) through CurseForge.
 
 ## Machines
 - **MacBook:** development and play. All building and in-game checking happens here. Paths (Claude Code reads these directly; the player never copies data across):

@@ -1,34 +1,39 @@
 ## Interface: 16001
 ## Title: WASDBars
-## Notes: Shows your form action bar in the shape of the keys around WASD.
+## Notes: Arranges action bar 1's buttons in the shape of the keys around WASD.
 ## Author: Matt
 ## X-License: MIT
 ## Version: @project-version@
-## SavedVariables: WASDBarsDB, WASDBarsPerfDB
+## SavedVariables: WASDBarsDB
 ## Dependencies: LibEditMode, LibEditModeOverride
 
-Core/Init.lua
-Core/Events.lua
-Logic/Settings.lua
-Logic/CombatQueue.lua
-Logic/LayoutGeometry.lua
-Logic/Placement.lua
-Logic/BindingPlan.lua
-Logic/LayoutPlan.lua
-Logic/LayoutCopy.lua
-Logic/Restore.lua
-Logic/HotkeyText.lua
-Logic/Dividers.lua
-Logic/PerfLog.lua
-Data/Layout.lua
-Data/BindingGroups.lua
-UI/Cluster.lua
-UI/MovementKeys.lua
-UI/BarArt.lua
-UI/EditMode.lua
-UI/Bindings.lua
-UI/SetupWindow.lua
-UI/Setup.lua
-UI/Options.lua
-Core/Perf.lua
-Core/Slash.lua
+Core/SavedSettings.lua
+Core/AddonVersion.lua
+ActionBarCluster/ClusterKeys.lua
+ActionBarCluster/ClusterGeometry.lua
+ActionBarCluster/HotkeyText.lua
+ActionBarCluster/ClusterPositions.lua
+MainBarReplacement/BarDividers.lua
+Keybinds/KeybindGroups.lua
+Keybinds/KeybindPlan.lua
+Keybinds/KeybindCopies.lua
+EditModeLayouts/LayoutList.lua
+EditModeLayouts/WasdLayoutSettings.lua
+Setup/SetupSteps.lua
+Setup/RestoreSteps.lua
+Core/ChatMessages.lua
+Core/CombatQueue.lua
+Core/SlashCommands.lua
+ActionBarCluster/ActionBarCluster.lua
+ActionBarCluster/ClusterEditModeElement.lua
+ActionBarCluster/MovementKeys.lua
+MainBarReplacement/MainBarReplacement.lua
+WasdLayoutMode/WasdLayoutMode.lua
+Keybinds/Keybinds.lua
+EditModeLayouts/EditModeLayouts.lua
+Setup/SetupGuards.lua
+Setup/SetupWindow.lua
+Setup/Setup.lua
+Setup/Restore.lua
+Options/OptionsPage.lua
+Core/Startup.lua

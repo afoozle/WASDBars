@@ -1,7 +1,7 @@
 LUA_BIN := $(if $(wildcard .lua/bin),.lua/bin/,)
 STYLUA := .tools/bin/stylua
 STYLUA_VERSION := $(shell cat .stylua-version)
-SRC := $(wildcard Core Logic Data UI tests)
+SRC := $(shell git ls-files --cached --others --exclude-standard "*.lua")
 
 .PHONY: setup lint stylua-version format format-check test check
 

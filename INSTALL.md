@@ -69,9 +69,9 @@ A clone also holds development files (`openspec/`, `tests/`, `.agents/` and so o
 
 ## 4. Check it in game
 1. Start the game (or `/reload` if it's running) and open **AddOns** on the character select screen: **WASDBars**, **Lib: EditMode** and **LibEditModeOverride** are listed and ticked. If WASDBars shows "Dependency missing", step 2 isn't done.
-2. Log in: action bar 1's buttons appear as a cluster shaped like the keys around WASD.
-3. On a character whose keys aren't set up, WASDBars offers to set them up. It always shows what will change before changing any keybind.
-4. `/wasd` lists the commands; `/wasd options` opens its options; move and scale the cluster in the game's Edit Mode (select "WASDBars").
+2. Log in: WASDBars offers to set up. Nothing changes until you agree: one window lists every change first (a WASDBars Edit Mode layout, action bar 1's buttons in the WASD shape, action bar 2 in action bar 1's place, and the keybinds). Click **Set up**, then **Reload to finish**. If you choose Not now, a one-line reminder shows at each login; type `/wasd setup` any time.
+3. After the reload, action bar 1's buttons sit in a cluster shaped like the keys around WASD.
+4. `/wasd` lists the commands; `/wasd options` opens its options; on the WASDBars layout, move and scale the cluster in the game's Edit Mode (select "WASDBars").
 
 `/wasd version` shows the release's version, or "Dev build." for a git clone; both are expected.
 
@@ -82,4 +82,4 @@ A clone also holds development files (`openspec/`, `tests/`, `.agents/` and so o
 To tell which one it is: a git clone has a `.git` folder inside `WASDBars`.
 
 ## Uninstalling
-Delete `AddOns\WASDBars`. Its settings are in `_forever_\WTF\Account\<ACCOUNT>\SavedVariables\WASDBars.lua` (delete that too for a clean slate). Keybinds it set stay until changed in the game's Key Bindings.
+First type `/wasd restore` in game on each character you set up: it switches you back to your old Edit Mode layout and offers to put your keybinds back. Then delete `AddOns\WASDBars`, and the WASDBars layout in Edit Mode if you like. Its settings are in `_forever_\WTF\Account\<ACCOUNT>\SavedVariables\WASDBars.lua` (delete that too for a clean slate).

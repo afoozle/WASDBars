@@ -9,7 +9,7 @@ Now also requires LibEditModeOverride.
 ### Added
 - Setup makes the Edit Mode changes itself, in its own **WASDBars** layout copied from the one you're using: action bar 2 placed exactly where action bar 1 was, the gryphons hidden, the cluster bottom left and the chat window moved up to make room. Your other layouts are never changed.
 - Keys and layout are set up in one window that lists every change before anything happens.
-- Action bar 2 takes action bar 1's place on the WASDBars layout: action bar 1 goes invisible (the bars above it stay where they are), and action bar 2 gets action bar 1's border, dividers and button frames. Untick them with **Hide Bar Art** in action bar 2's Edit Mode settings.
+- Action bar 2 takes action bar 1's place on the WASDBars layout: action bar 1 goes invisible (the bars above it stay where they are), and action bar 2 gets action bar 1's border, dividers and button frames. Turn them off by ticking **Hide Bar Art** in action bar 2's Edit Mode settings.
 - `/wasd restore` switches you back to your old layout, puts action bar 1's buttons back, and asks whether to put your keybinds back too.
 - A one-line reminder at login on characters that aren't set up.
 

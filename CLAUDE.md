@@ -18,11 +18,16 @@ Only when the player asks. On `main` with `make check` passing: add a `CHANGELOG
 - `make check`: lint + format-check + test; must pass before committing
 
 ## Code rules
-- The repo root is the addon folder; the game loads only what `WASDBars.toc` lists, in the order `Core` (Init, Events) → `Logic` → `Data` → `UI` → `Core` (Perf, Slash).
-- Every addon file starts with `local ADDON, ns = ...`. No globals except `WASDBarsDB`, `WASDBarsPerfDB`, `SLASH_WASDBARS1`, named StaticPopup dialogs and frames named `WASDBars...`.
-- **Logic/UI split:** pure logic goes in `Logic/`, makes no WoW calls when it loads, and receives any game functions as arguments, so busted can test it with the stubs in `tests/helpers/wow_stubs.lua`. Don't force the split onto code that is mostly game calls.
+- The repo root is the addon folder; the game loads only what `WASDBars.toc` lists. Folders are by feature (`ActionBarCluster/`, `Keybinds/`, `Setup/`, …); `tests/` mirrors them. `Core/Startup.lua` loads last and is the only file that connects game events.
+- Every addon file starts with `local ADDON, ns = ...`. No globals except `WASDBarsDB`, `SLASH_WASDBARS1`, named StaticPopup dialogs and frames named `WASDBars...`.
+- **Logic files and game files:** decisions go in logic files of plain functions (data in, data out, no game calls, no game functions passed in), and busted tests every one. Game files call WoW directly, stay thin and are checked in-game: they read the game into plain data, ask a logic function, and act on the answer. No dependency injection and no fakes of the game.
+- **Modules, not instances:** each file is one table on `ns` (`ns.Keybinds`) called with a dot. The TOC lists every logic and data file before any game file, so a file may name the logic and data modules it uses once at the top (`local KeybindPlan = ns.KeybindPlan`). Game files reach other game files through `ns`, only inside functions.
+- **Naming:** files and modules are nouns naming what they own; functions start with the verb and name the purpose, not details that may change (`repositionActionBarCluster`). Full-word names for variables, parameters and fields.
+- **No boolean parameters** that switch what a function does: write two functions.
+- **No functions inside functions**, except a short anonymous callback passed straight to the game or the combat queue whose body is one call.
+- **No tables of rules:** small named functions called in order. Plain data tables are fine.
 - **No per-frame work:** react to events only.
-- **Combat queue:** anything that moves, sizes, reparents or shows/hides the action buttons or the cluster, or changes keybinds, goes through `ns.combatQueue:run(key, fn)`. Setup and restore refuse in combat instead.
+- **Combat queue:** anything that moves, sizes, reparents or shows/hides the action buttons or the cluster, or changes keybinds, goes through `ns.CombatQueue.runOutOfCombat(jobName, job)`. Setup and restore refuse in combat instead.
 - Add to the game's functions with `hooksecurefunc`; never replace them.
 - Never change keybind or action-button code without updating the in-game checklist in the change's `tasks.md`.
 - User messages are plain language, prefixed `WASDBars:`. Fail quietly.
@@ -36,11 +41,3 @@ Only when the player asks. On `main` with `make check` passing: add a `CHANGELOG
 - Taint log: `_forever_/Logs/taint.log` (only with `/console taintLog 1`)
 - The player installs third-party addons (BugGrabber, BugSack, and runtime dependencies such as LibEditMode) through CurseForge. Helper libraries are welcome when they mean less addon code; declare them as TOC dependencies, never copy them into the repo.
 - Step the player through in-game checks a few at a time.
-
-## Performance
-Use on demand: when something feels slow, after adding hooks or event handling, and before a public release. Not part of every change's checks.
-- **Ask for a recording:** "/wasd perf start bear-pull, do the pull, /wasd perf stop, /reload". Suggested labels: `idle`, `bear-pull`, `form-spam`, `cat-dps` (prefix `pc-` for the Windows PC).
-- **Read it** from `SavedVariables/WASDBars.lua` (`WASDBarsPerfDB.sessions`; plain Lua data, read it as text, never run it). Newest 5 sessions, newest 600 one-second rows each.
-- **Each row:** `t` (seconds), `wasdbars` (every metric of the game's addon profiler for WASDBars, in ms, keyed by its `Enum.AddOnProfilerMetric` name), `allRecentAverage` (all addons), `fps`, `combat`, `form`, `target`. Each session also has `summary.wasdbars` and `summary.allAddons`.
-- **What good looks like** (rough guide, adjust with experience): WASDBars' recent average stays well under 0.1 ms in combat and is a small share of all addons; no regular peaks above 1 ms; frame rate doesn't dip when WASDBars' numbers rise.
-- **The loop:** compare combat rows with idle rows, link spikes to what was happening (combat, form, target), find the likely cause in the code, fix it, `make check`, ask for the same recording again and compare. Put the before/after numbers in the commit message.
