@@ -59,17 +59,6 @@ Moved buttons SHALL keep everything the game's action buttons do: icons, cooldow
 - **WHEN** a cluster button's spell is out of range
 - **THEN** its large bottom-centre hotkey text turns the game's out-of-range colour
 
-### Requirement: Layout holds
-While the "WASDBars" layout is active, the layout SHALL stay in place through form changes, combat, reloads, zoning, bar page changes and Edit Mode changes. When Edit Mode layouts change, "WASDBars" is still active and a button has left the cluster, the addon SHALL re-apply the layout straight away out of combat, or as soon as combat ends. The addon SHALL never move or change the buttons during combat, and SHALL cause no "Interface action blocked" errors.
-
-#### Scenario: Reload
-- **WHEN** the player reloads the UI on the "WASDBars" layout
-- **THEN** the buttons are back in the cluster
-
-#### Scenario: Edit Mode layout change
-- **WHEN** the player edits the "WASDBars" layout and a button has left the cluster
-- **THEN** the addon puts it back (after combat if in combat), with no errors
-
 ### Requirement: Other bars left alone
 The cluster SHALL NOT hide, move or change action bar 2, the micro menu or the bags. Action bar 1's look on the WASDBars layout is set by `main-bar-replacement`; the cluster itself SHALL NOT change the main bar's art or settings.
 
@@ -99,3 +88,14 @@ Action bar 1's buttons SHALL be in the cluster exactly while the active Edit Mod
 #### Scenario: Layout change in combat
 - **WHEN** the active layout changes during combat
 - **THEN** the buttons move when combat ends, with no errors
+
+### Requirement: Layout stays in place
+While the "WASDBars" layout is active, the layout SHALL stay in place through form changes, combat, reloads, zoning, bar page changes and Edit Mode changes. The addon SHALL never move or change the buttons during combat, and SHALL cause no "Interface action blocked" errors.
+
+#### Scenario: Reload
+- **WHEN** the player reloads the UI on the "WASDBars" layout
+- **THEN** the buttons are back in the cluster
+
+#### Scenario: Edit Mode changes
+- **WHEN** the player edits the "WASDBars" layout in Edit Mode
+- **THEN** the buttons stay in the cluster

@@ -48,11 +48,11 @@ The project SHALL provide one command that runs linting (luacheck), a formatting
 - **THEN** `make lint` fails and names the file and line
 
 ### Requirement: Testable logic modules
-Logic that doesn't need the game SHALL live in `Logic/` as functions that receive any game functions they need as arguments and make no game calls when the file loads. The test harness SHALL load these files the same way the game does (with the addon name and a shared namespace table).
+Decisions SHALL live in logic files: plain functions that take data and return data, make no game calls and take no game functions as arguments. Code that talks to the game SHALL live in separate game files in the same feature folder. The test harness SHALL load logic files the same way the game does (with the addon name and a shared namespace table).
 
 #### Scenario: Loading a logic file in tests
-- **WHEN** a test loads `Logic/Settings.lua` through the test helper
-- **THEN** `ns.Settings` is available and no WoW globals were needed
+- **WHEN** a test loads `Core/SavedSettings.lua` through the test helper
+- **THEN** `ns.SavedSettings` is available and no WoW globals were needed
 
 ### Requirement: Addon loads cleanly
 The addon SHALL load in WoW Forever with no errors, create its account-wide saved settings filled with defaults, and keep any values the player already saved.
@@ -87,7 +87,7 @@ The addon SHALL provide a single queue for work that can't happen in combat. Wor
 - **THEN** only the 1.3 change runs when combat ends
 
 ### Requirement: Slash command
-The addon SHALL register `/wasd` with `help`, `version` and `debug` subcommands, alongside the commands of the other capabilities. `debug` SHALL turn extra chat output on or off for the current session.
+The addon SHALL register `/wasd` with `help` and `version` subcommands, alongside the commands of the other capabilities.
 
 #### Scenario: Help
 - **WHEN** the player types `/wasd help`

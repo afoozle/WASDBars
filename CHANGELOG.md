@@ -2,6 +2,25 @@
 
 All notable changes to WASDBars. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-11-28
+
+### Fixed
+- A character on its own (character-specific) keybinds now gets its own copy of its keys from before setup, and `/wasd restore` puts back that character's keys instead of the account's.
+- `/wasd options` in combat says the options can't be opened, instead of being blocked by the game.
+- Restore's reload window is titled "WASDBars".
+
+### Changed
+- The W, A, S and D keys are drawn like the cluster's empty button slots.
+- Typing `/wasd setup` while the setup window is open fills it again with what still needs setting up.
+- With Edit Mode open, `/wasd restore` always says to close Edit Mode first.
+- The code is reorganised by feature and smaller, with every decision it makes covered by tests.
+
+### Removed
+- `/wasd perf` performance recording.
+- `/wasd setup status`; `/wasd setup` already says when everything is set up.
+- `/wasd setup layout`, which was the same as `/wasd setup`.
+- `/wasd debug`.
+
 ## [1.1.0] - 2026-11-26
 
 Now also requires LibEditModeOverride.

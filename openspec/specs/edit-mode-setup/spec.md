@@ -30,11 +30,11 @@ Setup SHALL only ever change an account-wide Edit Mode layout named "WASDBars". 
 In "WASDBars", setup SHALL set Action Bar 1 to 12 icons with Always Show Buttons, Hide Bar Art and Hide Bar Scrolling on, and hide both end caps (gryphons); every run SHALL fix whichever of these is off. When it creates the layout, setup SHALL also give Action Bar 2 12 icons and Action Bar 1's orientation, rows, icon size and icon padding; later runs SHALL leave Action Bar 2's shape alone.
 
 #### Scenario: Player resizes Action Bar 2
-- **WHEN** the player changes Action Bar 2's icon size in "WASDBars" and runs `/wasd setup layout`
+- **WHEN** the player changes Action Bar 2's icon size in "WASDBars" and runs `/wasd setup`
 - **THEN** setup doesn't list Action Bar 2's shape and leaves its size as the player set it
 
 #### Scenario: Fixing one setting later
-- **WHEN** the player turns Hide Bar Art off in "WASDBars" and runs `/wasd setup layout`
+- **WHEN** the player turns Hide Bar Art off in "WASDBars" and runs `/wasd setup`
 - **THEN** the window lists only that action, and Set up turns it back on
 
 ### Requirement: Layout positions
@@ -72,7 +72,7 @@ Setup SHALL show one window listing, under a Layout heading, the layout actions 
 
 #### Scenario: Edit Mode open
 - **WHEN** Edit Mode is open and the player runs `/wasd setup`
-- **THEN** chat says to close Edit Mode and run `/wasd setup layout`, and nothing changes
+- **THEN** chat says to close Edit Mode and run `/wasd setup`, and nothing changes
 
 #### Scenario: In combat
 - **WHEN** the player runs setup, or clicks Set up, during combat
@@ -92,17 +92,6 @@ At login, if the character hasn't been offered setup and either its keys or its 
 #### Scenario: Everything set up
 - **WHEN** a character's keys and layout are set up
 - **THEN** no offer is shown
-
-### Requirement: Setup commands and status
-`/wasd setup` and `/wasd setup layout` SHALL open the setup window, or say everything is set up. `/wasd setup status` SHALL report the keybinds and the layout in one line: layout ready, not on the WASDBars layout, or how many changes it needs.
-
-#### Scenario: Not on WASDBars
-- **WHEN** the keys are set up, the player has switched to Modern and types `/wasd setup status`
-- **THEN** chat shows "WASDBars: Keybinds set up (WASD keys and number row). Not on the WASDBars layout (/wasd setup layout)."
-
-#### Scenario: Nothing to do
-- **WHEN** everything is set up and the player types `/wasd setup`
-- **THEN** chat says everything is set up and no window opens
 
 ### Requirement: Restore
 `/wasd restore` SHALL ask to switch the character back to the layout it was on before setup (Modern if that layout is gone) and set Action Bar 2 back to how it was, then, if keys were changed by setup, ask separately whether to put the 24 keys back to what they were before. Leaving "WASDBars" SHALL put action bar 1's buttons back straight away, with no reload. It SHALL refuse in combat, SHALL never delete "WASDBars", and SHALL end by saying how to set it up again.
@@ -172,3 +161,10 @@ When Set up has changed the Edit Mode layout or turned on Action Bar 2, and at t
 #### Scenario: Keys only
 - **WHEN** only the keys needed setting up
 - **THEN** chat says "WASDBars: Set up." and no reload window shows
+
+### Requirement: Setup command
+`/wasd setup` SHALL open the setup window, or say everything is set up.
+
+#### Scenario: Nothing to do
+- **WHEN** everything is set up and the player types `/wasd setup`
+- **THEN** chat says everything is set up and no window opens
