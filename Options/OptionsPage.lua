@@ -83,7 +83,11 @@ function OptionsPage.addOptionsPage()
   Settings.RegisterAddOnCategory(optionsCategory)
 end
 
--- /wasd options.
+-- /wasd options. The game blocks addons from opening its options in combat.
 function OptionsPage.openOptionsPage()
+  if InCombatLockdown() then
+    ns.ChatMessages.printMessage("Options can't be opened in combat.")
+    return
+  end
   Settings.OpenToCategory(optionsCategory:GetID())
 end
