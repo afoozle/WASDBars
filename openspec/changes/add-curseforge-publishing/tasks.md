@@ -8,8 +8,8 @@
 - [x] 1.2 Game version: the packager maps 16xxx to "forever" but only looks it up while uploading, so the beta upload is the check (design.md section 4)
 
 ## 2. CurseForge project (manual)
-- [ ] 2.1 Create the CurseForge project (design.md section 3); note the project ID
-- [ ] 2.2 Add `## X-Curse-Project-ID` to the TOC
+- [x] 2.1 Create the CurseForge project (design.md section 3); project ID 1836867, source repo `afoozle/WASDBars`, no CurseForge automatic packaging (the release workflow uploads)
+- [x] 2.2 Add `## X-Curse-Project-ID` to the TOC
 
 ## 3. Packaging and workflow
 - [x] 3.1 `.pkgmeta`: `docs` ignored (design.md section 1; the dependencies are declared by `add-layout-setup`)

@@ -2,6 +2,14 @@
 
 All notable changes to WASDBars. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.2.1-beta.1] - 2026-11-28
+
+First upload to CurseForge, as a beta. No changes to the addon itself.
+
+### Added
+- Published on CurseForge, which installs LibEditMode and LibEditModeOverride for you.
+- A new README with screenshots, an icon and an FAQ.
+
 ## [1.2.0] - 2026-11-28
 
 ### Fixed

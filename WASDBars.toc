@@ -6,6 +6,7 @@
 ## Version: @project-version@
 ## SavedVariables: WASDBarsDB
 ## Dependencies: LibEditMode, LibEditModeOverride
+## X-Curse-Project-ID: 1836867
 
 Core/SavedSettings.lua
 Core/AddonVersion.lua
