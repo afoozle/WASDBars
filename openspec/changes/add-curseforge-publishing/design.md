@@ -26,7 +26,7 @@ Record the finding in this file.
 ## 5. Listing content (`docs/curseforge/`)
 - `description.md`: what it does, a screenshot, feature list, slash commands, how setup works (one window lists every change first; it makes its own WASDBars Edit Mode layout, puts action bar 2 in action bar 1's place, and binding Q and E replaces the default strafe keys), how to undo it (`/wasd restore`), the known limitation that the cluster's position is saved per computer, a link to GitHub issues; the player reviews it before it is pasted
 - `icon.png` (square, CurseForge's current size requirement): keycaps drawn in code, the player picks from a few versions
-- `screenshots/`: before setup, the setup window, after setup (the cluster, and action bar 2 with action bar 1's art), 1280×720, with the character name and other addons' chat lines removed
+- `screenshots/`: before setup, the setup window, after setup (the cluster, and action bar 2 with action bar 1's art), 1280×720, with the character name and other addons' chat lines removed; plus `cluster.png`, the cluster cropped at full resolution from the after-setup shot, shown in the description
 
 ## 6. Versioning and the beta
 Grilled 2026-11-28. v1.2.0 is already on GitHub, so the first CurseForge upload is `v1.2.1-beta.1`: the same code plus the project ID and the API key. It is installed through the CurseForge app on the Mac and the Windows PC and checked for both libraries, the WoW Forever flavour and a clean load (no performance recording: `/wasd perf` was removed, and nothing here runs in combat). On the Mac, Claude Code removes only the dev symlink before the install, checks the installed folder afterwards, and asks before deleting it and putting the link back. Then `v1.2.1` is the public release.
