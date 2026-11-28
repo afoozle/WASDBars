@@ -62,33 +62,43 @@ Type `/wasd restore` or head on into the addon options and click the shiny red b
 ## Frequently asked questions
 
 **Did you use an LLM to make this? I don't like LLMs?**
+
 I sure did, hand crafted artisanally programmed in a giant auto-complete machine. If that's not your jam, cool, look elsewhere
 
 **But I don't use WASD?**
+
 Okay. Don't install this addon then.
 
 **I use ESDF. Can I have ESDF Bars?**
+
 You can have a GitHub issue. Write a nice one please. Or better yet, fire up claude and send me a Pull Request.
 
 **Will it break my other characters?**
+
 No. A character's bars only move once you've run setup on that character. And a copy of your keybinds is made that you can restore if you don't like it
 
 **Does it change my spells or macros?**
+
 No. They're the game's own buttons with your own spells on them. WASD Bars just moves them into a visible shape
 
 **Why is the chat window moving?**
+
 Because the keys need somewhere to live, and your chat window was standing in the way. If you don't like that, just move things where you like in Edit Mode, including the WASDBar.
 
 **Where did Attack Target go? It used to be on T.**
+
 T is in the cluster now. Setup warned you, in orange, in a list. Attack Target is in Key Bindings, waiting for you to find it a new home.
 
 **What about C for my character sheet?**
+
 Yep I overwrote that one too, pick a new bind or just click the button using your mouse. The world is your oyster.
 
 **Can I make it bigger?**
+
 Yes. Open Edit Mode, select WASDBars and use the Scale slider. Go wild.
 
 **I don't like it. How do I get my old bars back?**
+
 `/wasd restore`. No hard feelings.
 
 ## Installing
