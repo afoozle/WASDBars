@@ -16,9 +16,9 @@
 - [ ] 3.2 `release.yml` passes `CF_API_KEY` (design.md section 2)
 
 ## 4. Listing content
-- [ ] 4.1 `docs/curseforge/description.md` (design.md section 5)
-- [x] 4.2 Icon: keycaps drawn in code, the player picked the lit keyboard (`docs/curseforge/icon.png`, 512×512)
-- [x] 4.3 Screenshots: before setup, setup window, after setup (`docs/curseforge/screenshots/`)
+- [x] 4.1 Description: `README.md` (design.md section 5); development notes moved to `CONTRIBUTING.md`
+- [x] 4.2 Icon: keycaps drawn in code, the player picked the lit keyboard (`docs/images/icon.png`, 512×512)
+- [x] 4.3 Screenshots: before setup, setup window, after setup (`docs/images/screenshots/`)
 - [ ] 4.4 Paste description, icon and screenshots into the CurseForge project page
 
 ## 5. First beta
@@ -29,5 +29,5 @@
 ## 6. Public release
 - [ ] 6.1 Fix anything from the beta, add the `v1.2.1` CHANGELOG section, merge, tag
 - [ ] 6.2 CurseForge shows it as a **release**; the CurseForge app offers it as an update over the beta
-- [ ] 6.3 `INSTALL.md`: CurseForge as the first way to install
+- [ ] 6.3 `INSTALL.md`: CurseForge as the first way to install; drop "(coming soon)" from the README
 - [ ] 6.4 Archive this change

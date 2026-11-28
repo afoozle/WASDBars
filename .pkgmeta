@@ -17,4 +17,5 @@ ignore:
   - CLAUDE.md
   - INSTALL.md
   - README.md
+  - CONTRIBUTING.md
   - skills-lock.json
