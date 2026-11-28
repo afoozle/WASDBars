@@ -16,6 +16,6 @@ Optional, for going public. `add-github-releases` already builds versioned zips 
 
 ## Impact
 - New capability spec: `curseforge-publishing`
-- Changed: `.pkgmeta` (`docs` ignored), `.github/workflows/release.yml` (`CF_API_KEY`), the TOC (`## X-Curse-Project-ID`), `INSTALL.md` (CurseForge as the first choice)
+- Changed: `.pkgmeta` (`docs` ignored), `.github/workflows/release.yml` (`CF_API_TOKEN`), the TOC (`## X-Curse-Project-ID`), `INSTALL.md` (CurseForge as the first choice)
 - New files: `docs/images/`, `CONTRIBUTING.md` (the README's development notes, moved out so the README can be the listing)
-- New GitHub secret: `CF_API_KEY` (never stored in the repo)
+- New GitHub secret: `CF_API_TOKEN` (never stored in the repo)

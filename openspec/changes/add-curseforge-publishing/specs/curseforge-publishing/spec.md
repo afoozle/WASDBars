@@ -32,7 +32,7 @@ The CurseForge API token SHALL only be stored as a GitHub repository secret and 
 
 #### Scenario: Secret use
 - **WHEN** the workflow uploads to CurseForge
-- **THEN** it reads the token from the `CF_API_KEY` secret and the token is masked in logs
+- **THEN** it reads the token from the `CF_API_TOKEN` secret and the token is masked in logs
 
 ### Requirement: Installs cleanly from CurseForge
 A file published to CurseForge SHALL install through the CurseForge app into WoW Forever on both macOS and Windows and load without errors or wrong-flavour warnings.

@@ -4,8 +4,8 @@
 - [x] 0.1 Grilled 2026-11-28: beta `v1.2.1-beta.1` then `v1.2.1`; no performance check; the three screenshots; icon drawn in code; listing basics as in design.md section 3; beta installed on both machines
 
 ## 1. Game version (first: decides whether the rest is worth doing)
-- [ ] 1.1 Create a CurseForge account and API token; add it to the GitHub repo as secret `CF_API_KEY`
-- [ ] 1.2 Dry run with the key; check which game version the packager would use and whether CurseForge has a WoW Forever entry (design.md section 4); record the finding
+- [x] 1.1 Create a CurseForge account and API token; add it to the GitHub repo as secret `CF_API_TOKEN`
+- [x] 1.2 Game version: the packager maps 16xxx to "forever" but only looks it up while uploading, so the beta upload is the check (design.md section 4)
 
 ## 2. CurseForge project (manual)
 - [ ] 2.1 Create the CurseForge project (design.md section 3); note the project ID
@@ -13,7 +13,7 @@
 
 ## 3. Packaging and workflow
 - [x] 3.1 `.pkgmeta`: `docs` ignored (design.md section 1; the dependencies are declared by `add-layout-setup`)
-- [ ] 3.2 `release.yml` passes `CF_API_KEY` (design.md section 2)
+- [x] 3.2 `release.yml` passes `CF_API_TOKEN` (design.md section 2)
 
 ## 4. Listing content
 - [x] 4.1 Description: `README.md` (design.md section 5); development notes moved to `CONTRIBUTING.md`
