@@ -9,6 +9,7 @@ required-dependencies:
   - libeditmodeoverride
 
 ignore:
+  - docs
   - tests
   - scripts
   - openspec
