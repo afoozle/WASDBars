@@ -68,7 +68,8 @@ WASDBars/                      repo root = addon folder
   .agents/  .claude/  skills-lock.json      Claude Code skills for this repo
   .pkgmeta                     packager config (what goes in the release zip)
   .luacheckrc  .stylua.toml  .stylua-version  .busted  .editorconfig  .gitattributes  .gitignore
-  Makefile  README.md  INSTALL.md  CHANGELOG.md  LICENSE  CLAUDE.md
+  Makefile  README.md  CONTRIBUTING.md  INSTALL.md  CHANGELOG.md  LICENSE  CLAUDE.md
+  docs/images/                 icon and screenshots, used by the README and the CurseForge listing
 ```
 
 ## Project Conventions

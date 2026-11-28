@@ -9,6 +9,7 @@ required-dependencies:
   - libeditmodeoverride
 
 ignore:
+  - docs
   - tests
   - scripts
   - openspec
@@ -16,4 +17,5 @@ ignore:
   - CLAUDE.md
   - INSTALL.md
   - README.md
+  - CONTRIBUTING.md
   - skills-lock.json
